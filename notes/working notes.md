@@ -1,5 +1,13 @@
 # Working Notes
 
+# React Concepts to Learn
+slots
+redux
+How do they animate the menues in the ionic demo conference app?
+
+
+ 
+
 # Tasks 
 - Get his demo project and do the course completely
 - Take notes in project then move to notes later
