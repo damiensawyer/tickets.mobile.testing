@@ -1,0 +1,35 @@
+pool:
+  name: Hosted VS2017
+  demands: java
+
+trigger:
+  batch: true
+  branches:
+    include: ['develop']
+
+steps:
+- task: Gradle@2
+  displayName: 'gradlew assembleDebug'
+  inputs:
+    gradleWrapperFile: 'MobileApp/SourceCode -Android/gradlew'
+    workingDirectory: 'MobileApp/SourceCode -Android'
+    tasks: assembleDebug
+    publishJUnitResults: false
+    checkStyleRunAnalysis: true
+    findBugsRunAnalysis: true
+    pmdRunAnalysis: true
+
+- task: whitesource.ws-bolt.bolt.wss.WhiteSource Bolt@18
+  displayName: 'WhiteSource Bolt'
+  inputs:
+    cwd: 'MobileApp/SourceCode -Android'
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactStagingDirectory)'
+  inputs:
+    SourceFolder: 'MobileApp/SourceCode -Android'
+    Contents: '**/*.apk'
+    TargetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
