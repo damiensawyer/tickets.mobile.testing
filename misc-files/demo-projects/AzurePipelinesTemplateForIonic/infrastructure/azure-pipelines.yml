@@ -1,0 +1,70 @@
+trigger:
+- none
+
+variables:
+  vmImageName: 'windows-latest'
+  projectName: 'SampleApp'
+
+stages:
+  - stage: Build
+    displayName: Build Ionic - Android projects
+    jobs:
+      # Debug build
+      - job: Build_Ionic_Android_Debug
+        variables:
+          - name: buildConfiguration
+            value: Debug
+        displayName: Build Debug
+        pool:
+          vmImage: $(vmImageName)
+        steps: 
+          - template: ionic-android-debug-build.yml
+
+    # Release build
+      - job: Build_Ionic_Android_Release
+        variables:
+         - group: DamoTemp-Release
+         - name: buildConfiguration 
+           value: Release
+        displayName: Build Release
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - template: ionic-android-release-build.yml
+            parameters:
+              # Apparently you can't define the filename as a parameter
+              keystoreFileName: 'damotemp.keystore'
+              keystorePassword: $(keystorePassword)
+              keyAlias: $(keyAlias)
+              keyPassword: $(keyPassword)
+
+
+  - stage: Deploy
+    displayName: Deploy Debug and Release Apps to App Center
+    dependsOn: Build
+    jobs:
+      - deployment: Deploy_Android_Debug
+        variables:
+          buildConfiguration: Debug
+        displayName: Deploy Android - Debug App
+        pool:
+          vmImage: $(vmImageName)
+        environment: Staging
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: ionic-android-deploy.yml
+                  parameters:
+                    appCenterServiceConnection: 'DaDAppCenter'
+                    # You can find the app slug by going to your project on App Center, and extracting it based on the url for the app: https://docs.microsoft.com/en-us/appcenter/distribution/vsts-deploy
+                    appSlug: 'damiensawyer/damientest'  
+                    appFile: '$(Pipeline.Workspace)/$(projectName)/app-debug.apk'
+                    releaseNotes: 'Debug App'
+                - template: ionic-android-deploy.yml
+                  parameters:
+                    appCenterServiceConnection: 'DaDAppCenter'
+                    # You can find the app slug by going to your project on App Center, and extracting it based on the url for the app: https://docs.microsoft.com/en-us/appcenter/distribution/vsts-deploy
+                    appSlug: 'damiensawyer/damientest'  
+                    appFile: '$(Pipeline.Workspace)/$(projectName)/$(projectName)-Release.apk'
+                    releaseNotes: 'Release App'
