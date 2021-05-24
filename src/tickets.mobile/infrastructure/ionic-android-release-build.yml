@@ -26,24 +26,24 @@ steps:
       npx cap sync
       cd android
       ./gradlew assemble$(buildConfiguration)
-    workingDirectory: $(Build.SourcesDirectory)/$(projectName)
+    workingDirectory: $(ticketsFolder)/$(projectName)
     displayName: 'Build Android Project'
 
   - task: AndroidSigning@3
     inputs:
-      apkFiles: '$(Build.SourcesDirectory)/$(projectName)/android/app/build/outputs/apk/$(buildConfiguration)/*.apk'
+      apkFiles: '$(ticketsFolder)/$(projectName)/android/app/build/outputs/apk/$(buildConfiguration)/*.apk'
       apksign: true
       apksignerKeystoreFile: '${{ parameters.keystoreFileName }}'
       apksignerKeystorePassword: '${{ parameters.keystorePassword }}'
       apksignerKeystoreAlias: '${{ parameters.keyAlias }}'
       apksignerKeyPassword: '${{ parameters.keyPassword }}'
-      apksignerArguments: --out $(Build.SourcesDirectory)/$(projectName)/android/app/build/outputs/apk/$(buildConfiguration)/$(projectName)-$(buildConfiguration).apk --verbose
+      apksignerArguments: --out $(ticketsFolder)/$(projectName)/android/app/build/outputs/apk/$(buildConfiguration)/$(projectName)-$(buildConfiguration).apk --verbose
       zipalign: true
     displayName: 'Sign the APK'
 
   - task: CopyFiles@2
     inputs:
-      SourceFolder: '$(Build.SourcesDirectory)/$(projectName)/android/app/build/outputs/apk/$(buildConfiguration)'
+      SourceFolder: '$(ticketsFolder)/$(projectName)/android/app/build/outputs/apk/$(buildConfiguration)'
       contents: "**/$(projectName)-$(buildConfiguration).apk"
       targetFolder: "$(Build.ArtifactStagingDirectory)/$(projectName)"
     displayName: "Copy unsigned APK to staging directory"
