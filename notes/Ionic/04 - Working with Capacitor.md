@@ -31,3 +31,14 @@ Running with the CAP 3 deploy stuff
 
 ## Notes
 Check out the new capacitor 3. I believe that it adds ability to deploy to device directly from CLI
+
+
+
+
+### Getting Acedemind project going with capacitor
+ ionic integrations enable capacitor
+ npx capacitor add android
+ ionic build
+ npx cap copy android
+ npx cap open android
+ npx cap run android
