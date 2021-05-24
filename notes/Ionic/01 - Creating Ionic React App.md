@@ -13,3 +13,6 @@ cd myApp
 In the above, blank is a template.
 See 
 
+
+## Creating with Capacitor
+ionic start tickets.mobile sidemenu --capacitor --type=react
