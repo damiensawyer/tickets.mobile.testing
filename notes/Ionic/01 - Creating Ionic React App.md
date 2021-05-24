@@ -5,6 +5,7 @@
 ``` bash
 npm install -g @ionic/cli
 ionic start myApp blank --type=react
+ionic login (optional logs into ionic account)
 cd myApp
 # see ionic start --help
 # see ionic start --list  to get a list of different templates

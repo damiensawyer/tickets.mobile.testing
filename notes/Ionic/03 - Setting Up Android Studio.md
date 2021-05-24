@@ -1,6 +1,9 @@
 # 03 Setting up Android Studio
 
 ## Step after Configuration
+[This was important (installing Android SDK Command Line Tools):](https://stackoverflow.com/a/64708730/494635). Before I did this, I had the "couldn't build until you accept licenses" issue. Not sure if this then allowed me to do the sdkmanager.bat thing below.
+
+
 https://www.geeksforgeeks.org/how-to-fix-failed-to-install-the-following-android-sdk-packages-as-some-licenses-have-not-been-accepted-error-in-android-studio/
 I had to go to C:\Users\Damien\AppData\Local\Android\Sdk\tools\bin and run sdkmanager.bat --licenses
 
