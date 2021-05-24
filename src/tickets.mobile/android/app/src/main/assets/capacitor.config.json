@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "tickets.mobile",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
