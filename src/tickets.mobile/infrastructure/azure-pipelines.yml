@@ -4,6 +4,7 @@ trigger:
 variables:
   vmImageName: 'windows-latest'
   projectName: 'tickets.mobile'
+  ticketsFolder: '$(Build.SourcesDirectory)/src'
 
 stages:
   - stage: Build
