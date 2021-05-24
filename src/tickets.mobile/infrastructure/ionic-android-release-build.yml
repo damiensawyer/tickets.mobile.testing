@@ -21,12 +21,13 @@ steps:
       command: install
     displayName: 'NPM Install'
 
-- task: android-manifest-version@1
-  inputs:
-    sourcePath: '$(ticketsFolder)/$(projectName)\android\app\src\main\AndroidManifest.xml'
-    versionCodeOption: 'buildid'
-    versionCode: '$(Build.BuildId)'
-    printFile: true
+  # https://stackoverflow.com/questions/54037164/increment-build-version-number-of-android-app-using-azure-devops-app-centre
+  - task: android-manifest-version@1
+    inputs:
+      sourcePath: '$(ticketsFolder)/$(projectName)\android\app\src\main\AndroidManifest.xml'
+      versionCodeOption: 'buildid'
+      versionCode: '$(Build.BuildId)'
+      printFile: true
 
   - powershell: |
       ionic cap build android --prod --no-open
