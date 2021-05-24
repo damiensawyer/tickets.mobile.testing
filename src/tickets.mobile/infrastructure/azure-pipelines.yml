@@ -1,0 +1,28 @@
+trigger:
+- none
+
+variables:
+  vmImageName: 'windows-latest'
+  projectName: 'SampleApp'
+
+stages:
+  - stage: Build
+    displayName: Build Ionic - Android projects
+    jobs:
+    # Release build
+      - job: Build_Ionic_Android_Release
+        variables:
+         - group: tickets.mobile-release
+         - name: buildConfiguration 
+           value: Release
+        displayName: Build Release
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - template: ionic-android-release-build.yml
+            parameters:
+              # Apparently you can't define the filename as a parameter
+              keystoreFileName: 'ticketsmobile.keystore'
+              keystorePassword: $(keystorePassword)
+              keyAlias: $(keyAlias)
+              keyPassword: $(keyPassword)
