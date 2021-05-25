@@ -111,3 +111,7 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 } 
+
+ion-img.small{
+  padding:50px 250px;
+}
