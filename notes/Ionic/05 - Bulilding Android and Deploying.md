@@ -11,7 +11,7 @@
     - I added keys keystorePassword, keyAlias and keyPassword as varibles in a group (under Pipelines -> Library in devops ). I also updloaded the keystore file as a secure file. 
 - Create a Play Account here https://play.google.com/console  (I used damiensawyer@daddigital.com)
 - [App Center Docs on pushing your Android App to Google Play](https://docs.microsoft.com/en-us/appcenter/distribution/stores/googleplay)
-- About bumping versions https://stackoverflow.com/questions/54037164/increment-build-version-number-of-android-app-using-azure-devops-app-centre
+- About bumping versions https://stackoverflow.com/questions/54037164/increment-build-version-number-of-android-app-using-azure-devops-app-centre. Note that, in addition to adding the plugin to devops, setting up the androidmanifest.xml, I also had to delete stuff from the gradle file https://forum.ionicframework.com/t/where-to-set-the-version-code-in-a-ionic-capacitor-app/192084
 
 
 ## Deploying Notes
