@@ -7,12 +7,13 @@ import {
   IonListHeader,
   IonMenu,
   IonMenuToggle,
-  IonNote,
+  IonNote, IonToggle,
 } from '@ionic/react';
 
 import { useLocation } from 'react-router-dom';
-import { archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
+import {archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, moonOutline, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp} from 'ionicons/icons';
 import './Menu.css';
+import { setDarkMode } from '../data/user/user.action';
 
 interface AppPage {
   url: string;
@@ -64,6 +65,8 @@ const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
 const Menu: React.FC = () => {
   const location = useLocation();
+  const darkMode = false;  
+
 
   return (
     <IonMenu contentId="main" type="overlay">
@@ -81,6 +84,11 @@ const Menu: React.FC = () => {
               </IonMenuToggle>
             );
           })}
+          <IonItem>
+            <IonIcon slot="start" icon={moonOutline}></IonIcon>
+            <IonLabel>Dark Mode</IonLabel>
+            <IonToggle checked={darkMode} onClick={() => setDarkMode(!darkMode)} />
+          </IonItem>
         </IonList>
 
         <IonList id="labels-list">
