@@ -67,13 +67,13 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-tint: #f5f6f9;
 }
 
-@media (prefers-color-scheme: light ) {
+
   /*
    * Dark Colors
    * -------------------------------------------
    */
 
-  body {
+ :root .dark-theme {
     --ion-color-secondary: #6c3f99;
     --ion-color-secondary-rgb: 108,63,153;
     --ion-color-secondary-contrast: #ffffff;
@@ -187,7 +187,7 @@ http://ionicframework.com/docs/theming/ */
    * -------------------------------------------
    */
 
-  .md body {
+  .md body .dark-theme {
     --ion-background-color: #121212;
     --ion-background-color-rgb: 18,18,18;
 
@@ -224,4 +224,3 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-card-background: #1e1e1e;
   }
-}

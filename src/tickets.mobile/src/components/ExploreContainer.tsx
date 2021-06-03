@@ -9,7 +9,7 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   return (
     <div className="container">
       <IonImg class="small" src="assets/tickets-logo-colour-rgb.png"></IonImg>
-      <h1>Hello Rider!</h1>
+      <h1>Hello Tickets11!</h1>
       <strong>{name}</strong>
       <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
     </div>

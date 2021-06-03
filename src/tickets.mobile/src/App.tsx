@@ -25,7 +25,7 @@ import './theme/variables.css';
 
 const App: React.FC = () => {
   return (
-    <IonApp>
+    <IonApp className={'dark-theme'}>
       <IonReactRouter>
         <IonSplitPane contentId="main">
           <Menu />
