@@ -6,6 +6,10 @@ or npx create-react-app redux-essentials-example --template redux
 
 ]
 
+## Installation
+check these out... 
+npm info @reduxjs/toolkit  (shows that it has redux as a dependency)   
+npm info react-redux
 
 ## Tooling (Chrome plugins)
 [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
