@@ -1,7 +1,9 @@
 ﻿# Redux
 [Getting Started](https://redux.js.org/introduction/getting-started/)
 [Getting Started (essentials?) Course](https://redux.js.org/tutorials/essentials/part-1-overview-concepts)
-npx create-react-app my-app --template redux-typescript
+npx create-react-app reduxreactsample --template redux-typescript
+or npx create-react-app redux-essentials-example --template redux
+
 ]
 
 
