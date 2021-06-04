@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExportableFileTemplateSettings">
+    <code_templates>
+      <template name="Typed React Function Component.tsx" reformat="true" live-template-enabled="true" enabled="true" />
+      <template name="TypeScript Implemented Method Body.ts" reformat="true" live-template-enabled="true" enabled="true" />
+    </code_templates>
+  </component>
+</project>
