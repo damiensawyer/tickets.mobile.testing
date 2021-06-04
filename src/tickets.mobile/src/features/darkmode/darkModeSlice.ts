@@ -7,7 +7,7 @@ export interface DarkModeState {
 }
 
 const initialState: DarkModeState = {
-  value: 'light',
+  value: 'dark',
 };
 
 export const darkModelSlice = createSlice({

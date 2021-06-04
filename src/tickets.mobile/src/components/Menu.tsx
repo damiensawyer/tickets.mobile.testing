@@ -1,7 +1,7 @@
 import {IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonToggle,} from '@ionic/react';
 
 import {useLocation} from 'react-router-dom';
-import {archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, moonOutline, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp} from 'ionicons/icons';
+import {bookmarkOutline, mailOutline, mailSharp, moonOutline} from 'ionicons/icons';
 import './Menu.css';
 
 import { useAppSelector, useAppDispatch } from '../app/hooks'
@@ -18,6 +18,12 @@ const appPages: AppPage[] = [
   {
     title: 'Inbox',
     url: '/page/Inbox',
+    iosIcon: mailOutline,
+    mdIcon: mailSharp
+  },
+  {
+    title: 'Outbox',
+    url: '/page/Outbox',
     iosIcon: mailOutline,
     mdIcon: mailSharp
   }
@@ -52,8 +58,8 @@ const Menu: React.FC = () => {
           })}
           <IonItem>
             <IonIcon slot="start" icon={moonOutline}></IonIcon>
-            <IonLabel>Dark Mode</IonLabel>
-            <IonToggle checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
+            <IonLabel onClick={() => toggleDarkMode()}>Dark Mode</IonLabel>
+            <IonToggle content-id='mytoggle' checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
           </IonItem>
         </IonList>
         <IonList id="labels-list">
