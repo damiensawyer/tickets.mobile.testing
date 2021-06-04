@@ -23,9 +23,13 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import { useAppSelector } from './app/hooks'
+import { selectDarkMode} from './features/darkmode/darkModeSlice'
+
 const App: React.FC = () => {
+  var darkMode = useAppSelector(selectDarkMode)
   return (
-    <IonApp className={'dark-theme'}>
+    <IonApp className={darkMode ==='dark' ? 'dark-theme' : ''}>
       <IonReactRouter>
         <IonSplitPane contentId="main">
           <Menu />

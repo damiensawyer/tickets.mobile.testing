@@ -3,8 +3,9 @@ import {IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu,
 import {useLocation} from 'react-router-dom';
 import {archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, moonOutline, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp} from 'ionicons/icons';
 import './Menu.css';
-import {setDarkMode} from '../data/user/user.action';
-import {DamienComponent} from "./DamienComponent";
+
+import { useAppSelector, useAppDispatch } from '../app/hooks'
+import {setDarkMode, selectDarkMode} from '../features/darkmode/darkModeSlice'
 
 interface AppPage {
   url: string;
@@ -19,44 +20,19 @@ const appPages: AppPage[] = [
     url: '/page/Inbox',
     iosIcon: mailOutline,
     mdIcon: mailSharp
-  },
-  {
-    title: 'Outbox',
-    url: '/page/Outbox',
-    iosIcon: paperPlaneOutline,
-    mdIcon: paperPlaneSharp
-  },
-  {
-    title: 'Favorites',
-    url: '/page/Favorites',
-    iosIcon: heartOutline,
-    mdIcon: heartSharp
-  },
-  {
-    title: 'Archived',
-    url: '/page/Archived',
-    iosIcon: archiveOutline,
-    mdIcon: archiveSharp
-  },
-  {
-    title: 'Trash',
-    url: '/page/Trash',
-    iosIcon: trashOutline,
-    mdIcon: trashSharp
-  },
-  {
-    title: 'Spam',
-    url: '/page/Spam',
-    iosIcon: warningOutline,
-    mdIcon: warningSharp
   }
 ];
 
-const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+const labels = ['Family'];
+
+ 
 
 const Menu: React.FC = () => {
   const location = useLocation();
-  const darkMode = false;
+  const darkMode = useAppSelector(selectDarkMode)
+  const isDarkModeEnabled = () => darkMode === 'dark'
+  const dispatch = useAppDispatch();
+  const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
 
   return (
     <IonMenu contentId="main" type="overlay">
@@ -77,10 +53,9 @@ const Menu: React.FC = () => {
           <IonItem>
             <IonIcon slot="start" icon={moonOutline}></IonIcon>
             <IonLabel>Dark Mode</IonLabel>
-            <IonToggle checked={darkMode} onClick={() => setDarkMode(!darkMode)}/>
+            <IonToggle checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
           </IonItem>
         </IonList>
-        <DamienComponent/>
         <IonList id="labels-list">
           <IonListHeader>Labels</IonListHeader>
           {labels.map((label, index) => (

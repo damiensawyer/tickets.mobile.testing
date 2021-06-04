@@ -1,4 +1,6 @@
-﻿import { Plugins } from '@capacitor/core';
+﻿// DAMIEN - this is from original demo.... not wired up yet... 
+
+import { Plugins } from '@capacitor/core';
 const { Storage } = Plugins;
 const HAS_LOGGED_IN = 'hasLoggedIn';
 const HAS_SEEN_TUTORIAL = 'hasSeenTutorial';
@@ -21,29 +23,8 @@ export const getUserData = async () => {
     return data;
 }
 
-
-export interface DispatchObject {
-    [key: string]: any,
-    type: string
-}
-
-type PromiseResolveValue<T> = T extends Promise<infer R> ? R : T;
-type EffectType<T extends (...args: any) => any> = ReturnType<ReturnType<T>>;
-
-type EffectReturnValue<T extends (...args: any) => any> = PromiseResolveValue<EffectType<T>>;
-
-export type ActionType<T extends (...args: any) => any> = ReturnType<T> extends DispatchObject ? ReturnType<T> : EffectReturnValue<T>
-
 export const loadUserData = () => async (dispatch: React.Dispatch<any>) => {
     const data = await getUserData();
 
 }
 
-
-export const setDarkMode = (darkMode: boolean) => ({
-    type: 'set-dark-mode',
-    darkMode
-} as const);
-
-export type UserActions =
-    | ActionType<typeof setDarkMode>
