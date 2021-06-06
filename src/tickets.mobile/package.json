@@ -21,6 +21,7 @@
     "@types/react-dom": "^17.0.6",
     "@types/react-router": "^5.1.14",
     "@types/react-router-dom": "^5.1.7",
+    "eslint": "^7.28.0",
     "ionicons": "^5.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -68,7 +69,9 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "3.0.0"
+    "@capacitor/cli": "3.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "eslint-config-prettier": "^8.3.0"
   },
   "description": "An Ionic project"
 }
