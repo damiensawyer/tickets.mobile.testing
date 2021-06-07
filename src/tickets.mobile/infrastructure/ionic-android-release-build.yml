@@ -18,7 +18,7 @@ steps:
   - task: Npm@1
     inputs:
       workingDir: '$(ticketsFolder)/$(projectName)'
-      command: install
+      command: install -f
     displayName: 'NPM Install'
 
   # https://stackoverflow.com/questions/54037164/increment-build-version-number-of-android-app-using-azure-devops-app-centre
