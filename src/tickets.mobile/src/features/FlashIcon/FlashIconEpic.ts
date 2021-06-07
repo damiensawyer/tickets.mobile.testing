@@ -19,6 +19,8 @@ export const pingEpic = (action$:any) => action$.pipe(
 const delayTime = 500
 export const incrementCountEpic = (action$:any) => action$.pipe(ofType('ping/setPing','ping/setPong' ),mapTo({type:'ping/incrementCounter'}))
 
+
+// REWORK ALL THIS AS DESCRIBED HERE. Don't use oftype  https://redux-toolkit.js.org/api/createAction#with-redux-observable
 export const pongEpic = (action$:any) => action$.pipe(
     ofType('ping/setPong'),
     delay(delayTime), // Asynchronously wait 1000ms then continue
