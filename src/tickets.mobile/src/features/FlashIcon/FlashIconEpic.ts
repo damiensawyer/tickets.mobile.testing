@@ -1,4 +1,4 @@
-﻿import {combineAll, delay, mapTo, tap} from 'rxjs/operators';
+﻿import {combineAll, delay, ignoreElements, mapTo, tap} from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
@@ -12,25 +12,31 @@ const pong = () => ({ type: PONG });
 
 export const pingEpic = (action$:any) => action$.pipe(
     ofType('ping/setPing' ),
-    delay(1000), // Asynchronously wait 1000ms then continue
-    tap(x => console.log('hhhhhhhhhhhhhhhhhhhhhhhh')),
+    delay(delayTime), // Asynchronously wait 1000ms then continue
     mapTo({ type: 'ping/setPong' })
 );
 
+const delayTime = 500
+export const incrementCountEpic = (action$:any) => action$.pipe(ofType('ping/setPing','ping/setPong' ),mapTo({type:'ping/incrementCounter'}))
+
 export const pongEpic = (action$:any) => action$.pipe(
     ofType('ping/setPong'),
-    delay(1000), // Asynchronously wait 1000ms then continue
+    delay(delayTime), // Asynchronously wait 1000ms then continue
     mapTo({ type: 'ping/setPing' })
 );
 
 export type pingValues = typeof PING | typeof PONG
 export interface PingState {
-    value: pingValues
+    value: pingValues,
+    isStarted:boolean,
+    count:number
 }
 
 
 const initialState: PingState = {
-    value: PONG
+    value: PONG,
+    isStarted:false,
+    count:0
 };
 
 export const pingSlice = createSlice({
@@ -38,17 +44,20 @@ export const pingSlice = createSlice({
     initialState,
     reducers: {
         setPing: (state => {
-            state.value = PING;
+            state.value = PING
+            state.isStarted = true
         }),
 
         setPong: (state => {
             state.value = PONG;
+            state.isStarted = true
         }),
+        incrementCounter:(state =>{state.count++})
 
     },
 });
 
- export const { setPing, setPong } = pingSlice.actions;
+ export const { setPing, setPong, incrementCounter } = pingSlice.actions;
 
  export const selectPingMode = (state: RootState) => state.pingMode.value;
 //

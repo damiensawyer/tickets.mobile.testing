@@ -10,11 +10,13 @@ interface ContainerProps {
 
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   const pingMode = useAppSelector(selectPingMode)
+  const counter = useAppSelector(x=>x.pingMode.count)
   return (
     <div className="container">
       <IonImg class="small" src="assets/tickets-logo-colour-rgb.png"></IonImg>
       <h1>Hello Abi!</h1>
-        <p><strong>PingMode: {pingMode}</strong></p>
+        <p><strong>Ping State: {pingMode}</strong></p>
+        <p><strong>Count: {counter}</strong></p>
         <strong>{name}</strong>
       <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
     </div>

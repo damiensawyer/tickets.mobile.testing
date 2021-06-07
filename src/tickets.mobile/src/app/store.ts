@@ -1,6 +1,6 @@
 import {configureStore, ThunkAction, Action, combineReducers, applyMiddleware} from '@reduxjs/toolkit';
 import darkModeSlice from "../features/darkmode/darkModeSlice";
-import pingSlice, {pingEpic, pongEpic } from "../features/FlashIcon/FlashIconEpic";
+import pingSlice, { pingEpic, pongEpic, incrementCountEpic} from "../features/FlashIcon/FlashIconEpic";
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
 import {useAppSelector} from "./hooks";
@@ -26,7 +26,7 @@ function logEpic(actions:any) {
 
 
 export const rootEpic = combineEpics(
-  logEpic, pingEpic,pongEpic
+  logEpic, pingEpic,pongEpic, incrementCountEpic
 );
 epicMiddleware.run(rootEpic)
 

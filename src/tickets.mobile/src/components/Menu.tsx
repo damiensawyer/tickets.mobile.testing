@@ -41,7 +41,9 @@ const Menu: React.FC = () => {
   const dispatch = useAppDispatch();
   const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
   
-  dispatch(setPing())
+  const isPingStarted = useAppSelector(x => x.pingMode.isStarted)
+  if (!isPingStarted)
+    dispatch(setPing())
   
   return (
     <IonMenu contentId="main" type="overlay">
