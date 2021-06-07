@@ -7,7 +7,7 @@ import './Menu.css';
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import {setDarkMode, selectDarkMode} from '../features/darkmode/darkModeSlice'
 import React from "react";
-import {PING, setPingMode} from "../features/FlashIcon/FlashIconEpic";
+import {PING, setPing} from "../features/FlashIcon/FlashIconEpic";
 import {rootEpic} from "../app/store";
 
 interface AppPage {
@@ -40,9 +40,8 @@ const Menu: React.FC = () => {
   const isDarkModeEnabled = () => darkMode === 'dark'
   const dispatch = useAppDispatch();
   const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
-
   
-  dispatch(setPingMode('PING'))
+  dispatch(setPing())
   
   return (
     <IonMenu contentId="main" type="overlay">
@@ -65,6 +64,8 @@ const Menu: React.FC = () => {
             <IonLabel onClick={() => toggleDarkMode()}>Dark Mode</IonLabel>
             <IonToggle content-id='mytoggle' checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
           </IonItem>
+          
+          
         </IonList>
         <IonList id="labels-list">
           <IonListHeader>Labels</IonListHeader>

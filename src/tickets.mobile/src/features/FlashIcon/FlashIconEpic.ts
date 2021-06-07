@@ -1,4 +1,4 @@
-﻿import { delay, mapTo} from 'rxjs/operators';
+﻿import {combineAll, delay, mapTo, tap} from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
@@ -10,16 +10,17 @@ export const PONG = 'PONG'
 const ping = () => ({ type: PING });
 const pong = () => ({ type: PONG });
 
-export const pingEpic = (action$:any, store$:any) => action$.pipe(
-    ofType(PING),
+export const pingEpic = (action$:any) => action$.pipe(
+    ofType('ping/setPing' ),
     delay(1000), // Asynchronously wait 1000ms then continue
-    mapTo({ type: PONG })
+    tap(x => console.log('hhhhhhhhhhhhhhhhhhhhhhhh')),
+    mapTo({ type: 'ping/setPong' })
 );
 
 export const pongEpic = (action$:any) => action$.pipe(
-    ofType(PING),
+    ofType('ping/setPong'),
     delay(1000), // Asynchronously wait 1000ms then continue
-    mapTo({ type: PING })
+    mapTo({ type: 'ping/setPing' })
 );
 
 export type pingValues = typeof PING | typeof PONG
@@ -29,20 +30,25 @@ export interface PingState {
 
 
 const initialState: PingState = {
-    value: PING
+    value: PONG
 };
 
 export const pingSlice = createSlice({
     name: 'ping',
     initialState,
     reducers: {
-        setPingMode: (state, action:PayloadAction<pingValues>) => {
-            state.value = action.payload;
-        }
+        setPing: (state => {
+            state.value = PING;
+        }),
+
+        setPong: (state => {
+            state.value = PONG;
+        }),
+
     },
 });
 
- export const { setPingMode } = pingSlice.actions;
+ export const { setPing, setPong } = pingSlice.actions;
 
  export const selectPingMode = (state: RootState) => state.pingMode.value;
 //

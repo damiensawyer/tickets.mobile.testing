@@ -1,6 +1,6 @@
 import {configureStore, ThunkAction, Action, combineReducers, applyMiddleware} from '@reduxjs/toolkit';
 import darkModeSlice from "../features/darkmode/darkModeSlice";
-import pingSlice, {pingEpic, pongEpic,setPingMode } from "../features/FlashIcon/FlashIconEpic";
+import pingSlice, {pingEpic, pongEpic } from "../features/FlashIcon/FlashIconEpic";
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
 import {useAppSelector} from "./hooks";
@@ -21,22 +21,14 @@ export const store = configureStore({
 });
 
 function logEpic(actions:any) {
-  return actions.pipe(tap(x => console.log(x)), ignoreElements())
+  return actions.pipe(tap(console.log), ignoreElements())
 }
 
-function logEpic2(actions:any, state:any) {
-  return actions.pipe(tap(x => console.log(state)), ignoreElements())
-}
 
 export const rootEpic = combineEpics(
-  logEpic, logEpic2, pingEpic, pongEpic
+  logEpic, pingEpic,pongEpic
 );
-
-
-
-
-
-
+epicMiddleware.run(rootEpic)
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
