@@ -3,8 +3,8 @@ import { ofType } from 'redux-observable';
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
 import {DarkModeState, darkModeValues} from "../darkmode/darkModeSlice";
-const PING = 'PING'
-const PONG = 'PONG'
+export const PING = 'PING'
+export const PONG = 'PONG'
 
 // action creators
 const ping = () => ({ type: PING });
@@ -17,7 +17,7 @@ export const pingEpic = (action$:any, store$:any) => action$.pipe(
 );
 
 export const pongEpic = (action$:any) => action$.pipe(
-    ofType(PONG),
+    ofType(PING),
     delay(1000), // Asynchronously wait 1000ms then continue
     mapTo({ type: PING })
 );
