@@ -4,7 +4,7 @@ trigger:
 - main
 
 variables:
-  vmImageName: 'ubuntu-20.04'
+  vmImageName: 'windows-2019'
   projectName: 'tickets.mobile'
   ticketsFolder: '$(Build.SourcesDirectory)/src'
 
