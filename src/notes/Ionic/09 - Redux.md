@@ -4,7 +4,7 @@
 npx create-react-app reduxreactsample --template redux-typescript
 or npx create-react-app redux-essentials-example --template redux
 
-]
+
 
 ## Installation
 check these out... 
@@ -74,7 +74,9 @@ const currentValue = selectCounterValue(store.getState())
 ```
 
 ### [Thunks and Async Logic](https://redux.js.org/tutorials/essentials/part-5-async-logic#thunks-and-async-logic)
-- [A kind of middlewear??](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware)
+[Crazy simple explantation of what redux-thunk does!!](https://daveceddia.com/what-is-a-thunk/)
+
+- [A kind of middlewear](https://redux.js.org/tutorials/fundamentals/part-4-store#middleware)
 There are many kinds of async middleware for Redux, and each lets you write your logic using different syntax. The most common async middleware is redux-thunk, which lets you write plain functions that may contain async logic directly. Redux Toolkit's configureStore function automatically sets up the thunk middleware by default, and we recommend using thunks as the standard approach for writing async logic with Redux.
 
 - I think that RXJS might be another type of middlewear [you can use instead of redux-thunk?](https://redux.js.org/style-guide/style-guide#use-thunks-for-async-logic)
