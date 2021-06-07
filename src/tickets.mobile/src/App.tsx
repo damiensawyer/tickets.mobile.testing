@@ -27,7 +27,7 @@ import { useAppSelector } from './app/hooks'
 import { selectDarkMode} from './features/darkmode/darkModeSlice'
 
 const App: React.FC = () => {
-  var darkMode = useAppSelector(selectDarkMode)
+  const darkMode = useAppSelector(selectDarkMode)
   return (
     <IonApp className={darkMode ==='dark' ? 'dark-theme' : ''}>
       <IonReactRouter>

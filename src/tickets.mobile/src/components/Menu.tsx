@@ -6,6 +6,7 @@ import './Menu.css';
 
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import {setDarkMode, selectDarkMode} from '../features/darkmode/darkModeSlice'
+import React from "react";
 
 interface AppPage {
   url: string;
@@ -30,8 +31,6 @@ const appPages: AppPage[] = [
 ];
 
 const labels = ['Family'];
-
- 
 
 const Menu: React.FC = () => {
   const location = useLocation();
