@@ -10,7 +10,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
-    </Provider>
+    </Provider>count
   </React.StrictMode>,
   document.getElementById('root')
 );
