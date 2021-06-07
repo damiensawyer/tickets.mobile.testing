@@ -16,7 +16,7 @@ export const pingEpic = (action$:any) => action$.pipe(
     mapTo({ type: 'ping/setPong' })
 );
 
-const delayTime = 500
+const delayTime = 1000
 export const incrementCountEpic = (action$:any) => action$.pipe(ofType('ping/setPing','ping/setPong' ),mapTo({type:'ping/incrementCounter'}))
 
 
