@@ -1,8 +1,8 @@
 ﻿import {combineAll, delay, ignoreElements, mapTo, tap} from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RootState} from "../../app/store";
-import {DarkModeState, darkModeValues} from "../darkmode/darkModeSlice";
+import {RootState} from "../../../app/store";
+
 export const PING = 'PING'
 export const PONG = 'PONG'
 

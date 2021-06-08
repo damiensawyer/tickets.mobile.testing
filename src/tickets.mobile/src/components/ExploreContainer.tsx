@@ -1,7 +1,7 @@
 import { IonImg } from '@ionic/react';
 import './ExploreContainer.css';
 import {useAppSelector} from "../app/hooks";
-import {selectPingMode} from "../features/FlashIcon/FlashIconEpic";
+import {selectPingMode} from "../features/LearningReactPatterns/FlashIcon/FlashIconEpic";
 
 
 interface ContainerProps {

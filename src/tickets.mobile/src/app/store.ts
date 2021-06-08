@@ -1,6 +1,6 @@
 import {configureStore, ThunkAction, Action, combineReducers, applyMiddleware} from '@reduxjs/toolkit';
 import darkModeSlice from "../features/darkmode/darkModeSlice";
-import pingSlice, { pingEpic, pongEpic, incrementCountEpic} from "../features/FlashIcon/FlashIconEpic";
+import pingSlice, { pingEpic, pongEpic, incrementCountEpic} from "../features/LearningReactPatterns/FlashIcon/FlashIconEpic";
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
 import {useAppSelector} from "./hooks";
