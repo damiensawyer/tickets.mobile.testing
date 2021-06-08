@@ -10,7 +10,7 @@ import {
   selectCount,
 } from './counterSlice';
 
-import styles from './Counter.module.css';
+
 
 import ExploreContainer from "../../../components/ExploreContainer";
 import {IonButton, IonButtons, IonHeader, IonInput, IonLabel} from "@ionic/react";
@@ -25,8 +25,8 @@ const count = useAppSelector(selectCount);
 
   return (
     <div>
-      <IonHeader>Counter using Redux-Toolkit with Redux Thunk</IonHeader>
-      <div className={styles.row}>
+      <h3 className="ion-align-items-center ion-padding-bottom">Counter using Redux-Toolkit with Redux Thunk</h3>
+      <div>
         <IonButton
           className="ion-padding-horizontal"
           aria-label="Decrement value"
@@ -34,7 +34,7 @@ const count = useAppSelector(selectCount);
             dispatch(decrement());
           }}
         >-</IonButton>
-        <span className={styles.value}>{count}</span>
+        <span>{count}</span>
         
         <IonButton
           className="ion-padding-horizontal"
@@ -42,27 +42,30 @@ const count = useAppSelector(selectCount);
           onClick={() => dispatch(increment())}
         >+</IonButton>
       </div>
-      <div className={styles.row}>
+      <div>
         <IonInput
+                          
+
           className="ion-padding-vertical"
+         
           aria-label="Set increment amount"
           value={incrementAmount}
           onIonChange={e => setIncrementAmount(e.detail.value!)}
         />
         <IonButton
-          className={styles.button}
-          onClick={() => dispatch(incrementByAmount(incrementValue))}
+            fill="outline"
+            onClick={() => dispatch(incrementByAmount(incrementValue))}
         >
           Add Amount
         </IonButton>
         <IonButton
-          className={styles.asyncButton}
+            fill="outline"
           onClick={() => dispatch(incrementAsync(incrementValue))}
         >
-          Add Async
+          Add With Delay
         </IonButton>
         <IonButton
-          className={styles.button}
+            fill="outline"
           onClick={() => dispatch(incrementIfOdd(incrementValue))}
         >
           Add If Odd
