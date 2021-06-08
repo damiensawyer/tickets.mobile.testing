@@ -4,7 +4,7 @@ import pingSlice, { pingEpic, pongEpic, incrementCountEpic} from "../features/Fl
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
 import {useAppSelector} from "./hooks";
-import counterSlice from "../features/Learning/Counter/counterSlice";
+import counterSlice from "../features/LearningReactPatterns/Counter/counterSlice";
 
 //import {setDarkMode, selectDarkMode} from '../features/darkmode/darkModeSlice'
 const epicMiddleware = createEpicMiddleware();

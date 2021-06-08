@@ -25,7 +25,7 @@ import './theme/variables.css';
 
 import { useAppSelector } from './app/hooks'
 import { selectDarkMode} from './features/darkmode/darkModeSlice'
-import {CounterWrapper} from "./features/Learning/Counter/CounterWrapper";
+import {CounterWrapper} from "./features/LearningReactPatterns/Counter/CounterWrapper";
 
 
 const App: React.FC = () => {

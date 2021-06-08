@@ -14,7 +14,8 @@ const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   return (
     <div className="container">
       <IonImg class="small" src="assets/tickets-logo-colour-rgb.png"></IonImg>
-      <h1>Hello Raphael!</h1>
+      <h1>Hello World!</h1>
+      
         <p><strong>Ping State: {pingMode}</strong></p>
         <p><strong>Count: {counter}</strong></p>
         <strong>{name}</strong>

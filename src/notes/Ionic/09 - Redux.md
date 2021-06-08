@@ -82,3 +82,8 @@ There are many kinds of async middleware for Redux, and each lets you write your
 - I think that RXJS might be another type of middlewear [you can use instead of redux-thunk?](https://redux.js.org/style-guide/style-guide#use-thunks-for-async-logic)
 
 
+
+
+## Normalizr
+https://github.com/paularmstrong/normalizr
+C:\temp\code\quokka\Normalizr\01 - Normalizr Intro.ts
