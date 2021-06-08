@@ -7,7 +7,7 @@ import './Menu.css';
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import {setDarkMode, selectDarkMode} from '../features/darkmode/darkModeSlice'
 import React from "react";
-import {PING, setPing} from "../features/LearningReactPatterns/FlashIcon/FlashIconEpic";
+import {setPing} from "../features/LearningReactPatterns/FlashIcon/FlashIconEpic";
 import {rootEpic} from "../app/store";
 
 interface AppPage {

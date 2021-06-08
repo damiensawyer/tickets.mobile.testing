@@ -1,33 +1,20 @@
 ﻿import {combineAll, delay, ignoreElements, mapTo, tap} from 'rxjs/operators';
 import { ofType } from 'redux-observable';
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "../../../app/store";
 
-export const PING = 'PING'
-export const PONG = 'PONG'
+// export const PING = 'PING'
+// export const PONG = 'PONG'
 
 // action creators
-const ping = () => ({ type: PING });
-const pong = () => ({ type: PONG });
+// 
+// const ping = createAction('ping')
+// const pong = createAction('ping')
 
-export const pingEpic = (action$:any) => action$.pipe(
-    ofType('ping/setPing' ),
-    delay(delayTime), // Asynchronously wait 1000ms then continue
-    mapTo({ type: 'ping/setPong' })
-);
-
-const delayTime = 1000
+const delayTime = 100
 export const incrementCountEpic = (action$:any) => action$.pipe(ofType('ping/setPing','ping/setPong' ),mapTo({type:'ping/incrementCounter'}))
 
-
-// REWORK ALL THIS AS DESCRIBED HERE. Don't use oftype  https://redux-toolkit.js.org/api/createAction#with-redux-observable
-export const pongEpic = (action$:any) => action$.pipe(
-    ofType('ping/setPong'),
-    delay(delayTime), // Asynchronously wait 1000ms then continue
-    mapTo({ type: 'ping/setPing' })
-);
-
-export type pingValues = typeof PING | typeof PONG
+export type pingValues = 'PING' | 'PONG'
 export interface PingState {
     value: pingValues,
     isStarted:boolean,
@@ -36,7 +23,7 @@ export interface PingState {
 
 
 const initialState: PingState = {
-    value: PONG,
+    value: 'PING',
     isStarted:false,
     count:0
 };
@@ -46,20 +33,34 @@ export const pingSlice = createSlice({
     initialState,
     reducers: {
         setPing: (state => {
-            state.value = PING
+            state.value = 'PING'
             state.isStarted = true
         }),
 
         setPong: (state => {
-            state.value = PONG;
+            state.value = 'PONG';
             state.isStarted = true
         }),
         incrementCounter:(state =>{state.count++})
 
     },
 });
+export const { setPing, setPong, incrementCounter } = pingSlice.actions;
 
- export const { setPing, setPong, incrementCounter } = pingSlice.actions;
+export const pingEpic = (action$:any) => action$.pipe(
+    ofType(setPing),
+    delay(delayTime), // Asynchronously wait 1000ms then continue
+    mapTo(setPong())
+);
+
+// REWORK ALL THIS AS DESCRIBED HERE. Don't use oftype  https://redux-toolkit.js.org/api/createAction#with-redux-observable
+export const pongEpic = (action$:any) => action$.pipe(
+    ofType(setPong),
+    delay(delayTime), // Asynchronously wait 1000ms then continue
+    mapTo(setPing())
+);
+
+ 
 
  export const selectPingMode = (state: RootState) => state.pingPong.value;
 //
