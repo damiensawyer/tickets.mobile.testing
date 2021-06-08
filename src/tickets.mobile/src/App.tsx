@@ -41,7 +41,7 @@ const App: React.FC = () => {
               <Redirect to="/page/index" />
             </Route>
 
-            <Route path="/page/counter" exact={true}>
+            <Route path="/Counter" exact={true}>
               <CounterWrapper />
             </Route>
             

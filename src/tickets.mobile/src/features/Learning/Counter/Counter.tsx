@@ -13,6 +13,7 @@ import {
 import styles from './Counter.module.css';
 
 import ExploreContainer from "../../../components/ExploreContainer";
+import {IonButton, IonButtons, IonHeader, IonInput, IonLabel} from "@ionic/react";
 
 //export function Counter() {
 export const Counter: React.FC = (b) =>{
@@ -24,51 +25,48 @@ const count = useAppSelector(selectCount);
 
   return (
     <div>
-      <h1>Counter using Redux-Toolkit with Redux Thunk</h1>
+      <IonHeader>Counter using Redux-Toolkit with Redux Thunk</IonHeader>
       <div className={styles.row}>
-        <button
-          className={styles.button}
+        <IonButton
+          className="ion-padding-horizontal"
           aria-label="Decrement value"
           onClick={() => {
             dispatch(decrement());
           }}
-        >
-          -
-        </button>
+        >-</IonButton>
         <span className={styles.value}>{count}</span>
-        <button
-          className={styles.button}
+        
+        <IonButton
+          className="ion-padding-horizontal"
           aria-label="Increment value"
           onClick={() => dispatch(increment())}
-        >
-          +
-        </button>
+        >+</IonButton>
       </div>
       <div className={styles.row}>
-        <input
-          className={styles.textbox}
+        <IonInput
+          className="ion-padding-vertical"
           aria-label="Set increment amount"
           value={incrementAmount}
-          onChange={(e) => setIncrementAmount(e.target.value)}
+          onIonChange={e => setIncrementAmount(e.detail.value!)}
         />
-        <button
+        <IonButton
           className={styles.button}
           onClick={() => dispatch(incrementByAmount(incrementValue))}
         >
           Add Amount
-        </button>
-        <button
+        </IonButton>
+        <IonButton
           className={styles.asyncButton}
           onClick={() => dispatch(incrementAsync(incrementValue))}
         >
           Add Async
-        </button>
-        <button
+        </IonButton>
+        <IonButton
           className={styles.button}
           onClick={() => dispatch(incrementIfOdd(incrementValue))}
         >
           Add If Odd
-        </button>
+        </IonButton>
       </div>
     </div>
   );

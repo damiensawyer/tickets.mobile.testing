@@ -32,7 +32,7 @@ const appPages: AppPage[] = [
   },
   {
     title: 'Counter',
-    url: '/page/counter',
+    url: '/Counter',
     iosIcon: calendarNumber,
     mdIcon: calendarNumber
   }
