@@ -4,6 +4,7 @@ import pingSlice, { pingEpic, pongEpic, incrementCountEpic} from "../features/Fl
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
 import {useAppSelector} from "./hooks";
+import counterSlice from "../features/Learning/Counter/counterSlice";
 
 //import {setDarkMode, selectDarkMode} from '../features/darkmode/darkModeSlice'
 const epicMiddleware = createEpicMiddleware();
@@ -13,7 +14,8 @@ const dd = applyMiddleware(epicMiddleware)
 export const store = configureStore({
   reducer: {
     darkMode: darkModeSlice,
-    pingMode: pingSlice
+    pingPong: pingSlice,
+    counterSlice: counterSlice
   },
   // @ts-ignore
   middleware:getDefaultMiddleware =>
@@ -26,7 +28,8 @@ function logEpic(actions:any) {
 
 
 export const rootEpic = combineEpics(
-  logEpic, pingEpic,pongEpic, incrementCountEpic
+  // logEpic, 
+    pingEpic,pongEpic, incrementCountEpic
 );
 epicMiddleware.run(rootEpic)
 

@@ -10,7 +10,7 @@ interface ContainerProps {
 
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
   const pingMode = useAppSelector(selectPingMode)
-  const counter = useAppSelector(x=>x.pingMode.count)
+  const counter = useAppSelector(x=>x.pingPong.count)
   return (
     <div className="container">
       <IonImg class="small" src="assets/tickets-logo-colour-rgb.png"></IonImg>

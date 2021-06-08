@@ -25,6 +25,8 @@ import './theme/variables.css';
 
 import { useAppSelector } from './app/hooks'
 import { selectDarkMode} from './features/darkmode/darkModeSlice'
+import {CounterWrapper} from "./features/Learning/Counter/CounterWrapper";
+
 
 const App: React.FC = () => {
   const darkMode = useAppSelector(selectDarkMode)
@@ -34,12 +36,20 @@ const App: React.FC = () => {
         <IonSplitPane contentId="main">
           <Menu />
           <IonRouterOutlet id="main">
+            
             <Route path="/" exact={true}>
-              <Redirect to="/page/Inbox" />
+              <Redirect to="/page/index" />
             </Route>
+
+            <Route path="/page/counter" exact={true}>
+              <CounterWrapper />
+            </Route>
+            
             <Route path="/page/:name" exact={true}>
               <Page />
             </Route>
+            
+
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>

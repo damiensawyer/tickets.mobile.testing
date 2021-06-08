@@ -61,6 +61,6 @@ export const pingSlice = createSlice({
 
  export const { setPing, setPong, incrementCounter } = pingSlice.actions;
 
- export const selectPingMode = (state: RootState) => state.pingMode.value;
+ export const selectPingMode = (state: RootState) => state.pingPong.value;
 //
  export default pingSlice.reducer;
