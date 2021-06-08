@@ -1,7 +1,7 @@
 import { IonImg } from '@ionic/react';
 import './ExploreContainer.css';
 import {useAppSelector} from "../app/hooks";
-import {selectPingMode} from "../features/LearningReactPatterns/FlashIcon/FlashIconEpic";
+//import {selectPingMode} from "../features/LearningReactPatterns/FlashIcon/FlashIconEpic";
 
 
 interface ContainerProps {
@@ -9,7 +9,7 @@ interface ContainerProps {
 }
 
 const ExploreContainer: React.FC<ContainerProps> = ({ name }) => {
-  const pingMode = useAppSelector(selectPingMode)
+  const pingMode = useAppSelector(x=>x.pingPong.value)
   const counter = useAppSelector(x=>x.pingPong.count)
   return (
     <div className="container">

@@ -12,3 +12,6 @@ Note that I had to press ctrl-shift-p and do insert snippet.
 - [File Templates](https://www.jetbrains.com/help/rider/Using_File_and_Code_Templates.html)
 
 - To fast create a ts / tsx ctrl,shift-A  ->> TSF  (TypeScript file). It prompted for .ts or .tsx. You can put a path as well eg  mystuff/damo (and it will prompt for the extension).
+
+## Redux Devtools
+https://github.com/reduxjs/redux-devtools

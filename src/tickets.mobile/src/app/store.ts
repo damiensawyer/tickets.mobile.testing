@@ -1,43 +1,38 @@
 import {configureStore, ThunkAction, Action, combineReducers, applyMiddleware} from '@reduxjs/toolkit';
 import darkModeSlice from "../features/darkmode/darkModeSlice";
-import pingSlice, { pingEpic, pongEpic, incrementCountEpic} from "../features/LearningReactPatterns/FlashIcon/FlashIconEpic";
+import pingSlice, {epics as pingPongEpics} from "../features/LearningReactPatterns/PingPong/PingPongSlice"
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
-import {useAppSelector} from "./hooks";
 import counterSlice from "../features/LearningReactPatterns/Counter/counterSlice";
+import {pin} from "ionicons/icons";
+//import {logger} from 'redux-logger'
+const rxjsEpicMiddleware = createEpicMiddleware();
+const dd = applyMiddleware(rxjsEpicMiddleware)
 
-//import {setDarkMode, selectDarkMode} from '../features/darkmode/darkModeSlice'
-const epicMiddleware = createEpicMiddleware();
-const dd = applyMiddleware(epicMiddleware)
-
-
+// https://redux-toolkit.js.org/api/configureStore
 export const store = configureStore({
-  reducer: {
-    darkMode: darkModeSlice,
-    pingPong: pingSlice,
-    counterSlice: counterSlice
-  },
-  // @ts-ignore
-  middleware:getDefaultMiddleware =>
-      getDefaultMiddleware().concat(epicMiddleware)
+    reducer: {
+        darkMode: darkModeSlice,
+        pingPong: pingSlice,
+        counterSlice: counterSlice
+    },
+    devTools: true,
+    middleware: getDefaultMiddleware =>
+        // https://redux-toolkit.js.org/api/getDefaultMiddleware  does different defaults for dev and prod. Includes redux-thunk in all
+        getDefaultMiddleware().concat(rxjsEpicMiddleware)
 });
 
-function logEpic(actions:any) {
-  return actions.pipe(tap(console.log), ignoreElements())
+function logEpic(actions: any) {
+    return actions.pipe(tap(console.log), ignoreElements())
 }
 
 
 export const rootEpic = combineEpics(
-  // logEpic, 
-    pingEpic,pongEpic, incrementCountEpic
+    //logEpic, 
+    ...pingPongEpics
 );
-epicMiddleware.run(rootEpic)
+rxjsEpicMiddleware.run(rootEpic)
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;

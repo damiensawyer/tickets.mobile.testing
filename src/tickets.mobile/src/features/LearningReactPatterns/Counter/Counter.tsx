@@ -27,13 +27,15 @@ const count = useAppSelector(selectCount);
     <div>
       <h3 className="ion-align-items-center ion-padding-bottom">Counter using Redux-Toolkit with Redux Thunk</h3>
       <div>
-        <IonButton
-          className="ion-padding-horizontal"
+        <IonButton color={'danger'}
+            className="ion-padding-horizontal"
           aria-label="Decrement value"
           onClick={() => {
             dispatch(decrement());
           }}
         >-</IonButton>
+
+
         <span>{count}</span>
         
         <IonButton
@@ -45,7 +47,7 @@ const count = useAppSelector(selectCount);
       <div>
         <IonInput
                           
-
+          type={'number'}
           className="ion-padding-vertical"
          
           aria-label="Set increment amount"
@@ -70,6 +72,19 @@ const count = useAppSelector(selectCount);
         >
           Add If Odd
         </IonButton>
+      </div>
+      <h3>some buttons</h3>
+      <div>
+        <IonButton color={'danger'}>danger</IonButton>
+        <IonButton color={'primary'}>primary</IonButton>
+        <IonButton color={'secondary'}>secondary</IonButton>
+        <IonButton color={'tertiary'}>tertiary</IonButton>
+        <IonButton color={'success'}>success</IonButton>
+        <IonButton color={'warning'}>warning</IonButton>
+        <IonButton color={'light'}>light</IonButton>
+        <IonButton color={'medium'}>medium</IonButton>
+        <IonButton color={'dark'}>dark</IonButton>
+        
       </div>
     </div>
   );

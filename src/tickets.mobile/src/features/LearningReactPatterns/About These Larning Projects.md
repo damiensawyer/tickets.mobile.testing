@@ -42,3 +42,6 @@ This is cool.
     
   
 
+
+## RXJS = Redux Observable library
+- Look at PingPongSlice.ts. I have a good example there of pulling the best out of the above. 
