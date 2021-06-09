@@ -70,7 +70,9 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "3.0.0"
+    "@capacitor/cli": "3.0.0",
+    "@types/redux-logger": "^3.0.6",
+    "redux-logger": "^3.0.6"
   },
   "description": "An Ionic project"
 }

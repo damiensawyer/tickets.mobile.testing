@@ -5,7 +5,9 @@ import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
 import counterSlice from "../features/LearningReactPatterns/Counter/counterSlice";
 import {pin} from "ionicons/icons";
-//import {logger} from 'redux-logger'
+import logger from 'redux-logger';
+import * as EnvironmentFunctions from "./environmentFunctions";
+
 const rxjsEpicMiddleware = createEpicMiddleware();
 const dd = applyMiddleware(rxjsEpicMiddleware)
 
@@ -16,10 +18,16 @@ export const store = configureStore({
         pingPong: pingSlice,
         counterSlice: counterSlice
     },
-    devTools: true,
-    middleware: getDefaultMiddleware =>
+    devTools: false,
+    middleware: getDefaultMiddleware => {
         // https://redux-toolkit.js.org/api/getDefaultMiddleware  does different defaults for dev and prod. Includes redux-thunk in all
-        getDefaultMiddleware().concat(rxjsEpicMiddleware)
+        let result = getDefaultMiddleware().concat(rxjsEpicMiddleware)
+        if (EnvironmentFunctions.IsProduction()) {
+            result = result.concat(logger)
+        }
+        return result
+    }
+
 });
 
 function logEpic(actions: any) {
