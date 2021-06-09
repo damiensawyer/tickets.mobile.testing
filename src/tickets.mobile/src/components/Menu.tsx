@@ -31,10 +31,17 @@ const appPages: AppPage[] = [
   },
   {
     title: 'Counter',
-    url: '/Counter',
+    url: '/study/Counter',
+    iosIcon: calendarNumber,
+    mdIcon: calendarNumber
+  },
+  {
+    title: 'PingPong',
+    url: '/study/PingPong',
     iosIcon: calendarNumber,
     mdIcon: calendarNumber
   }
+  
 ];
 
 const labels = ['Family'];

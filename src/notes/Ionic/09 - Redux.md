@@ -66,6 +66,18 @@ Selectors are functions that know how to extract specific pieces of information 
 "Selector functions" are a powerful tool for encapsulating reading values from the Redux store state and deriving further data from those values. In addition, libraries like Reselect enable creating memoized selector functions that only recalculate results when the inputs have changed, which is an important aspect of optimizing performance.
 
 We strongly recommend using memoized selector functions for reading store state whenever possible, and recommend creating those selectors with Reselect.
+[Reselect with Redux and React](https://www.youtube.com/watch?v=6Xwo5mVxDqI&ab_channel=aboutscript)
+[Using memoizing Selectors](https://react-redux.js.org/api/hooks#using-memoizing-selectors)
+"When the selector does only depend on the state, simply ensure that it is declared outside of the component so that the same selector instance is used for each render:"
+
+[Intersting?](https://thewebdev.info/2020/09/27/using-the-react-redux-useselector-hook/) 
+He says, "It’s equivalent to mapStateToProps in connect, The selector will be called with the entire Redux store state as its only argument." which I think is what they use in the Conference Demo App.
+Also, "If we want to retrieve multiple values from the store, we can call useSelector multiple times with each call returning a single field value, use Reselect or a similar library to create a memoized selector that returns multiple values in an object but returns a new object when one of the values is changed"
+
+[Good SO post on useSelector vs createSeelector](https://stackoverflow.com/questions/63493433/confusion-about-useselector-and-createselector-with-redux-toolkit)
+He says, "I would recommend only using createSelector if there's actual derived state involved, ie, state => state.items.map(item => item.id)". 
+So, in a nutshell, if the component is mutating the state from the store, use createSelector from the Reselect library (which is [re-exported from RTK for ease of use](https://redux-toolkit.js.org/api/createselector/#createselector)) 
+
 
 
 ``` js

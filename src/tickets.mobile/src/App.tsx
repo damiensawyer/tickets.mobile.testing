@@ -25,7 +25,8 @@ import './theme/variables.css';
 
 import { useAppSelector } from './app/hooks'
 import { selectDarkMode} from './features/darkmode/darkModeSlice'
-import {CounterWrapper} from "./features/LearningReactPatterns/Counter/CounterWrapper";
+import CounterWrapper from "./features/LearningReactPatterns/Counter/CounterWrapper";
+import PingPong from "./features/LearningReactPatterns/PingPong/PingPong";
 
 
 const App: React.FC = () => {
@@ -41,8 +42,12 @@ const App: React.FC = () => {
               <Redirect to="/page/index" />
             </Route>
 
-            <Route path="/Counter" exact={true}>
+            <Route path="/study/Counter" exact={true}>
               <CounterWrapper />
+            </Route>
+            
+            <Route path="/study/PingPong" exact={true}>
+              <PingPong />
             </Route>
             
             <Route path="/page/:name" exact={true}>

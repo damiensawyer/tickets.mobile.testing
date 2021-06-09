@@ -2,7 +2,7 @@ import React from "react";
 import {IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar} from "@ionic/react";
 import Counter from "./Counter";
 
-export const CounterWrapper: React.FC = (b) =>{
+const CounterWrapper: React.FC = (b) =>{
   return (
       /*If I didn't put all this wrapping around IonHeader then it wouldn't navigate on click */
       <IonPage>
@@ -21,7 +21,7 @@ export const CounterWrapper: React.FC = (b) =>{
                       <IonTitle size="large">My Title</IonTitle>
                   </IonToolbar>
               </IonHeader>
-              <div className="container">
+              <div className="container ion-padding">
                 <Counter />
               </div>
           </IonContent>
@@ -29,3 +29,4 @@ export const CounterWrapper: React.FC = (b) =>{
   );
 }
 
+export default CounterWrapper
