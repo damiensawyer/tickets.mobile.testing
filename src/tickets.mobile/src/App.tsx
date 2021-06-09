@@ -1,6 +1,6 @@
-import  { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route } from 'react-router-dom';
+import {IonApp, IonRouterOutlet, IonSplitPane} from '@ionic/react';
+import {IonReactRouter} from '@ionic/react-router';
+import {Redirect, Route} from 'react-router-dom';
 import Menu from './components/Menu';
 import Page from './pages/Page';
 
@@ -23,42 +23,41 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-import { useAppSelector } from './app/hooks'
-import { selectDarkMode} from './features/darkmode/darkModeSlice'
-import CounterWrapper from "./features/LearningReactPatterns/Counter/CounterWrapper";
-import PingPong from "./features/LearningReactPatterns/PingPong/PingPong";
+import {useAppSelector} from './app/hooks'
+import {selectDarkMode} from './features/darkmode/darkModeSlice'
+import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
 
 const App: React.FC = () => {
-  const darkMode = useAppSelector(selectDarkMode)
-  return (
-    <IonApp className={darkMode ==='dark' ? 'dark-theme' : ''}>
-      <IonReactRouter>
-        <IonSplitPane contentId="main">
-          <Menu />
-          <IonRouterOutlet id="main">
-            
-            <Route path="/" exact={true}>
-              <Redirect to="/page/index" />
-            </Route>
+    const darkMode = useAppSelector(selectDarkMode)
+    return (
+        <IonApp className={darkMode === 'dark' ? 'dark-theme' : ''}>
+            <IonReactRouter>
+                <IonSplitPane contentId="main">
+                    <Menu/>
+                    <IonRouterOutlet id="main">
 
-            <Route path="/study/Counter" exact={true}>
-              <CounterWrapper />
-            </Route>
-            
-            <Route path="/study/PingPong" exact={true}>
-              <PingPong />
-            </Route>
-            
-            <Route path="/page/:name" exact={true}>
-              <Page />
-            </Route>
-            
+                        <Route path="/" exact={true}>
+                            <Redirect to="/page/index"/>
+                        </Route>
 
-          </IonRouterOutlet>
-        </IonSplitPane>
-      </IonReactRouter>
-    </IonApp>
-  );
+                        <Route path="/study/Counter" exact={true}>
+                            <LearningPageWrapper page={TestPages.counter}/>
+                        </Route>
+
+                        <Route path="/study/PingPong" exact={true}>
+                            <LearningPageWrapper page={TestPages.pingPong}/>
+                        </Route>
+
+                        <Route path="/page/:name" exact={true}>
+                            <Page/>
+                        </Route>
+
+
+                    </IonRouterOutlet>
+                </IonSplitPane>
+            </IonReactRouter>
+        </IonApp>
+    );
 };
 
 export default App;
