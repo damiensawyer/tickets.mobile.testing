@@ -28,7 +28,6 @@ import { selectDarkMode} from './features/darkmode/darkModeSlice'
 import CounterWrapper from "./features/LearningReactPatterns/Counter/CounterWrapper";
 import PingPong from "./features/LearningReactPatterns/PingPong/PingPong";
 
-
 const App: React.FC = () => {
   const darkMode = useAppSelector(selectDarkMode)
   return (
