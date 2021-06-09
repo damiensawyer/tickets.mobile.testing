@@ -1,4 +1,4 @@
-﻿/*
+/*
     Demonstration of using redux-observable with React Toolkit for async. 
     Note that there's no reason that you couldn't combine this with the redux-thunk example used in Counter.tsx. Redux thunk with Redux Toolkit can do some cool things, including generating action types in response to sucess/fail/complete states on promises. 
  */

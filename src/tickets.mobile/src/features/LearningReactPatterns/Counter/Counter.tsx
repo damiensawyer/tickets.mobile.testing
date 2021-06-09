@@ -10,10 +10,7 @@ import {
   selectCount,
 } from './counterSlice';
 
-
-
-import ExploreContainer from "../../../components/ExploreContainer";
-import {IonButton, IonButtons, IonHeader, IonInput, IonLabel} from "@ionic/react";
+import {IonButton,  IonInput} from "@ionic/react";
 
 //export function Counter() {
 export const Counter: React.FC = (b) =>{

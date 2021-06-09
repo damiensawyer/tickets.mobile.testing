@@ -1,15 +1,12 @@
-import {configureStore, ThunkAction, Action, combineReducers, applyMiddleware} from '@reduxjs/toolkit';
+import {configureStore, ThunkAction, Action} from '@reduxjs/toolkit';
 import darkModeSlice from "../features/darkmode/darkModeSlice";
 import pingSlice, {epics as pingPongEpics} from "../features/LearningReactPatterns/PingPong/PingPongSlice"
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
 import counterSlice from "../features/LearningReactPatterns/Counter/counterSlice";
-import {pin} from "ionicons/icons";
-import logger from 'redux-logger';
 import * as EnvironmentFunctions from "./environmentFunctions";
 
 const rxjsEpicMiddleware = createEpicMiddleware();
-const dd = applyMiddleware(rxjsEpicMiddleware)
 
 // https://redux-toolkit.js.org/api/configureStore
 export const store = configureStore({
@@ -18,18 +15,20 @@ export const store = configureStore({
         pingPong: pingSlice,
         counterSlice: counterSlice
     },
-    devTools: false,
+    devTools: EnvironmentFunctions.IsProduction() ? false : true, // is is the redux devtools integration ENHANCEMENT
     middleware: getDefaultMiddleware => {
         // https://redux-toolkit.js.org/api/getDefaultMiddleware  does different defaults for dev and prod. Includes redux-thunk in all
         let result = getDefaultMiddleware().concat(rxjsEpicMiddleware)
-        if (EnvironmentFunctions.IsProduction()) {
-            result = result.concat(logger)
+        if (!EnvironmentFunctions.IsProduction()) {
+            // don't need the redux-logger if you're using the redux devtools above... but wanted to show how to do an optional middlewear inclusion
+            //result = result.concat(logger) // This is redux logger which is MIDDLEWEAR. It logs previous and next state to the console on every change.  
         }
         return result
     }
 
 });
 
+/* eslint-disable-next-line */
 function logEpic(actions: any) {
     return actions.pipe(tap(console.log), ignoreElements())
 }
