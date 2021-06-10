@@ -24,11 +24,11 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 
 import {useAppSelector} from './app/hooks'
-import {selectDarkMode} from './features/darkmode/darkModeSlice'
+//import {setEnvironment} from './features/Settings/settingsSlice'
 import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
 
 const App: React.FC = () => {
-    const darkMode = useAppSelector(selectDarkMode)
+    const darkMode = useAppSelector(x=>x.settings.darkMode)
     return (
         <IonApp className={darkMode === 'dark' ? 'dark-theme' : ''}>
             <IonReactRouter>

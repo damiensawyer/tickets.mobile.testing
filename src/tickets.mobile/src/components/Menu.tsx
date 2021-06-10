@@ -5,7 +5,7 @@ import {bookmarkOutline, mailOutline, mailSharp, moonOutline, calendarNumber} fr
 import './Menu.css';
 
 import { useAppSelector, useAppDispatch } from '../app/hooks'
-import {setDarkMode, selectDarkMode} from '../features/darkmode/darkModeSlice'
+import {setDarkMode} from '../features/Settings/settingsSlice'
 import React from "react";
 import {setPing} from "../features/LearningReactPatterns/PingPong/PingPongSlice"
 
@@ -48,7 +48,7 @@ const labels = ['Family'];
 
 const Menu: React.FC = () => {
   const location = useLocation();
-  const darkMode = useAppSelector(selectDarkMode)
+  const darkMode = useAppSelector(x=>x.settings.darkMode)
   const isDarkModeEnabled = () => darkMode === 'dark'
   const dispatch = useAppDispatch();
   const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))

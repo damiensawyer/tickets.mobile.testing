@@ -39,7 +39,7 @@ const memoizedFifthVal = (): Return =>
         ],
         (pingCount, counterCount) => {
             console.log('calculating memoizedFifthVal')
-            return getnthValue(pingCount.count, 100) + counterCount}
+            return getnthValue(pingCount.count, 10) + counterCount}
     );
 
 const ShowEveryFifthCountWithReselector: React.FC<ObjectProps> = function ({message}: ObjectProps) {

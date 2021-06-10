@@ -1,5 +1,5 @@
 import {configureStore, ThunkAction, Action} from '@reduxjs/toolkit';
-import darkModeSlice from "../features/darkmode/darkModeSlice";
+import settingsSlice from './../features/Settings/settingsSlice'
 import pingSlice, {epics as pingPongEpics} from "../features/LearningReactPatterns/PingPong/PingPongSlice"
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
@@ -8,10 +8,10 @@ import * as EnvironmentFunctions from "./environmentFunctions";
 
 const rxjsEpicMiddleware = createEpicMiddleware();
 
-// https://redux-toolkit.js.org/api/configureStore
+
 export const store = configureStore({
     reducer: {
-        darkMode: darkModeSlice,
+        settings : settingsSlice,
         pingPong: pingSlice,
         counterSlice: counterSlice
     },

@@ -1,29 +1,28 @@
-﻿export const enum Environment {
+﻿export enum Environment {
     production = "production",
     development = "development",
-    local ='local'
+    local = 'local'
 }
 
 export type EnvironmentSettings = {
-    environment:Environment,
+    environment: Environment,
     baseUrl: string,
 }
 
-export const  GetEnvironmentSettings:(e:Environment) => (e:Environment) => 
-    {
-        return switch (e)
-    {
+// export const trippleNumber = (a: number): number => a * 3;
+export const GetEnvironmentSettings = (e: Environment): EnvironmentSettings => {
+    switch (e) {
         case Environment.development:
-            return {environment: Environment.local, baseUrl:'https://dev.tickets.org.au'}
+            return {environment: Environment.local, baseUrl: 'https://dev.tickets.org.au'}
         case Environment.production:
-            return {environment: Environment.local, baseUrl:'https://app.tickets.org.au'}
+            return {environment: Environment.local, baseUrl: 'https://app.tickets.org.au'}
         case Environment.local:
-            return {environment: Environment.local, baseUrl:'https://welcomemat.com'}
-        }
+            return {environment: Environment.local, baseUrl: 'https://welcomemat.com'}
+    }
+
 
 }
 
-export default class TicketsCore
-{   
-    
+export default class TicketsCore {
+
 }
