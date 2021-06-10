@@ -14,7 +14,7 @@ const Page: React.FC<PageProps> = () => {
     
   const  pageName  = useParams<{ name: string; }>().name;
   const pageSettings = core.PageSettings[pageName as PageName]
-  const $comp = pageSettings.Template
+  
   return (
     <IonPage>
       <IonHeader>
@@ -32,10 +32,8 @@ const Page: React.FC<PageProps> = () => {
             <IonTitle size="large">{pageSettings.pageName}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        top
-        <a href={'https://gist.github.com/mikeyamadeo/6bdbbfde7ff0e1c3cf3c'} >see this on dynamic rendering!!</a>
-        <$comp />
-        bottom
+        <pageSettings.$Template />
+        
       </IonContent>
     </IonPage>
   );
