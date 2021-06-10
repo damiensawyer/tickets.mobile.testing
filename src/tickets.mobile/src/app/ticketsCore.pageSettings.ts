@@ -1,15 +1,13 @@
 ﻿import {SettingsPage} from "../features/Settings/SettingsPage";
 import {HomePage} from "../features/Home/HomePage";
 import {FC} from "react";
+import {EnumDictionary} from "./ticketsCore.Tooling";
 
 export enum PageName {
     settings = "Settings",
     home = "Home"
 }
 
-export type EnumDictionary<T extends string | symbol | number, U> = {
-    [K in T]: U;
-};
 
 interface PageSettingsBase {
     isSecure: boolean,
