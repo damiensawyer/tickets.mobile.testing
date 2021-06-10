@@ -87,11 +87,11 @@ export const LoginPage: React.FC = (b) => {
 
             <IonRow>
                 <IonCol>
-                    <IonButton type="submit" expand="block" onClick={()=>{setFormSubmitted((true))}}>Login</IonButton>
+                    <IonButton expand="block" onClick={()=>{setFormSubmitted((true))}}>Login</IonButton>
                 </IonCol>
-                <IonCol>
-                    <IonButton routerLink="/signup" color="light" expand="block">Signup</IonButton>
-                </IonCol>
+                {/*<IonCol>*/}
+                {/*    <IonButton routerLink="/signup" color="light" expand="block">Signup</IonButton>*/}
+                {/*</IonCol>*/}
             </IonRow>
         </IonCard>
 
