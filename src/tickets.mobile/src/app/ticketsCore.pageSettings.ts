@@ -5,7 +5,8 @@ import {EnumDictionary} from "./ticketsCore.Tooling";
 
 export enum PageName {
     settings = "Settings",
-    home = "Home"
+    home = "Home",
+    login = "Login"
 }
 
 
@@ -21,7 +22,8 @@ const defaultSecurePage: PageSettingsBase = {isSecure: true}
 const defaultUnsecuredPage: PageSettingsBase = {isSecure: false}
 
 export const PageSettings: EnumDictionary<PageName, PageSettings> = {
-    //[PageName.settings]: {...{pageName: PageName.settings, $Template: SettingsPage}, ...defaultSecurePage},
+    
+    [PageName.login]: {...{pageName: PageName.login, $Template: SettingsPage}, ...defaultSecurePage},
     [PageName.settings]: {...{pageName: PageName.settings, $Template: SettingsPage}, ...defaultSecurePage},
     [PageName.home]: {...{pageName: PageName.home, $Template: HomePage}, ...defaultUnsecuredPage},
 };

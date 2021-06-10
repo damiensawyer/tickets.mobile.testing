@@ -7,7 +7,7 @@ import { delay, mapTo} from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import { createSlice} from "@reduxjs/toolkit";
 
-const delayTime = 200
+const delayTime = 20000
 export type pingValues = 'PING' | 'PONG'
 
 export interface PingState {
