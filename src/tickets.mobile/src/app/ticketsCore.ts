@@ -7,18 +7,18 @@ export type {EnvironmentSettings} from "./ticketsCore.Tooling";
 export * from './ticketsCore.pageSettings';
 
 export enum Environment {
-    production = "production",
-    development = "development",
-    local = 'local'
+    production = "Production",
+    development = "Development",
+    local = "Localhost"
 }
 
 // export const trippleNumber = (a: number): number => a * 3;
 export const GetEnvironmentSettings = (e: Environment): EnvironmentSettings => {
     switch (e) {
         case Environment.development:
-            return {environment: Environment.local, baseUrl: 'https://dev.tickets.org.au'}
+            return {environment: Environment.development, baseUrl: 'https://dev.tickets.org.au'}
         case Environment.production:
-            return {environment: Environment.local, baseUrl: 'https://app.tickets.org.au'}
+            return {environment: Environment.production, baseUrl: 'https://app.tickets.org.au'}
         case Environment.local:
             return {environment: Environment.local, baseUrl: 'https://welcomemat.com'}
     }
@@ -26,7 +26,7 @@ export const GetEnvironmentSettings = (e: Environment): EnvironmentSettings => {
 
 export const RunSetup = () => {
     let dispatch = useDispatch()
-    if (!useAppSelector(x => x.pingPong.isStarted))
-        dispatch(setPing())
+    // if (!useAppSelector(x => x.pingPong.isStarted))
+    //     dispatch(setPing())
 
 }
