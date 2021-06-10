@@ -30,6 +30,13 @@ const appPages: AppPage[] = [
     mdIcon: mailSharp
   },
   {
+    title: 'Login',
+    url: '/page/Login',
+    iosIcon: mailOutline,
+    mdIcon: mailSharp
+  },
+    
+  {
     title: 'Counter',
     url: '/study/Counter',
     iosIcon: calendarNumber,
