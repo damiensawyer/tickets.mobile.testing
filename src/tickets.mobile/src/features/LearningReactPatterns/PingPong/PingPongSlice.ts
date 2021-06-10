@@ -22,7 +22,7 @@ const initialState: PingState = {
     count: 0
 };
 
-export const pingSlice = createSlice({
+const pingSlice = createSlice({
     name: 'ping',
     initialState,
     reducers: {

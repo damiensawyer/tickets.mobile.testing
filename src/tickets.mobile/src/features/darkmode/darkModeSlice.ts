@@ -10,7 +10,7 @@ const initialState: DarkModeState = {
   value: 'dark',
 };
 
-export const darkModelSlice = createSlice({
+const darkModelSlice = createSlice({
   name: 'counter',
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
