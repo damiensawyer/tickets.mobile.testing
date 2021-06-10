@@ -1,5 +1,10 @@
 # Working Notes
 
+
+## Ideas
+ - Allow to search in the top toolbar and just "find stuff"... events, users, etc etc. global, generic, full text search. 
+
+
 # React Concepts to Learn
 slots
 redux
