@@ -1,5 +1,10 @@
-﻿import {constants} from "os";
-import EINTR = module
+﻿import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
+import {RootState} from "./store";
+import {useAppSelector} from "./hooks";
+import {setPing} from "../features/LearningReactPatterns/PingPong/PingPongSlice";
+import {Dispatch} from "redux";
+import {SettingsPage} from "../features/Settings/SettingsPage";
+import {HomePage} from "../features/Home/HomePage";
 
 export enum Environment {
     production = "production",
@@ -24,117 +29,42 @@ export const GetEnvironmentSettings = (e: Environment): EnvironmentSettings => {
     }
 }
 
-// export enum PageName {
-//     settings = "Settings",
-// };
-
-// interface PageSettingsBase {
-//     isSecure:boolean
-// }
-
-// export interface PageSettings extends PageSettingsBase {
-//     page: PageName
-// }
-//
-// const defaultSecurePage:PageSettingsBase = {isSecure:true}
-// let ss:PageSettings = {page:PageName.settings, isSecure:false}
-// const Pages = {
-//     settings:<PageSettings>{...defaultSecurePage}
-// } 
-// let s = Pages //?
-
-
-
-
 export enum PageName {
     settings = "Settings",
     home = "Home"
-};
+}
 
-interface IDictionary<TValue> {
+export interface IDictionary<TValue> {
     [id: string]: TValue;
 }
 
-export  const pageSettings:IDictionary<PageSettings> = {
-    '':{pageName:PageName.settings, isSecure:true}
-    // settings: <PageSettings>{...defaultSecurePage, ...{pageName: PageName.settings}},
-    // home: <PageSettings>{...defaultSecurePage, ...{pageName: PageName.home}}
-}
 
-
-type EnumDictionary<T extends string | symbol | number, U> = {
+export type EnumDictionary<T extends string | symbol | number, U> = {
     [K in T]: U;
 };
 
-enum Direction {
-    Up,
-    Down,
+interface PageSettingsBase {
+    isSecure: boolean,
 }
 
-export interface PageSettingsBase {
-    isSecure:boolean
+interface PageSettings extends PageSettingsBase {
+    pageName: PageName,
+    Template: any
 }
+const defaultSecurePage: PageSettingsBase = {isSecure: true}
+const defaultUnsecuredPage: PageSettingsBase = {isSecure: false}
 
-export interface PageSettings extends PageSettingsBase
-{
-    pageName:PageName
-
-}
-
-const defaultSecurePage:PageSettingsBase = {isSecure:true}
-const defaultUnsecuredPage:PageSettingsBase = {isSecure:false}
-
-const a: EnumDictionary<PageName, PageSettings> = {
-    [PageName.settings]: <PageSettings>{...defaultSecurePage, ...{pageName: PageName.settings}},
-    [PageName.home]: <PageSettings>{...defaultUnsecuredPage, ...{pageName: PageName.settings}},
+export const PageSettings: EnumDictionary<PageName, PageSettings> = {
+    //[PageName.settings]: {...{pageName: PageName.settings, Template: SettingsPage}, ...defaultSecurePage},
+    [PageName.settings]: {...{pageName: PageName.settings, Template: SettingsPage}, ...defaultSecurePage},
+    [PageName.home]: {...{pageName: PageName.home, Template: HomePage}, ...defaultUnsecuredPage},
 };
- //?
-
-// export type PageSettings = {
-//     isSecure:boolean,
-//     pageName:PageName
-// }
-//
-// const defaultSecurePage:Partial<PageSettings> = {isSecure:true}
-//
-// export class allPages {
-//     settings:PageSettings = {...defaultSecurePage, pageName:PageName.settings}
-// }
-//
-//
-//
 
 
+export const RunSetup = () => {
+    let dispatch = useDispatch()
+    if (!useAppSelector(x => x.pingPong.isStarted))
+        dispatch(setPing())
 
-// export class allPages {
-//     settings:PageSettings = {...defaultSecurePage, ...{pageName:PageName.settings}}
-//     home:PageSettings = {...defaultUnsecuredPage, ...{pageName:PageName.home}}
-// }
-// export const pageSettings = {
-//     settings: <PageSettings>{...defaultSecurePage, ...{pageName: PageName.settings}},
-//     home: <PageSettings>{...defaultSecurePage, ...{pageName: PageName.home}}
-// }
-// pageSettings //?
-// // var s = new allPages()
-// // s //?
-// //
-//
-
-
-
-
-
-
-
-
-// export const Pages = (): PageSettings[] => {return []}
-//
-//const allTypes: {[key: string]: boolean} = { jpg: true, gif: true, png: true, mp4: false };
-// const allPages: {[key:string]: PageSettings} = {
-//     'asd':{page:PageName.settings, isSecure:false},
-// }
-
-
-export default class TicketsCore {
 
 }

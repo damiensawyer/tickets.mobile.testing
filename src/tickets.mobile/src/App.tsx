@@ -26,8 +26,11 @@ import './theme/variables.css';
 import {useAppSelector} from './app/hooks'
 //import {setEnvironment} from './features/Settings/settingsSlice'
 import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
+import * as core from "./app/ticketsCore";
+import {PageName} from "./app/ticketsCore";
 
 const App: React.FC = () => {
+    core.RunSetup()
     const darkMode = useAppSelector(x=>x.settings.darkMode)
     return (
         <IonApp className={darkMode === 'dark' ? 'dark-theme' : ''}>
@@ -37,7 +40,7 @@ const App: React.FC = () => {
                     <IonRouterOutlet id="main">
 
                         <Route path="/" exact={true}>
-                            <Redirect to="/page/index"/>
+                            <Redirect to="/page/Home"/>
                         </Route>
 
                         <Route path="/study/Counter" exact={true}>
@@ -49,7 +52,7 @@ const App: React.FC = () => {
                         </Route>
 
                         <Route path="/page/:name" exact={true}>
-                            <Page/>
+                            <Page />
                         </Route>
 
 

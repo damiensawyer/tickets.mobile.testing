@@ -7,7 +7,7 @@ import './Menu.css';
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import {setDarkMode} from '../features/Settings/settingsSlice'
 import React from "react";
-import {setPing} from "../features/LearningReactPatterns/PingPong/PingPongSlice"
+import * as core from './../app/ticketsCore'
 
 interface AppPage {
   url: string;
@@ -18,14 +18,14 @@ interface AppPage {
 
 const appPages: AppPage[] = [
   {
-    title: 'Inbox',
-    url: '/page/Inbox',
+    title: 'Settings',
+    url: '/page/Settings',
     iosIcon: mailOutline,
     mdIcon: mailSharp
   },
   {
-    title: 'Outbox',
-    url: '/page/Outbox',
+    title: 'Home',
+    url: '/page/Home',
     iosIcon: mailOutline,
     mdIcon: mailSharp
   },
@@ -52,10 +52,8 @@ const Menu: React.FC = () => {
   const isDarkModeEnabled = () => darkMode === 'dark'
   const dispatch = useAppDispatch();
   const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
+    
   
-  const isPingStarted = useAppSelector(x => x.pingPong.isStarted)
-  if (!isPingStarted)
-    dispatch(setPing())
   
   return (
     <IonMenu contentId="main" type="overlay">
