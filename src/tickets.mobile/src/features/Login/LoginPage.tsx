@@ -15,14 +15,26 @@ import {fromNullable, isNone, isSome} from "fp-ts/Option";
 import {BehaviorSubject} from "rxjs";
 import {filter} from "rxjs/operators";
 
+
+// The type returned.  https://stackoverflow.com/a/65301990/494635 
+type ErrorLabelRef = {
+    setVisible: (status: boolean) => void
+    setText: (text: string) => void
+} | null;
+
+type ErrorLabelProps = {
+    children?: React.ReactNode | null;
+};
+
+
 // https://stackoverflow.com/a/55889638/494635
 // https://www.tutorialspoint.com/reactjs-useimperativehandle-hook
 // Need to do this so that we can render only the child component without rendering the parent. 
-const LoginLabel = forwardRef((props, ref) => {
+const LoginLabel = forwardRef<ErrorLabelRef, ErrorLabelProps>((props, ref) => {
     const [visible, _setVisible] = useState(false);
     const [text, _setText] = useState('');
 
-    useImperativeHandle<{setVisible:(status:boolean)=>void, setText:(text:string)=>void }>(ref, () => {
+    useImperativeHandle(ref, () => {
         return {
             setVisible: _setVisible,
             setText: _setText
@@ -34,20 +46,20 @@ const LoginLabel = forwardRef((props, ref) => {
 export const LoginPage: React.FC = (b) => {
 
     const emailInput = useRef<HTMLIonInputElement | null>(null);
-    const emailErrorLabel = useRef<typeof LoginLabel>(null);
-    const shortTokenErrorLabel = useRef<typeof LoginLabel>(null);
+    const emailErrorLabel = useRef<ErrorLabelRef>(null);
+    const shortTokenErrorLabel = useRef<ErrorLabelRef>(null);
 
     let emailCapturedText = new BehaviorSubject<string>('')
-    emailCapturedText.pipe(filter(b => b !== '')).subscribe(x => (emailErrorLabel.current! as any).setVisible(false))
+    emailCapturedText.pipe(filter(b => b !== '')).subscribe(x => emailErrorLabel.current!.setVisible(false))
     let shortCodeCapturedText = new BehaviorSubject<string>('')
-    shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => (shortTokenErrorLabel.current! as any).setVisible(false))
+    shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => shortTokenErrorLabel.current!.setVisible(false))
 
     const requestEmail = () => {
         let data = fromNullable(emailCapturedText.value)
         if (isNone(data) || data.value === '') {
-            let l = (emailErrorLabel.current! as any);
-            l.setVisible(true)
-            l.setText('please enter an email')
+            emailErrorLabel.current!
+            emailErrorLabel.current!.setVisible(true)
+            emailErrorLabel.current!.setText('please enter an email')
         } else {
             (emailErrorLabel.current! as any).setVisible(false)
         }
@@ -55,9 +67,9 @@ export const LoginPage: React.FC = (b) => {
     const submitShortCode = () => {
         let data = fromNullable(shortCodeCapturedText.value)
         if (isNone(data) || data.value === '') {
-            let l = (shortTokenErrorLabel.current! as any);
-            l.setVisible(true)
-            l.setText('please enter code')
+
+            shortTokenErrorLabel.current!.setVisible(true)
+            shortTokenErrorLabel.current!.setText('please enter code')
         } else {
             (shortTokenErrorLabel.current! as any).setVisible(false)
 
