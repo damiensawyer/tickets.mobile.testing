@@ -18,7 +18,7 @@ steps:
   - task: Npm@1
     inputs:
       workingDir: '$(ticketsFolder)/$(projectName)'
-      command: run build
+      command: build
     displayName: 'NPM Build'
 
   - task: PublishBuildArtifacts@1
