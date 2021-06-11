@@ -1,0 +1,32 @@
+name: '1.0.$(Rev:r)'
+
+trigger:
+- develop
+
+variables:
+  vmImageName: 'windows-2019'
+  projectName: 'tickets.mobile'
+  ticketsFolder: '$(Build.SourcesDirectory)/src'
+
+steps:    
+  - script: npm install -g @ionic/cli
+    displayName: 'Install Ionic CLI'
+
+  - task: Npm@1
+    inputs:
+      workingDir: '$(ticketsFolder)/$(projectName)'
+      command: install
+    displayName: 'NPM Install'
+
+  - task: Npm@1
+      inputs:
+        workingDir: '$(ticketsFolder)/$(projectName)'
+        command: run build
+      displayName: 'NPM Build'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(ticketsFolder)/$(projectName)/build"
+      ArtifactName: "$(projectName)"
+      publishLocation: "Container"
+    displayName: "Publish artifacts"
