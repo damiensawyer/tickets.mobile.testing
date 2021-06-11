@@ -10,7 +10,7 @@ export interface SettingsState {
 }
 
 const initialState: SettingsState = {
-  activeSettings:core.GetEnvironmentSettings(Environment.local),
+  activeSettings:core.GetEnvironmentSettings[Environment.local],
   darkMode : "dark"
 };
 
@@ -19,7 +19,7 @@ export const settingsSlice = createSlice({
   initialState,
   reducers: {
     setEnvironment: (state, action: PayloadAction<Environment>) => {
-      state.activeSettings = core.GetEnvironmentSettings(action.payload)
+      state.activeSettings = core.GetEnvironmentSettings[action.payload]
     },
     setDarkMode: (state, action: PayloadAction<darkModeValues>) => {
       state.darkMode = action.payload

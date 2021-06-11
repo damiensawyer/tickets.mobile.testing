@@ -27,4 +27,4 @@ export const PageSettings: EnumDictionary<PageName, PageSettings> = {
     [PageName.login]: {...{pageName: PageName.login, $Template: LoginPage}, ...defaultSecurePage},
     [PageName.settings]: {...{pageName: PageName.settings, $Template: SettingsPage}, ...defaultSecurePage},
     [PageName.home]: {...{pageName: PageName.home, $Template: HomePage}, ...defaultUnsecuredPage},
-};
+}
