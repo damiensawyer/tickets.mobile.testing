@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {forwardRef, useImperativeHandle, useRef, useState} from "react";
 import {
     IonButton,
     IonCard, IonCardHeader, IonCardTitle,
@@ -17,36 +17,65 @@ const selectOptions = {
     //header: 'Select a Location'
 };
 
-export const LoginLabel: React.FC<{visible:boolean, text:string}> = ({visible, text}) => visible ?  <IonText color="danger"><p className="ion-padding-start">{text}</p></IonText> : null
+//export const LoginLabel: React.FC<{visible:boolean, text:string}> = ({visible, text}) => visible ?  <IonText color="danger"><p className="ion-padding-start">{text}</p></IonText> : null
+
+
+// https://stackoverflow.com/a/55889638/494635
+// https://www.tutorialspoint.com/reactjs-useimperativehandle-hook
+
+const LoginLabel = forwardRef((props, ref) => {
+    const [visible, _setVisible] = useState(false);
+    const [text, _setText] = useState('');
+
+    useImperativeHandle(ref, () => {
+        return {
+            setVisible: _setVisible,
+            setText: _setText
+
+        }
+    });
+
+    return visible ? <IonText color="danger">{text}</IonText> : <IonText>&nbsp;</IonText>
+});
 
 export const LoginPage: React.FC = (b) => {
+    console.log('LOGIN RENDERING???')
 
     enum modes {enterEmail, enterShortSCode}
 
     const [mode, setMode] = useState(modes.enterEmail);
     //const [emailError, setEmailError] = useState(false);
-    
+
     const [shortCodeError, setShortCodeErrror] = useState(false);
-    const [eE, setEE] = useState(false);
-    const [email, setEmail] = useState('');
-    let eee = ''
-    let emailError = true;
+    //const [eE, setEE] = useState(false);
+    //const [email, setEmail] = useState('');
+    let emailCapturedText = ''
+    let shortCodeCapturedText = ''
+    const [instanceKey, setInstanceKey] = useState(0)
 
     const emailInput = useRef<HTMLIonInputElement | null>(null);
-
+    const emailErrorLabel = useRef<typeof LoginLabel>(null);
+    const shortTokenErrorLabel = useRef<typeof LoginLabel>(null);
     const requestEmail = () => {
-
-        let data = fromNullable(eee.toString())
-        console.log('request email')
+        let data = fromNullable(emailCapturedText)
         if (isNone(data) || data.value === '') {
-            emailError = true;
-            setEE(true)
+            let l = (emailErrorLabel.current! as any);
+            l.setVisible(true)
+            l.setText('please enter an email')
         } else {
-            setEE(false)
+            (emailErrorLabel.current! as any).setVisible(false)
         }
-
     }
     const submitShortCode = () => {
+        let data = fromNullable(shortCodeCapturedText)
+        if (isNone(data) || data.value === '') {
+            let l = (shortTokenErrorLabel.current! as any);
+            l.setVisible(true)
+            l.setText('please enter code')
+        } else {
+            (shortTokenErrorLabel.current! as any).setVisible(false)
+            
+        }
     }
     const Login = () => <>
         <div className="login-logo">
@@ -61,13 +90,12 @@ export const LoginPage: React.FC = (b) => {
 
             </IonCardHeader>
 
-            <IonList>
+            <IonList lines={'none'}>
                 <IonItem>
                     <IonLabel position="floating" color="primary">Email Address</IonLabel>
-                    <IonInput name="email" type="email" value={email} ref={emailInput} spellCheck={false} autocapitalize="off" onIonChange={e => eee = e.detail.value!} required> </IonInput>
+                    <IonInput name="email" type="email" value={''} ref={emailInput} spellCheck={false} autocapitalize="off" onIonChange={e => emailCapturedText = e.detail.value!}> </IonInput>
+                    <LoginLabel ref={emailErrorLabel}/>
                 </IonItem>
-
-                <LoginLabel text={'Email is required '} visible={eE} />
 
                 <IonRow className='ion-padding'>
                     <IonCol>
@@ -86,23 +114,13 @@ export const LoginPage: React.FC = (b) => {
             <IonList>
                 <IonItem>
                     <IonLabel position="floating" color="primary">Login Code</IonLabel>
-                    <IonInput name="email" type="email" value={email} ref={emailInput} spellCheck={false} autocapitalize="off"
-
-                              required>
-                    </IonInput>
+                    <IonInput name="email" type="email" value={''} ref={emailInput} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText = e.detail.value!}></IonInput>
+                    <LoginLabel ref={shortTokenErrorLabel}/>
                 </IonItem>
-
-                {shortCodeError && <IonText color="danger">
-                    <p className="ion-padding-start">
-                        Email is required
-                    </p>
-                </IonText>}
 
                 <IonRow className='ion-padding'>
                     <IonCol>
-                        <IonButton expand="block" onClick={() => {
-                            submitShortCode()
-                        }}>Login with Code</IonButton>
+                        <IonButton expand="block" onClick={submitShortCode}>Login with Code</IonButton>
                     </IonCol>
                 </IonRow>
             </IonList>

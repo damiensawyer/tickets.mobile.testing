@@ -40,7 +40,7 @@ const App: React.FC = () => {
                     <IonRouterOutlet id="main">
 
                         <Route path="/" exact={true}>
-                            <Redirect to="/page/Home"/>
+                            <Redirect to="/page/Login"/>
                         </Route>
 
                         <Route path="/study/Counter" exact={true}>
