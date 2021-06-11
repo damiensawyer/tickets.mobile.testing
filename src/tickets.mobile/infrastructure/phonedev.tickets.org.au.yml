@@ -14,6 +14,10 @@ variables:
   ticketsFolder: '$(Build.SourcesDirectory)/src'
 
 steps:
+- task: Bash@3
+  inputs:
+    filePath: 'pwd'
+    
 - task: NodeTool@0
   inputs:
     versionSpec: '10.x'
