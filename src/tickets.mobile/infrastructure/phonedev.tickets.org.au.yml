@@ -19,10 +19,10 @@ steps:
     displayName: 'NPM Install'
 
   - task: Npm@1
-      inputs:
-        workingDir: '$(ticketsFolder)/$(projectName)'
-        command: run build
-      displayName: 'NPM Build'
+    inputs:
+      workingDir: '$(ticketsFolder)/$(projectName)'
+      command: run build
+    displayName: 'NPM Build'
 
   - task: PublishBuildArtifacts@1
     inputs:
