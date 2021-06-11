@@ -25,9 +25,18 @@ steps:
   displayName: 'npm install and build'
   workingDirectory: '$(ticketsFolder)/$(projectName)'
 
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(ticketsFolder)/$(projectName)/build"'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: "$(ticketsFolder)/$(projectName)/build"
+    PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
     ArtifactName: "$(projectName)"
     publishLocation: "Container"
   displayName: "Publish artifacts"
+
