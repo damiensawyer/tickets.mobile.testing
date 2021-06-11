@@ -14,10 +14,7 @@ variables:
   ticketsFolder: '$(Build.SourcesDirectory)/src'
 
 steps:
-- task: Bash@3
-  inputs:
-    filePath: 'pwd'
-    
+
 - task: NodeTool@0
   inputs:
     versionSpec: '10.x'
@@ -31,7 +28,7 @@ steps:
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(ticketsFolder)/$(projectName)/build"'
+    rootFolderOrFile: '$(ticketsFolder)/$(projectName)/build'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
