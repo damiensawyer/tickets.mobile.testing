@@ -12,6 +12,8 @@ import {
 } from "@ionic/react";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {fromNullable, isNone, isSome} from "fp-ts/Option";
+import {BehaviorSubject} from "rxjs";
+import {filter} from "rxjs/operators";
 
 // https://stackoverflow.com/a/55889638/494635
 // https://www.tutorialspoint.com/reactjs-useimperativehandle-hook
@@ -24,22 +26,28 @@ const LoginLabel = forwardRef((props, ref) => {
         return {
             setVisible: _setVisible,
             setText: _setText
-
         }
     });
     return visible ? <IonText color="danger">{text}</IonText> : <IonText>&nbsp;</IonText>
 });
 
 export const LoginPage: React.FC = (b) => {
-    let emailCapturedText = ''
-    let shortCodeCapturedText = ''
+
+    
+    
+    
 
     const emailInput = useRef<HTMLIonInputElement | null>(null);
     const emailErrorLabel = useRef<typeof LoginLabel>(null);
     const shortTokenErrorLabel = useRef<typeof LoginLabel>(null);
 
+    let emailCapturedText = new BehaviorSubject<string>('')
+    emailCapturedText.pipe(filter(b => b !== '')).subscribe(x => (emailErrorLabel.current! as any).setVisible(false))
+    let shortCodeCapturedText = new BehaviorSubject<string>('')
+    shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => (shortTokenErrorLabel.current! as any).setVisible(false))
+    
     const requestEmail = () => {
-        let data = fromNullable(emailCapturedText)
+        let data = fromNullable(emailCapturedText.value)
         if (isNone(data) || data.value === '') {
             let l = (emailErrorLabel.current! as any);
             l.setVisible(true)
@@ -49,7 +57,7 @@ export const LoginPage: React.FC = (b) => {
         }
     }
     const submitShortCode = () => {
-        let data = fromNullable(shortCodeCapturedText)
+        let data = fromNullable(shortCodeCapturedText.value)
         if (isNone(data) || data.value === '') {
             let l = (shortTokenErrorLabel.current! as any);
             l.setVisible(true)
@@ -75,7 +83,7 @@ export const LoginPage: React.FC = (b) => {
             <IonList lines={'none'}>
                 <IonItem>
                     <IonLabel position="floating" color="primary">Email Address</IonLabel>
-                    <IonInput name="email" type="email" value={''} ref={emailInput} spellCheck={false} autocapitalize="off" onIonChange={e => emailCapturedText = e.detail.value!}> </IonInput>
+                    <IonInput name="email" type="email" value={''} ref={emailInput} spellCheck={false} autocapitalize="off" onIonChange={e => emailCapturedText.next(e.detail.value!)}/>
                     <LoginLabel ref={emailErrorLabel}/>
                 </IonItem>
 
@@ -96,7 +104,7 @@ export const LoginPage: React.FC = (b) => {
             <IonList>
                 <IonItem>
                     <IonLabel position="floating" color="primary">Login Code</IonLabel>
-                    <IonInput name="email" type="email" value={''} ref={emailInput} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText = e.detail.value!}></IonInput>
+                    <IonInput name="email" type="email" value={''} ref={emailInput} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText.next(e.detail.value!)}/>
                     <LoginLabel ref={shortTokenErrorLabel}/>
                 </IonItem>
 
