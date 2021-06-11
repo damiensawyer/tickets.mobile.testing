@@ -5,6 +5,7 @@ import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
 import counterSlice from "../features/LearningReactPatterns/Counter/counterSlice";
 import * as EnvironmentFunctions from "./environmentFunctions";
+import LoginSlice from "../features/Login/LoginSlice";
 
 const rxjsEpicMiddleware = createEpicMiddleware();
 
@@ -13,7 +14,8 @@ export const store = configureStore({
     reducer: {
         settings : settingsSlice,
         pingPong: pingSlice,
-        counterSlice: counterSlice
+        counterSlice: counterSlice,
+        loginSlice : LoginSlice
     },
     devTools: EnvironmentFunctions.IsProduction() ? false : true, // is is the redux devtools integration ENHANCEMENT
     middleware: getDefaultMiddleware => {

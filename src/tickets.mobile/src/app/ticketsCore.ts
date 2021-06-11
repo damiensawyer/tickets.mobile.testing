@@ -1,13 +1,19 @@
-﻿// https://www.typescriptlang.org/docs/handbook/modules.html
-import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
-import {useAppSelector} from "./hooks";
+// https://www.typescriptlang.org/docs/handbook/modules.html
+import {useDispatch} from "react-redux";
 import {EnumDictionary, EnvironmentSettings} from "./ticketsCore.Tooling";
-import {setPing} from "../features/LearningReactPatterns/PingPong/PingPongSlice";
 import {fromNullable} from "fp-ts/Option";
-import {from} from "rxjs";
-import {EnumValueMappee} from "ts-enum-util";
+import {useAppSelector} from "./hooks";
+import {setPing} from "../features/LearningReactPatterns/PingPong/PingPongSlice";
+
 export type {EnvironmentSettings} from "./ticketsCore.Tooling";
 export * from './ticketsCore.pageSettings';
+
+export const RunSetup = () => {
+    let dispatch = useDispatch()
+    if (!useAppSelector(x => x.pingPong.isStarted))
+        dispatch(setPing())
+
+}
 
 export enum Environment {
     production = "Production",
@@ -29,11 +35,4 @@ export const GetEnvironmentSettings: EnumDictionary<Environment, EnvironmentSett
     [Environment.localFiddler]: {...defaultEnvironment, environment: Environment.localFiddler, baseUrl: 'https://welcomemat.com', proxy:fromNullable({port:8888, host:'localhost'})},
 }
 
-
 let  s = GetEnvironmentSettings[Environment.local] //?
-export const RunSetup = () => {
-    let dispatch = useDispatch()
-    // if (!useAppSelector(x => x.pingPong.isStarted))
-    //     dispatch(setPing())
-
-}
