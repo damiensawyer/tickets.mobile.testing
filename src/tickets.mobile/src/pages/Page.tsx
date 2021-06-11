@@ -39,7 +39,7 @@ const Page: React.FC<PageProps> = () => {
             <IonContent fullscreen>
                 <IonHeader collapse="condense">
                     <IonToolbar>
-                        <IonTitle size="large">{pageSettings.pageName} sdsd</IonTitle>
+                        <IonTitle size="large">{pageSettings.pageName}</IonTitle>
                     </IonToolbar>
                 </IonHeader>
                 <div className="ion-padding">

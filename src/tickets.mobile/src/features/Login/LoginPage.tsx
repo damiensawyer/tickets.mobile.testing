@@ -22,7 +22,7 @@ const LoginLabel = forwardRef((props, ref) => {
     const [visible, _setVisible] = useState(false);
     const [text, _setText] = useState('');
 
-    useImperativeHandle(ref, () => {
+    useImperativeHandle<{setVisible:(status:boolean)=>void, setText:(text:string)=>void }>(ref, () => {
         return {
             setVisible: _setVisible,
             setText: _setText
@@ -33,10 +33,6 @@ const LoginLabel = forwardRef((props, ref) => {
 
 export const LoginPage: React.FC = (b) => {
 
-    
-    
-    
-
     const emailInput = useRef<HTMLIonInputElement | null>(null);
     const emailErrorLabel = useRef<typeof LoginLabel>(null);
     const shortTokenErrorLabel = useRef<typeof LoginLabel>(null);
@@ -45,7 +41,7 @@ export const LoginPage: React.FC = (b) => {
     emailCapturedText.pipe(filter(b => b !== '')).subscribe(x => (emailErrorLabel.current! as any).setVisible(false))
     let shortCodeCapturedText = new BehaviorSubject<string>('')
     shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => (shortTokenErrorLabel.current! as any).setVisible(false))
-    
+
     const requestEmail = () => {
         let data = fromNullable(emailCapturedText.value)
         if (isNone(data) || data.value === '') {
@@ -89,7 +85,7 @@ export const LoginPage: React.FC = (b) => {
 
                 <IonRow className='ion-padding'>
                     <IonCol>
-                        <IonButton expand="block" onClick={requestEmail}>Request Login Code via Email</IonButton>
+                        <IonButton expand="block" onClick={requestEmail}>Send Login Code</IonButton>
                     </IonCol>
                 </IonRow>
             </IonList>
