@@ -1,4 +1,4 @@
-import {IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonToggle,} from '@ionic/react';
+import {IonContent, IonIcon, IonImg, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonToggle,} from '@ionic/react';
 
 import {useLocation} from 'react-router-dom';
 import {bookmarkOutline, mailOutline, mailSharp, moonOutline, calendarNumber} from 'ionicons/icons';
@@ -65,12 +65,16 @@ const Menu: React.FC = () => {
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
+        <IonItem>
+          <IonImg className="" slot={'start'} src="assets/tickets-logo-colour-rgb.png" ></IonImg>
+          
+        </IonItem>
         <IonList id="inbox-list">
-          <IonListHeader>Inbox</IonListHeader>
           <IonNote>hi@ionicframework.com</IonNote>
           {appPages.map((appPage, index) => {
             return (
                 <IonMenuToggle key={index} autoHide={false}>
+                  
                   <IonItem className={location.pathname === appPage.url ? 'selected' : ''} routerLink={appPage.url} routerDirection="none" lines="none" detail={false}>
                     <IonIcon slot="start" ios={appPage.iosIcon} md={appPage.mdIcon}/>
                     <IonLabel>{appPage.title}</IonLabel>
