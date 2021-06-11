@@ -79,7 +79,7 @@ export const LoginPage: React.FC = (b) => {
         <div className="login-logo">
             <IonImg class="small" src="assets/tickets-logo-colour-rgb.png"></IonImg>
         </div>
-        <IonTitle><h1>Login</h1></IonTitle>
+        {/*<IonTitle><h1>Login</h1></IonTitle>*/}
 
         <IonCard>
             <IonCardHeader>

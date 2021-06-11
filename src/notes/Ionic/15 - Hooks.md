@@ -31,3 +31,9 @@ The Effect Hook lets you perform side effects in function components:
 
 [Use Effect with Cleanup](https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup)
 Every effect may return a function that cleans up after it. 
+
+
+## Use Ref
+### Create a child object which is not updated when the parent is 
+See LoginPage.tsx at commit bfcd5d7d3df97dce0844248fd75b411b0b982fda in the tickets.mobile project for example of how to do this (LoginLabel)
+

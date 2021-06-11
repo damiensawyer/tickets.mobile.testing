@@ -28,7 +28,6 @@ const Page: React.FC<PageProps> = () => {
                                     <IonIcon slot="icon-only" icon={search} />
                                 </IonButton>
                             </IonButtons>
-                            <IonSearchbar placeholder="Search Favorites" />
                         </IonToolbar>
                         
                     </IonButtons>
