@@ -11,7 +11,7 @@ export interface SettingsState {
 
 const initialState: SettingsState = {
   activeSettings:core.GetEnvironmentSettings[Environment.local],
-  darkMode : "light"
+  darkMode : "dark"
 };
 
 export const settingsSlice = createSlice({
