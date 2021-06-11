@@ -17,27 +17,32 @@ const selectOptions = {
     //header: 'Select a Location'
 };
 
+export const LoginLabel: React.FC<{visible:boolean, text:string}> = ({visible, text}) => visible ?  <IonText color="danger"><p className="ion-padding-start">{text}</p></IonText> : null
 
 export const LoginPage: React.FC = (b) => {
 
     enum modes {enterEmail, enterShortSCode}
 
     const [mode, setMode] = useState(modes.enterEmail);
-    const [emailError, setEmailError] = useState(false);
+    //const [emailError, setEmailError] = useState(false);
+    
     const [shortCodeError, setShortCodeErrror] = useState(false);
+    const [eE, setEE] = useState(false);
     const [email, setEmail] = useState('');
     let eee = ''
-    
+    let emailError = true;
+
     const emailInput = useRef<HTMLIonInputElement | null>(null);
-    
+
     const requestEmail = () => {
-        
+
         let data = fromNullable(eee.toString())
         console.log('request email')
         if (isNone(data) || data.value === '') {
-            setEmailError(true)
+            emailError = true;
+            setEE(true)
         } else {
-            setEmailError(false)
+            setEE(false)
         }
 
     }
@@ -59,23 +64,14 @@ export const LoginPage: React.FC = (b) => {
             <IonList>
                 <IonItem>
                     <IonLabel position="floating" color="primary">Email Address</IonLabel>
-                    <IonInput name="email" type="email" value={email} ref={emailInput} spellCheck={false} autocapitalize="off" onIonChange={e => eee = e.detail.value!}
-
-                              required>
-                    </IonInput>
+                    <IonInput name="email" type="email" value={email} ref={emailInput} spellCheck={false} autocapitalize="off" onIonChange={e => eee = e.detail.value!} required> </IonInput>
                 </IonItem>
-                
-                {emailError && <IonText color="danger">
-                    <p className="ion-padding-start">
-                        Email is required
-                    </p>
-                </IonText>}
+
+                <LoginLabel text={'Email is required '} visible={eE} />
 
                 <IonRow className='ion-padding'>
                     <IonCol>
-                        <IonButton expand="block" onClick={() => {
-                            requestEmail()
-                        }}>Request Login Code via Email</IonButton>
+                        <IonButton expand="block" onClick={requestEmail}>Request Login Code via Email</IonButton>
                     </IonCol>
                 </IonRow>
             </IonList>
@@ -112,12 +108,9 @@ export const LoginPage: React.FC = (b) => {
             </IonList>
 
         </IonCard>
-
-
     </>
 
     return (
         <Login/>
     )
-        ;
 };
