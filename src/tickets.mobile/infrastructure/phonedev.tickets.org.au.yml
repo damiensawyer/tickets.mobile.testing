@@ -9,9 +9,6 @@ variables:
   ticketsFolder: '$(Build.SourcesDirectory)/src'
 
 steps:    
-  - script: npm install -g @ionic/cli
-    displayName: 'Install Ionic CLI'
-
   - task: Npm@1
     inputs:
       workingDir: '$(ticketsFolder)/$(projectName)'
