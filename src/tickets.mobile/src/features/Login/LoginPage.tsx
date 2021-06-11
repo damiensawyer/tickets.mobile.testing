@@ -13,16 +13,9 @@ import {
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {fromNullable, isNone, isSome} from "fp-ts/Option";
 
-const selectOptions = {
-    //header: 'Select a Location'
-};
-
-//export const LoginLabel: React.FC<{visible:boolean, text:string}> = ({visible, text}) => visible ?  <IonText color="danger"><p className="ion-padding-start">{text}</p></IonText> : null
-
-
 // https://stackoverflow.com/a/55889638/494635
 // https://www.tutorialspoint.com/reactjs-useimperativehandle-hook
-
+// Need to do this so that we can render only the child component without rendering the parent. 
 const LoginLabel = forwardRef((props, ref) => {
     const [visible, _setVisible] = useState(false);
     const [text, _setText] = useState('');
@@ -34,28 +27,17 @@ const LoginLabel = forwardRef((props, ref) => {
 
         }
     });
-
     return visible ? <IonText color="danger">{text}</IonText> : <IonText>&nbsp;</IonText>
 });
 
 export const LoginPage: React.FC = (b) => {
-    console.log('LOGIN RENDERING???')
-
-    enum modes {enterEmail, enterShortSCode}
-
-    const [mode, setMode] = useState(modes.enterEmail);
-    //const [emailError, setEmailError] = useState(false);
-
-    const [shortCodeError, setShortCodeErrror] = useState(false);
-    //const [eE, setEE] = useState(false);
-    //const [email, setEmail] = useState('');
     let emailCapturedText = ''
     let shortCodeCapturedText = ''
-    const [instanceKey, setInstanceKey] = useState(0)
 
     const emailInput = useRef<HTMLIonInputElement | null>(null);
     const emailErrorLabel = useRef<typeof LoginLabel>(null);
     const shortTokenErrorLabel = useRef<typeof LoginLabel>(null);
+
     const requestEmail = () => {
         let data = fromNullable(emailCapturedText)
         if (isNone(data) || data.value === '') {
@@ -74,7 +56,7 @@ export const LoginPage: React.FC = (b) => {
             l.setText('please enter code')
         } else {
             (shortTokenErrorLabel.current! as any).setVisible(false)
-            
+
         }
     }
     const Login = () => <>
@@ -86,7 +68,7 @@ export const LoginPage: React.FC = (b) => {
         <IonCard>
             <IonCardHeader>
                 <IonCardTitle>Step 1</IonCardTitle>
-                <p>Please enter the email associated with your tickets.org.au account. If you logged in with Google or Facebook, please use the email asscociated with that account. If we find an account associated with that address we will email you a login code which you can enter below.</p>
+                <p>Please enter the email linked to your tickets.org.au account. If you logged in with Google or Facebook, use the email from that account. We will email you a login code which you can enter below.</p>
 
             </IonCardHeader>
 
