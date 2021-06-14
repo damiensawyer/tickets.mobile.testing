@@ -7,4 +7,5 @@ What am I trying to achieve?
 
 */
 let e = core.GetEnvironmentSettings[core.Environment.development]
-e
+let a = 100
+a //?
