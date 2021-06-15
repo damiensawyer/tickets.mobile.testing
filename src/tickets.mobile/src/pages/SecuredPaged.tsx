@@ -1,9 +1,8 @@
 import { useParams } from 'react-router';
-import {PageName} from "../app/ticketsCore";
 
 const Page: React.FC = () => {
     
-  const { name } = useParams<{ name: PageName; }>();
+  const { name } = useParams<{ name: string; }>();
   
   return (
     <div>secured {name}</div>

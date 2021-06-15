@@ -27,7 +27,7 @@ import {useAppSelector} from './app/hooks'
 //import {setEnvironment} from './features/Settings/settingsSlice'
 import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
 import * as core from "./app/ticketsCore";
-import {PageName} from "./app/ticketsCore";
+
 
 const App: React.FC = () => {
     core.RunSetup()

@@ -6,13 +6,16 @@ import {useAppSelector} from "./hooks";
 import {setPing} from "../features/LearningReactPatterns/PingPong/PingPongSlice";
 
 export type {EnvironmentSettings} from "./ticketsCore.Tooling";
-export * from './ticketsCore.pageSettings';
+//export * from './ticketsCore.pageSettings';
+
+export const TestSettings = {
+    RunIntegratorTests:false
+}
 
 export const RunSetup = () => {
     let dispatch = useDispatch()
     if (!useAppSelector(x => x.pingPong.isStarted))
         dispatch(setPing())
-
 }
 
 export enum Environment {
@@ -35,4 +38,3 @@ export const GetEnvironmentSettings: EnumDictionary<Environment, EnvironmentSett
     [Environment.localFiddler]: {...defaultEnvironment, environment: Environment.localFiddler, baseUrl: 'https://welcomemat.com', proxy:fromNullable({port:8888, host:'localhost'})},
 }
 
-let  s = GetEnvironmentSettings[Environment.local] //?

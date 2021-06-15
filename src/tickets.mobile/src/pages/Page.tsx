@@ -2,7 +2,7 @@ import {IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, Io
 import {useParams} from 'react-router';
 import ExploreContainer from '../components/ExploreContainer';
 import './Page.css';
-import {PageName} from "../app/ticketsCore";
+import * as ps from "../app/ticketsCore.pageSettings";
 import * as core from "./..//app/ticketsCore";
 import {SettingsPage} from "../features/Settings/SettingsPage";
 import {search} from "ionicons/icons";
@@ -13,7 +13,7 @@ type PageProps = {}
 const Page: React.FC<PageProps> = () => {
 
     const pageName = useParams<{ name: string; }>().name;
-    const pageSettings = core.PageSettings[pageName as PageName]
+    const pageSettings = ps.PageSettings[pageName as ps.PageName]
 
     return (
         <IonPage>

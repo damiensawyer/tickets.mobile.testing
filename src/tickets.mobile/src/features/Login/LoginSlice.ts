@@ -1,5 +1,5 @@
 import * as core from './../../app/ticketsCore'
-import {Environment, PageName} from './../../app/ticketsCore'
+import {Environment} from './../../app/ticketsCore'
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {EnumDictionary} from "../../app/ticketsCore.Tooling";
 import {LoginPage} from "./LoginPage";

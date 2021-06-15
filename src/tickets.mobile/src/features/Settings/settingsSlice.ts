@@ -1,6 +1,6 @@
 import * as core from './../../app/ticketsCore'
-import {Environment} from './../../app/ticketsCore'
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {Environment} from "./../../app/ticketsCore";
 
 export type darkModeValues = 'light'|'dark'
 
@@ -9,8 +9,8 @@ export interface SettingsState {
     darkMode: darkModeValues
 }
 
-const initialState: SettingsState = {
-  activeSettings:core.GetEnvironmentSettings[Environment.local],
+export const initialState: SettingsState = {
+  activeSettings:core.GetEnvironmentSettings[Environment.production],
   darkMode : "dark"
 };
 
