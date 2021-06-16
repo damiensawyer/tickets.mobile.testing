@@ -8,14 +8,18 @@ import {TicketsAPI} from "../data/user/tickets-auth-api";
 import {flow, pipe} from "fp-ts/function";
 import {isLeft, isRight, match} from "fp-ts/Either";
 import * as E from "fp-ts/Either";
+import * as TE from "fp-ts/TaskEither";
 import axios from "axios";
 
 export type {EnvironmentSettings} from "./ticketsCore.Tooling";
 //export * from './ticketsCore.pageSettings';
 
 export const TestSettings = {
-    RunIntegratorTests:false
+    RunIntegratorTests:true,
+    
 }
+/** optionally Runs API tests */
+export const itIfAPI = () => TestSettings.RunIntegratorTests ? it : it.skip;
 
 export const RunSetup = () => {
     axios.defaults.adapter = require('axios/lib/adapters/http');
@@ -45,18 +49,6 @@ export const GetEnvironmentSettings: EnumDictionary<Environment, EnvironmentSett
     [Environment.local]: {...defaultEnvironment, environment: Environment.local, baseUrl: 'https://welcomemat.com', handleSelfSignedCerts:true},
     [Environment.localFiddler]: {...defaultEnvironment, environment: Environment.localFiddler, baseUrl: 'https://welcomemat.com', proxy:fromNullable({port:8888, host:'localhost'})},
 }
-
-let api = new TicketsAPI(GetEnvironmentSettings[Environment.localFiddler])
-//let api = new TicketsAPI(GetEnvironmentSettings[Environment.development])
-// api.TCExample(200)().then(flow(match(x=>x /*?*/, y=>{
-//     return y.data /*?*/
-// } )))
-
-api.environmentSettings //?
-api.GetEnvironmentDetailsTemp().then(y => {
-    let message = pipe(y, E.match((x:Error) => `There was an error ${x.message}`, y => y)) //?
-
-})
 
 
 // api.TCExample(200)().then(flow(match(x=>x /*?*/, y=>y.data /*?*/)))
