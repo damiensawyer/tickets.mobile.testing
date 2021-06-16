@@ -28,11 +28,19 @@ export const RunSetup = () => {
         dispatch(setPing())
 }
 
+
+export enum LoggedInStatus
+{
+    loggedOut,
+    loggedIn
+}
+
+
 export enum Environment {
     production = "Production",
     development = "Development",
     local = "Localhost",
-    localFiddler = "Local Fidler"
+    localFiddler = "Local Fiddler"
 }
 
 export const defaultEnvironment: EnvironmentSettings = {
