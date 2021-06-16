@@ -6,6 +6,3 @@ What am I trying to achieve?
 - 
 
 */
-let e = core.GetEnvironmentSettings[core.Environment.development]
-let a = 100
-a //?

@@ -3,11 +3,13 @@
     Note that there's no reason that you couldn't combine this with the redux-thunk example used in Counter.tsx. Redux thunk with Redux Toolkit can do some cool things, including generating action types in response to sucess/fail/complete states on promises. 
  */
 
-import { delay, mapTo} from 'rxjs/operators';
-import { ofType } from 'redux-observable';
-import { createSlice} from "@reduxjs/toolkit";
+import {delay, mapTo, tap} from 'rxjs/operators';
+import {ofType} from 'redux-observable';
+import { createSlice } from '@reduxjs/toolkit';
+import {EMPTY} from "rxjs";
+import {RootState} from "../../../app/store";
 
-const delayTime = 20000
+const delayTime = 2000
 export type pingValues = 'PING' | 'PONG'
 
 export interface PingState {
@@ -40,21 +42,33 @@ const pingSlice = createSlice({
     },
 });
 
-export const pingEpic = (action$:any) => action$.pipe(
+// export const trackStateEpic = (action$: any, state: any) =>
+//
+//    
+//
+// {
+//         console.log(`Tracking State ${state}`, state)
+//         return EMPTY;
+//     }
+//
+
+export const pingEpic = (action$: any, state: any) => action$.pipe(
     ofType(setPing), // Pulling out the string 'ping/setPing' from the action creator 
+    tap(()=>console.log(`ping state:`), state),
     delay(delayTime),// Asynchronously wait 1000ms then continue
     mapTo(setPong()) // here we're executing the action creator to create an action Type 'plain old javascript object' 
 );
 
-export const pongEpic = (action$:any) => action$.pipe(
-    ofType(setPong), 
+export const pongEpic = (action$: any, state:any) => action$.pipe(
+    ofType(setPong),
+    tap(()=>console.log(`pong state:`, state)),
     delay(delayTime),
     mapTo(setPing())
 );
- 
+
 
 // Export the actionCreators
-export const { setPing, setPong } = pingSlice.actions;
+export const {setPing, setPong} = pingSlice.actions;
 export const epics = [pingEpic, pongEpic]
 
 // export the reducer

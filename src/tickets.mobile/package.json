@@ -78,5 +78,9 @@
     "@types/redux-logger": "^3.0.6",
     "redux-logger": "^3.0.6"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "quokka": {
+    "autoDetect": false,
+    "plugins": []
+  }
 }
