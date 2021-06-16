@@ -5,7 +5,7 @@ import {EnumDictionary} from "../../app/ticketsCore.Tooling";
 import {fromNullable, match, none, Option} from "fp-ts/Option";
 import {pipe} from "fp-ts/function";
 import {ofType} from "redux-observable";
-import {map, mapTo} from "rxjs/operators";
+import {filter, map, mapTo, switchMap} from "rxjs/operators";
 import * as rxjs from "rxjs"
 
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
@@ -57,25 +57,10 @@ export const LoginSlice = createSlice({
 
 
 export const convertShortCodeToBearerEpic = (action$:any) => // action$ is a stream of actions
-    // action$.ofType is the outer Observable
     action$.pipe(
         ofType(processShortCode),
-        //.filter((x:PayloadAction<string>) => x.payload.length == shortCodeLength)
-        // .switchMap(() => {
-        //     // ajax calls from Observable return observables. This is how we generate the inner Observable
-        //      return rxjs.from(['super dooper bearer'])
-        //     //     .getJSON(url) // getJSON simply sends a GET request with Content-Type application/json
-        //     //     .map(data => data.results) // get the data and extract only the results
-        //     //     .map(whiskies => whiskies.map(whisky => ({
-        //     //         id: whisky.id,
-        //     //         title: whisky.title,
-        //     //         imageUrl: whisky.img_url
-        //     //     })))// we need to iterate over the whiskies and get only the properties we need
-        //     //     // filter out whiskies without image URLs (for convenience only)
-        //     //     .map(whiskies => whiskies.filter(whisky => !!whisky.imageUrl))
-        //     // at the end our inner Observable has a stream of an array of whisky objects which will be merged into the outer Observable
-        // })
-        map((x:string) =>setBearerToken({token:x,environment:Environment.local}))
+        filter((x:PayloadAction<string>) => x.payload.length == shortCodeLength),
+        switchMap(map((x:string) =>setBearerToken({token:x,environment:Environment.local})))
     )
 
 
