@@ -5,7 +5,7 @@ import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {ignoreElements, tap} from "rxjs/operators";
 import counterSlice from "../features/LearningReactPatterns/Counter/counterSlice";
 import * as EnvironmentFunctions from "./environmentFunctions";
-import LoginSlice from "../features/Login/LoginSlice";
+import LoginSlice, {epics as loginEpics} from "../features/Login/LoginSlice";
 
 const rxjsEpicMiddleware = createEpicMiddleware();
 
@@ -38,7 +38,8 @@ function logEpic(actions: any) {
 
 export const rootEpic = combineEpics(
     //logEpic, 
-    ...pingPongEpics
+    ...pingPongEpics,
+    ...loginEpics
 );
 rxjsEpicMiddleware.run(rootEpic)
 

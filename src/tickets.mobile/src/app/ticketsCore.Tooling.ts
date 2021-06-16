@@ -26,7 +26,3 @@ export module EnvironmentFunctions {
         = (e: EnvironmentSettings) => isSome(e.bearerToken);
 }
 
-export module EnvironmentFunctions2 {
-    export const isLoggedIn
-        = (e: EnvironmentSettings) => isNone(e.bearerToken);
-}

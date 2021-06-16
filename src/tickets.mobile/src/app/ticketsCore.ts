@@ -4,11 +4,6 @@ import {EnumDictionary, EnvironmentSettings} from "./ticketsCore.Tooling";
 import {fromNullable} from "fp-ts/Option";
 import {useAppSelector} from "./hooks";
 import {setPing} from "../features/LearningReactPatterns/PingPong/PingPongSlice";
-import {TicketsAPI} from "../data/user/tickets-auth-api";
-import {flow, pipe} from "fp-ts/function";
-import {isLeft, isRight, match} from "fp-ts/Either";
-import * as E from "fp-ts/Either";
-import * as TE from "fp-ts/TaskEither";
 import axios from "axios";
 
 export type {EnvironmentSettings} from "./ticketsCore.Tooling";
@@ -24,8 +19,8 @@ export const itIfAPI = () => TestSettings.RunIntegratorTests ? it : it.skip;
 export const RunSetup = () => {
     axios.defaults.adapter = require('axios/lib/adapters/http');
     let dispatch = useDispatch()
-    if (!useAppSelector(x => x.pingPong.isStarted))
-        dispatch(setPing())
+    // if (!useAppSelector(x => x.pingPong.isStarted))
+    //     dispatch(setPing())
 }
 
 

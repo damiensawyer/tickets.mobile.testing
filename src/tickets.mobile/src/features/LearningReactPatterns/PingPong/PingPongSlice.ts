@@ -9,7 +9,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {EMPTY} from "rxjs";
 import {RootState} from "../../../app/store";
 
-const delayTime = 2000
+const delayTime = 200000
 export type pingValues = 'PING' | 'PONG'
 
 export interface PingState {
