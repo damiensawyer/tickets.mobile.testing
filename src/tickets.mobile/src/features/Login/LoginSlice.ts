@@ -31,7 +31,7 @@ const initialState: LoginState = {
         [Environment.local]: fromNullable(null),
         [Environment.localFiddler]: fromNullable(null)
     },
-    activeEnvironment: core.GetEnvironmentSettings[Environment.development]
+    activeEnvironment: core.GetEnvironmentSettings[Environment.localFiddler]
 };
 
 export const LoginSlice = createSlice({

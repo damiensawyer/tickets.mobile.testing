@@ -42,7 +42,7 @@ export class TicketsAPI {
         this.axiosConfig = {
             proxy: (isSome(environmentSettings.proxy) && pipe(environmentSettings.proxy, O.match(() => undefined, x => x))), // possibly don't need to pipe if && is short-circuiting
             headers: {
-                ...(isSome(environmentSettings.bearerToken) && {Authorization: `Bearer ${environmentSettings.bearerToken}`}),
+                ...(isSome(environmentSettings.bearerToken) && {Authorization: `Bearer ${environmentSettings.bearerToken.value}`}),
 
             },
             httpsAgent: true || environmentSettings.handleSelfSignedCerts ? new Agent({rejectUnauthorized: false}) : new Agent({rejectUnauthorized: false}),
