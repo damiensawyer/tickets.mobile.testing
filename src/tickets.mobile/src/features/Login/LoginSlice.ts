@@ -6,14 +6,14 @@ import {fromNullable, match, none, Option} from "fp-ts/Option";
 import {pipe as fptsPipe} from "fp-ts/function";
 
 import {ofType, StateObservable} from "redux-observable";
-import {catchError, filter, map, mapTo, switchMap} from "rxjs/operators";
+import {catchError, filter, map, switchMap} from "rxjs/operators";
 import * as rxjs from "rxjs"
-import {Observable, of, pipe as rxJSPipe} from "rxjs";
-import axios, {AxiosRequestConfig} from "axios";
+import {Observable} from "rxjs"
 import {isStatusCodeError, TicketsAPI} from "../../data/user/tickets-auth-api";
-import {Env} from "ionicons/dist/types/stencil-public-runtime";
 import {isRight} from "fp-ts/Either";
 import {RootState} from "../../app/store";
+import {incrementAsync} from "../LearningReactPatterns/Counter/counterSlice";
+import {setEnvironment} from "../Settings/settingsSlice";
 
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
 
@@ -31,7 +31,7 @@ const initialState: LoginState = {
         [Environment.local]: fromNullable(null),
         [Environment.localFiddler]: fromNullable(null)
     },
-    activeEnvironment: core.GetEnvironmentSettings[Environment.local]
+    activeEnvironment: core.GetEnvironmentSettings[Environment.development]
 };
 
 export const LoginSlice = createSlice({
@@ -56,6 +56,12 @@ export const LoginSlice = createSlice({
         processShortCode: (state, action: PayloadAction<string>) => {
         },
     },
+    extraReducers: (builder) => {
+        builder
+            .addCase(setEnvironment, (state,action: PayloadAction<Environment>) => {
+                state.activeEnvironment = core.GetEnvironmentSettings[action.payload]
+            })
+    }
 });
 
 // export const pingEpic = (action$:any) => action$.pipe(
@@ -66,7 +72,7 @@ export const LoginSlice = createSlice({
 
 
 // to do... make this generic so that we can use for multiple API calls. 
-let getBearerFromShortCode$ = (s: any, environmentSettings: EnvironmentSettings, shortCord: string):Observable<string> =>
+let getBearerFromShortCode$ = (environmentSettings: EnvironmentSettings, shortCord: string):Observable<string> =>
     new Observable((s) => {
         //let cancellationSource = axios.CancelToken.source();
         let api = new TicketsAPI(environmentSettings)
@@ -94,8 +100,8 @@ export const convertShortCodeToBearerEpic = (action$: any, state$: any) => // ac
         ofType(processShortCode),
         filter((x: PayloadAction<string>) => x.payload.length >= 1),
         switchMap((x: PayloadAction<string>) => {
-            return getBearerFromShortCode$(state$.value, state$.value.loginSlice.activeEnvironment, x.payload).pipe(
-                 map((x: string) => setBearerToken({token: x, environment: Environment.local})),
+            return getBearerFromShortCode$(state$.value.loginSlice.activeEnvironment, x.payload).pipe(
+                 map((i: string) => setBearerToken({token: i, environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})),
                  catchError(error => rxjs.of(setBearerToken({token: 'bad token!!!', environment: Environment.local})))
             )
         })
