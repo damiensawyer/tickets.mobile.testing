@@ -3,7 +3,7 @@ import * as TE from "fp-ts/TaskEither";
 import {EnvironmentSettings} from "../../app/ticketsCore.Tooling";
 import * as O from "fp-ts/Option";
 import * as E from "fp-ts/Either";
-import axios, {AxiosRequestConfig} from "axios";
+import axios, {AxiosRequestConfig, CancelTokenSource} from "axios";
 import {Lazy, pipe} from "fp-ts/function";
 import {isSome} from "fp-ts/Option";
 import {Either} from "fp-ts/Either";
@@ -16,7 +16,7 @@ const onRejected: (reason: unknown) => AxiosError = (r: any) => !!r.response
 export interface AxiosErrorWithStatusCode {
     /**The status code returned with the error. Eg 403 */
     status: number,
-    statusText: string
+    statusText: string,
 }
 
 /** Get these when you get the host wrong etc. */
@@ -34,15 +34,19 @@ export type AxiosError = AxiosErrorWithStatusCode | AxiosErrorWithNoStatusCode
 
 export class TicketsAPI {
     public axiosConfig: AxiosRequestConfig;
+    public axiosCancellationSource: CancelTokenSource;
     
     constructor(/**This comes from redux*/ public environmentSettings: EnvironmentSettings) {
+        
+        this.axiosCancellationSource = axios.CancelToken.source();
         this.axiosConfig = {
             proxy: (isSome(environmentSettings.proxy) && pipe(environmentSettings.proxy, O.match(() => undefined, x => x))), // possibly don't need to pipe if && is short-circuiting
             headers: {
                 ...(isSome(environmentSettings.bearerToken) && {Authorization: `Bearer ${environmentSettings.bearerToken}`}),
 
             },
-            httpsAgent: true || environmentSettings.handleSelfSignedCerts ? new Agent({rejectUnauthorized: false}) : new Agent({rejectUnauthorized: false})
+            httpsAgent: true || environmentSettings.handleSelfSignedCerts ? new Agent({rejectUnauthorized: false}) : new Agent({rejectUnauthorized: false}),
+            cancelToken: this.axiosCancellationSource.token
 
         };
         axios.defaults.adapter = require('axios/lib/adapters/http'); // search for "configure axios adapter" from wallaby support in gmail. https://github.com/axios/axios/issues/1754#issuecomment-572778305 

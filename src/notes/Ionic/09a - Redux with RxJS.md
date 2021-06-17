@@ -8,3 +8,7 @@ npm info redux-observable shows there's a v2.0 RC available (currently at 1.2)
 
 
 [Great sample of setup... not perfect... but a start](https://stackoverflow.com/questions/64320308/react-observable-epic-with-redux-toolkit-and-typescript)
+
+
+## ACcessing State
+[remember, you get an observable of state](https://stackoverflow.com/questions/40914865/accessing-the-state-from-within-a-redux-observable-epic)

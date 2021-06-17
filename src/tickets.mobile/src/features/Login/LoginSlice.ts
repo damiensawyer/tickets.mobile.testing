@@ -3,19 +3,26 @@ import {Environment, EnvironmentSettings} from './../../app/ticketsCore'
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {EnumDictionary} from "../../app/ticketsCore.Tooling";
 import {fromNullable, match, none, Option} from "fp-ts/Option";
-import {pipe} from "fp-ts/function";
-import {ofType} from "redux-observable";
-import {filter, map, mapTo, switchMap} from "rxjs/operators";
+import {pipe as fptsPipe} from "fp-ts/function";
+
+import {ofType, StateObservable} from "redux-observable";
+import {catchError, filter, map, mapTo, switchMap} from "rxjs/operators";
 import * as rxjs from "rxjs"
+import {Observable, of, pipe as rxJSPipe} from "rxjs";
+import axios, {AxiosRequestConfig} from "axios";
+import {isStatusCodeError, TicketsAPI} from "../../data/user/tickets-auth-api";
+import {Env} from "ionicons/dist/types/stencil-public-runtime";
+import {isRight} from "fp-ts/Either";
+import {RootState} from "../../app/store";
 
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
- 
+
 export interface LoginState {
     bearerTokens: EnumDictionary<Environment, Option<string>>, // I'm thinking to do this so that we can switch between environments without having to log back in and out.  
-    activeEnvironment:EnvironmentSettings
+    activeEnvironment: EnvironmentSettings
 }
 
-const shortCodeLength=6 // need to keep this is sync with the back end. Will use so that they don't have to press enter. Search for CreateShortToken() in c# 
+const shortCodeLength = 6 // need to keep this is sync with the back end. Will use so that they don't have to press enter. Search for CreateShortToken() in c# 
 
 const initialState: LoginState = {
     bearerTokens: {
@@ -24,7 +31,7 @@ const initialState: LoginState = {
         [Environment.local]: fromNullable(null),
         [Environment.localFiddler]: fromNullable(null)
     },
-    activeEnvironment : core.GetEnvironmentSettings[Environment.local]
+    activeEnvironment: core.GetEnvironmentSettings[Environment.local]
 };
 
 export const LoginSlice = createSlice({
@@ -32,7 +39,7 @@ export const LoginSlice = createSlice({
     initialState,
     reducers: {
         setLoggedOut: (state, action: PayloadAction<{ environment: Option<Environment> }>) => {
-            let env = pipe(action.payload.environment, match(()=>state.activeEnvironment.environment, b=>b)) // if they don't pass an environment, log out the default
+            let env = fptsPipe(action.payload.environment, match(() => state.activeEnvironment.environment, b => b)) // if they don't pass an environment, log out the default
             state.bearerTokens[env] = none
             if (state.activeEnvironment.environment == env)
                 state.activeEnvironment.bearerToken = none
@@ -41,11 +48,13 @@ export const LoginSlice = createSlice({
             let p = action.payload
             let token = fromNullable(p.token)
             state.bearerTokens[p.environment] = token
-            if (state.activeEnvironment.environment == action.payload.environment) 
+            if (state.activeEnvironment.environment == action.payload.environment)
                 state.activeEnvironment.bearerToken = token
         },
-        requestShortCodeToEmail: (state, action:PayloadAction<string>) =>{},
-        processShortCode: (state, action:PayloadAction<string>) =>{},
+        requestShortCodeToEmail: (state, action: PayloadAction<string>) => {
+        },
+        processShortCode: (state, action: PayloadAction<string>) => {
+        },
     },
 });
 
@@ -56,44 +65,46 @@ export const LoginSlice = createSlice({
 // );
 
 
-export const convertShortCodeToBearerEpic = (action$:any) => // action$ is a stream of actions
+// to do... make this generic so that we can use for multiple API calls. 
+let getBearerFromShortCode$ = (s: any, environmentSettings: EnvironmentSettings, shortCord: string):Observable<string> =>
+    new Observable((s) => {
+        //let cancellationSource = axios.CancelToken.source();
+        let api = new TicketsAPI(environmentSettings)
+        api.GetBearerToken(shortCord)().then(r => {
+            if (isRight(r)) {
+                s.next(r.right.value)
+                s.complete()
+            } else {
+                if (isStatusCodeError(r.left))
+                    s.error(`${r.left.status} ${r.left.statusText}`)
+                else
+                    s.error(`error from http call ${r.left.code}`)
+            }
+        })
+        //return a function which is called when they unsubscribe.
+        return () => {
+            api.axiosCancellationSource.cancel()
+            //console.log(`tearing down ${searchTerm}`);
+        };
+    });
+
+
+export const convertShortCodeToBearerEpic = (action$: any, state$: any) => // action$ is a stream of actions
     action$.pipe(
         ofType(processShortCode),
-        filter((x:PayloadAction<string>) => x.payload.length == shortCodeLength),
-        switchMap(map((x:string) =>setBearerToken({token:x,environment:Environment.local})))
+        filter((x: PayloadAction<string>) => x.payload.length >= 1),
+        switchMap((x: PayloadAction<string>) => {
+            return getBearerFromShortCode$(state$.value, state$.value.loginSlice.activeEnvironment, x.payload).pipe(
+                 map((x: string) => setBearerToken({token: x, environment: Environment.local})),
+                 catchError(error => rxjs.of(setBearerToken({token: 'bad token!!!', environment: Environment.local})))
+            )
+        })
     )
-
-
-
-// function convertShortCodeToBearer(action$) { // action$ is a stream of actions
-//     // action$.ofType is the outer Observable
-//     return action$
-//         .ofType(FETCH_WHISKIES) // ofType(FETCH_WHISKIES) is just a simpler version of .filter(x => x.type === FETCH_WHISKIES)
-//         .switchMap(() => {
-//             // ajax calls from Observable return observables. This is how we generate the inner Observable
-//             return ajax
-//                 .getJSON(url) // getJSON simply sends a GET request with Content-Type application/json
-//                 .map(data => data.results) // get the data and extract only the results
-//                 .map(whiskies => whiskies.map(whisky => ({
-//                     id: whisky.id,
-//                     title: whisky.title,
-//                     imageUrl: whisky.img_url
-//                 })))// we need to iterate over the whiskies and get only the properties we need
-//                 // filter out whiskies without image URLs (for convenience only)
-//                 .map(whiskies => whiskies.filter(whisky => !!whisky.imageUrl))
-//             // at the end our inner Observable has a stream of an array of whisky objects which will be merged into the outer Observable
-//         })
-//         .map(whiskies => fetchWhiskiesSuccess(whiskies)) // map the resulting array to an action of type FETCH_WHISKIES_SUCCESS
-//         // every action that is contained in the stream returned from the epic is dispatched to Redux, this is why we map the actions to streams.
-//         // if an error occurs, create an Observable of the action to be dispatched on error. Unlike other operators, catch does not explicitly return an Observable.
-//         .catch(error => Observable.of(fetchWhiskiesFailure(error.message)))
-// }
-
 
 
 // Export the actionCreators
 export const {requestShortCodeToEmail, setBearerToken, processShortCode} = LoginSlice.actions;
- export const epics = [convertShortCodeToBearerEpic]
+export const epics = [convertShortCodeToBearerEpic]
 
 // export the reducer
 export default LoginSlice.reducer;
