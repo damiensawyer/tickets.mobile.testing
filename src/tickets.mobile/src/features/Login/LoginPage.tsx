@@ -52,16 +52,18 @@ export const LoginPage: React.FC = (b) => {
 
     // const count = useAppSelector(selectCount);
     const dispatch = useAppDispatch();
-    
-    //const emailInput = useRef<HTMLIonInputElement | null>(null);
+
     const emailErrorLabel = useRef<ErrorLabelRef>(null);
     const shortTokenErrorLabel = useRef<ErrorLabelRef>(null);
 
     let emailCapturedText = new BehaviorSubject<string>('')
     emailCapturedText.pipe(filter(b => b !== '')).subscribe(x => emailErrorLabel.current!.setVisible(false))
     let shortCodeCapturedText = new BehaviorSubject<string>('')
-    shortCodeCapturedText.subscribe(x=>{dispatch(processShortCode(x))})
-    shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => shortTokenErrorLabel.current!.setVisible(false))
+
+    shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => {
+        dispatch(processShortCode(x))
+        shortTokenErrorLabel.current!.setVisible(false)}
+    )
 
     const requestEmail = () => {
         let data = fromNullable(emailCapturedText.value)
@@ -84,12 +86,10 @@ export const LoginPage: React.FC = (b) => {
 
         }
     }
-    const Login = () => <>
+    return <>
         <div className="login-logo">
-            <IonImg class="small" src="assets/tickets-logo-colour-rgb.png"></IonImg>
+            <IonImg class="small" src="assets/tickets-logo-colour-rgb.png"/>
         </div>
-        {/*<IonTitle><h1>Login</h1></IonTitle>*/}
-
         <IonCard>
             <IonCardHeader>
                 <IonCardTitle>Step 1</IonCardTitle>
@@ -122,7 +122,6 @@ export const LoginPage: React.FC = (b) => {
                 <IonItem>
                     <IonLabel position="floating" color="primary">Login Code</IonLabel>
                     <IonInput name="email" type="email" value={''} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText.next(e.detail.value!)}/>
-                    {/*onClick={() => dispatch(incrementAsync(incrementValue))}*/}
                     <LoginLabel ref={shortTokenErrorLabel}/>
                 </IonItem>
 
@@ -135,8 +134,4 @@ export const LoginPage: React.FC = (b) => {
 
         </IonCard>
     </>
-
-    return (
-        <Login/>
-    )
 };
