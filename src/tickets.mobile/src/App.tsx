@@ -50,60 +50,60 @@ const fakeAuth = {
     }
 };
 
-function useProvideAuth() {
-    const [user, setUser] = useState<O.Option<{user:string}>>();
-    
-    const signin = (cb: () => {}) => {
-        return fakeAuth.signin(() => {
-            setUser(O.some({user:'user'}));
-            cb();
-        });
-    };
+// function useProvideAuth() {
+//     const [user, setUser] = useState<O.Option<{user:string}>>();
+//    
+//     const signin = (cb: () => {}) => {
+//         return fakeAuth.signin(() => {
+//             setUser(O.some({user:'user'}));
+//             cb();
+//         });
+//     };
+//
+//     const signout = (cb: () => {}) => {
+//         return fakeAuth.signout(() => {
+//             setUser(O.none);
+//             cb();
+//         });
+//     };
+//
+//     return {
+//         user,
+//         signin,
+//         signout
+//     };
+// }
+//
+// const authContext = createContext<ReactNode>(null);
+//
+// const ProvideAuth: React.FC<{ children: ReactNode }> = ({children}) => {
+//     const auth = useProvideAuth();
+//     return (
+//         <authContext.Provider value={auth}>
+//             {children}
+//         </authContext.Provider>
+//     );
+// }
 
-    const signout = (cb: () => {}) => {
-        return fakeAuth.signout(() => {
-            setUser(O.none);
-            cb();
-        });
-    };
 
-    return {
-        user,
-        signin,
-        signout
-    };
-}
-
-const authContext = createContext<ReactNode>(null);
-
-const ProvideAuth: React.FC<{ children: ReactNode }> = ({children}) => {
-    const auth = useProvideAuth();
-    return (
-        <authContext.Provider value={auth}>
-            {children}
-        </authContext.Provider>
-    );
-}
-
-
-function useAuth() {
-    return useContext(authContext);
-}
+// function useAuth() {
+//     return useContext(authContext);
+// }
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-const PrivateRoute: React.FC<{ path:string, children: ReactNode }> = ({children, ...rest}) => {
-    let auth = useAuth();
+const PrivateRoute: React.FC<{ path:string, exact:boolean, children: ReactNode }> = ({children, ...rest}) => {
+    let isLoggedIn = true;
     return (
         <Route
             {...rest}
             render={({location}) =>
-                auth.user ? (
+                isLoggedIn ? (
                     children
                 ) : (
                     <Redirect
                         to={{
-                            pathname: "/login",
+                            pathname: "/page/Login",
                             state: {from: location}
                         }}
                     />
@@ -117,7 +117,6 @@ const PrivateRoute: React.FC<{ path:string, children: ReactNode }> = ({children,
 const App: React.FC = () => {
         core.RunSetup()
         const darkMode = useAppSelector(x => x.settings.darkMode)
-        const isLoggedIn = true;
         let routes =
             <IonRouterOutlet id="main">
                 <Route path="/" exact={true}>
