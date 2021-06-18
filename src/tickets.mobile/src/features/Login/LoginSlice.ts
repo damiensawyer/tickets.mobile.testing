@@ -44,6 +44,12 @@ export const LoginSlice = createSlice({
             if (state.activeEnvironment.environment == env)
                 state.activeEnvironment.bearerToken = none
         },
+        removeBearerToken:(state, action: PayloadAction<{ environment: Environment }>) => {
+            let p = action.payload
+            state.bearerTokens[p.environment] = none
+            if (state.activeEnvironment.environment == action.payload.environment)
+                state.activeEnvironment.bearerToken = none
+        },
         setBearerToken: (state, action: PayloadAction<{ token: string, environment: Environment }>) => {
             let p = action.payload
             let token = fromNullable(p.token)
@@ -102,14 +108,14 @@ export const convertShortCodeToBearerEpic = (action$: any, state$: any) => // ac
         switchMap((x: PayloadAction<string>) => {
             return getBearerFromShortCode$(state$.value.loginSlice.activeEnvironment, x.payload).pipe(
                  map((i: string) => setBearerToken({token: i, environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})),
-                 catchError(error => rxjs.of(setBearerToken({token: 'bad token!!!', environment: Environment.local})))
+                 catchError(error => rxjs.of(removeBearerToken({environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})))
             )
         })
     )
 
 
 // Export the actionCreators
-export const {requestShortCodeToEmail, setBearerToken, processShortCode} = LoginSlice.actions;
+export const {requestShortCodeToEmail, setBearerToken, processShortCode, removeBearerToken} = LoginSlice.actions;
 export const epics = [convertShortCodeToBearerEpic]
 
 // export the reducer

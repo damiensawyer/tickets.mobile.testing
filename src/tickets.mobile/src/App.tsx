@@ -35,8 +35,6 @@ import {useAppSelector} from './app/hooks'
 import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
 import * as core from "./app/ticketsCore";
 import {createContext, ReactNode, useContext, useState} from "react";
-import {Lazy} from "fp-ts/function";
-import * as O from "fp-ts/Option";
 import {EnvironmentFunctions} from "./app/ticketsCore.Tooling";
 
 const fakeAuth = {
@@ -51,10 +49,8 @@ const fakeAuth = {
     }
 };
 
-// A wrapper for <Route> that redirects to the login
-// screen if you're not yet authenticated.
+// A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
 const PrivateRoute: React.FC<{ path:string, exact:boolean, children: ReactNode }> = ({children, ...rest}) => {
-    
     let env = useAppSelector(x=>x.loginSlice.activeEnvironment)
     let isLoggedIn = EnvironmentFunctions.isLoggedIn(env)
     return (
@@ -76,7 +72,6 @@ const PrivateRoute: React.FC<{ path:string, exact:boolean, children: ReactNode }
     );
 }
 
-
 const App: React.FC = () => {
         core.RunSetup()
         const darkMode = useAppSelector(x => x.settings.darkMode)
@@ -85,7 +80,11 @@ const App: React.FC = () => {
                 <Route path="/" exact={true}>
                     <Redirect to="/page/Login"/>
                 </Route>
-
+                {/*Note if I put a private route before this one, we got into an infinite loop when we because logged out*/}
+                <Route path="/page/:name" exact={true}>
+                    <Page/>
+                </Route>
+                
                 <PrivateRoute path="/study/Counter" exact={true}>
                     <LearningPageWrapper page={TestPages.counter}/>
                 </PrivateRoute>
@@ -94,9 +93,7 @@ const App: React.FC = () => {
                     <LearningPageWrapper page={TestPages.pingPong}/>
                 </PrivateRoute>
 
-                <Route path="/page/:name" exact={true}>
-                    <Page/>
-                </Route>
+                
             </IonRouterOutlet>
 
         return (
