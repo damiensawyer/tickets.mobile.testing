@@ -23,44 +23,131 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+
+/*
+On Auth
+https://reactrouter.com/web/example/auth-workflow
+https://usehooks.com/useAuth/
+*/
+
 import {useAppSelector} from './app/hooks'
 //import {setEnvironment} from './features/Settings/settingsSlice'
 import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
 import * as core from "./app/ticketsCore";
+import {createContext, ReactNode, useContext, useState} from "react";
+import {Lazy} from "fp-ts/function";
+import * as O from "fp-ts/Option";
+
+const fakeAuth = {
+    isAuthenticated: false,
+    signin(cb: () => void) {
+        fakeAuth.isAuthenticated = true;
+        setTimeout(cb, 100); // fake async
+    },
+    signout(cb: () => void) {
+        fakeAuth.isAuthenticated = false;
+        setTimeout(cb, 100);
+    }
+};
+
+function useProvideAuth() {
+    const [user, setUser] = useState<O.Option<{user:string}>>();
+    
+    const signin = (cb: () => {}) => {
+        return fakeAuth.signin(() => {
+            setUser(O.some({user:'user'}));
+            cb();
+        });
+    };
+
+    const signout = (cb: () => {}) => {
+        return fakeAuth.signout(() => {
+            setUser(O.none);
+            cb();
+        });
+    };
+
+    return {
+        user,
+        signin,
+        signout
+    };
+}
+
+const authContext = createContext<ReactNode>(null);
+
+const ProvideAuth: React.FC<{ children: ReactNode }> = ({children}) => {
+    const auth = useProvideAuth();
+    return (
+        <authContext.Provider value={auth}>
+            {children}
+        </authContext.Provider>
+    );
+}
+
+
+function useAuth() {
+    return useContext(authContext);
+}
+
+// A wrapper for <Route> that redirects to the login
+// screen if you're not yet authenticated.
+const PrivateRoute: React.FC<{ path:string, children: ReactNode }> = ({children, ...rest}) => {
+    let auth = useAuth();
+    return (
+        <Route
+            {...rest}
+            render={({location}) =>
+                auth.user ? (
+                    children
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: "/login",
+                            state: {from: location}
+                        }}
+                    />
+                )
+            }
+        />
+    );
+}
 
 
 const App: React.FC = () => {
-    core.RunSetup()
-    const darkMode = useAppSelector(x=>x.settings.darkMode)
-    return (
-        <IonApp className={darkMode === 'dark' ? 'dark-theme' : ''}>
-            <IonReactRouter>
-                <IonSplitPane contentId="main">
-                    <Menu/>
-                    <IonRouterOutlet id="main">
+        core.RunSetup()
+        const darkMode = useAppSelector(x => x.settings.darkMode)
+        const isLoggedIn = true;
+        let routes =
+            <IonRouterOutlet id="main">
+                <Route path="/" exact={true}>
+                    <Redirect to="/page/Login"/>
+                </Route>
 
-                        <Route path="/" exact={true}>
-                            <Redirect to="/page/Login"/>
-                        </Route>
+                <PrivateRoute path="/study/Counter" exact={true}>
+                    <LearningPageWrapper page={TestPages.counter}/>
+                </PrivateRoute>
 
-                        <Route path="/study/Counter" exact={true}>
-                            <LearningPageWrapper page={TestPages.counter}/>
-                        </Route>
+                <PrivateRoute path="/study/PingPong" exact={true}>
+                    <LearningPageWrapper page={TestPages.pingPong}/>
+                </PrivateRoute>
 
-                        <Route path="/study/PingPong" exact={true}>
-                            <LearningPageWrapper page={TestPages.pingPong}/>
-                        </Route>
+                <Route path="/page/:name" exact={true}>
+                    <Page/>
+                </Route>
+            </IonRouterOutlet>
 
-                        <Route path="/page/:name" exact={true}>
-                            <Page />
-                        </Route>
-
-
-                    </IonRouterOutlet>
-                </IonSplitPane>
-            </IonReactRouter>
-        </IonApp>
-    );
-};
+        return (
+            <IonApp className={darkMode === 'dark' ? 'dark-theme' : ''}>
+                <IonReactRouter>
+                    <IonSplitPane contentId="main">
+                        {routes}
+                        <Menu/>
+                    </IonSplitPane>;
+                </IonReactRouter>
+            </IonApp>
+        );
+    }
+;
 
 export default App;
