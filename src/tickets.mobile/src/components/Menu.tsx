@@ -17,18 +17,18 @@ interface AppPage {
 }
 
 const appPages: AppPage[] = [
-  {
-    title: 'Settings',
-    url: '/page/Settings',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp
-  },
-  {
-    title: 'Home',
-    url: '/page/Home',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp
-  },
+  // {
+  //   title: 'Settings',
+  //   url: '/page/Settings',
+  //   iosIcon: mailOutline,
+  //   mdIcon: mailSharp
+  // },
+  // {
+  //   title: 'Home',
+  //   url: '/page/Home',
+  //   iosIcon: mailOutline,
+  //   mdIcon: mailSharp
+  // },
   {
     title: 'Login',
     url: '/page/Login',
@@ -42,12 +42,12 @@ const appPages: AppPage[] = [
     iosIcon: calendarNumber,
     mdIcon: calendarNumber
   },
-  {
-    title: 'PingPong',
-    url: '/study/PingPong',
-    iosIcon: calendarNumber,
-    mdIcon: calendarNumber
-  }
+  // {
+  //   title: 'PingPong',
+  //   url: '/study/PingPong',
+  //   iosIcon: calendarNumber,
+  //   mdIcon: calendarNumber
+  // }
   
 ];
 
@@ -59,14 +59,14 @@ const Menu: React.FC = () => {
   const isDarkModeEnabled = () => darkMode === 'dark'
   const dispatch = useAppDispatch();
   const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
-    
+  console.log('menu rendering')
   
   
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonItem>
-          <IonImg className="" slot={'start'} src="assets/tickets-logo-colour-rgb.png" ></IonImg>
+          <IonImg className="" slot={'start'} src="assets/tickets-logo-colour-rgb.png" />
           
         </IonItem>
         <IonList id="inbox-list">
@@ -83,7 +83,7 @@ const Menu: React.FC = () => {
             );
           })}
           <IonItem>
-            <IonIcon slot="start" icon={moonOutline}></IonIcon>
+            <IonIcon slot="start" icon={moonOutline} />
             <IonLabel onClick={() => toggleDarkMode()}>Dark Mode</IonLabel>
             <IonToggle content-id='mytoggle' checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
           </IonItem>

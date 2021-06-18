@@ -61,6 +61,7 @@ export const LoginPage: React.FC = (b) => {
     let shortCodeCapturedText = new BehaviorSubject<string>('')
 
     shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => {
+        console.log('IN SUBSCRIBE FOR shortCodeCapturedText')
         dispatch(processShortCode(x))
         shortTokenErrorLabel.current!.setVisible(false)}
     )
