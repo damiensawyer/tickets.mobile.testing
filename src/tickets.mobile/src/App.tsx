@@ -36,8 +36,6 @@ import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/L
 import * as core from "./app/ticketsCore";
 import {createContext, ReactNode, useContext, useState} from "react";
 import {EnvironmentFunctions} from "./app/ticketsCore.Tooling";
-import {useSelector} from "react-redux";
-import {RootState} from "./app/store";
 
 const fakeAuth = {
     isAuthenticated: false,
@@ -52,21 +50,20 @@ const fakeAuth = {
 };
 
 // A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
-
-const PrivateRoute: React.FC<{ path: string, exact: boolean, children: ReactNode }> = ({children, ...rest}) => {
-    const isLoggedIn = useSelector((x: RootState) => x.loginSlice.isLoggedIn, (x, y) => {return x===y})
+const PrivateRoute: React.FC<{ path:string, exact:boolean, children: ReactNode }> = ({children, ...rest}) => {
+    let isLoggedIn = useAppSelector(x=>EnvironmentFunctions.isLoggedIn(x.loginSlice.activeEnvironment))
     console.log('rendering privateRoute')
     return (
         <Route
             {...rest}
-            render={() =>
+            render={({location}) =>
                 isLoggedIn ? (
                     children
                 ) : (
                     <Redirect
                         to={{
                             pathname: "/page/Login",
-                            state: {from: null}
+                            state: {from: location}
                         }}
                     />
                 )
@@ -78,25 +75,32 @@ const PrivateRoute: React.FC<{ path: string, exact: boolean, children: ReactNode
 const App: React.FC = () => {
         core.RunSetup()
         const darkMode = useAppSelector(x => x.settings.darkMode)
+        let routes =
+            <IonRouterOutlet id="main">
+                <Route path="/" exact={true}>
+                    <Redirect to="/page/Login"/>
+                </Route>
+                {/*Note if I put a private route before this one, we got into an infinite loop when we because logged out*/}
+                <Route path="/page/:name" exact={true}>
+                    <Page/>
+                </Route>
+                
+                <PrivateRoute path="/study/Counter" exact={true}>
+                    <LearningPageWrapper page={TestPages.counter}/>
+                </PrivateRoute>
+
+                <PrivateRoute path="/study/PingPong" exact={true}>
+                    <LearningPageWrapper page={TestPages.pingPong}/>
+                </PrivateRoute>
+
+                
+            </IonRouterOutlet>
+
         return (
             <IonApp className={darkMode === 'dark' ? 'dark-theme' : ''}>
                 <IonReactRouter>
                     <IonSplitPane contentId="main">
-                        <IonRouterOutlet id="main">
-                            <Route path="/" exact={true}>
-                                <Redirect to="/page/Login"/>
-                            </Route>
-
-                            <Route path="/page/:name" exact={true}>
-                                <Page/>
-                            </Route>
-
-                            <PrivateRoute path="/study/Counter" exact={true}>
-                                <LearningPageWrapper page={TestPages.counter}/>
-                            </PrivateRoute>
-
-                        </IonRouterOutlet>
-
+                        {routes}
                         <Menu/>
                     </IonSplitPane>;
                 </IonReactRouter>
