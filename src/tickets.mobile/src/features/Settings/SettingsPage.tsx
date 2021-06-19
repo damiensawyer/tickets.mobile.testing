@@ -33,8 +33,6 @@ export const SettingsPage: React.FC = (b) => {
             <IonItem>
                 <IonIcon slot="start" icon={airplane}></IonIcon>
                 
-
-
                 <IonList slot="end" lines="none">
                     <IonItem>
                         <IonSelect value={activeSettings.environment} interfaceOptions={selectOptions} onIonChange={(e) => dispatch(setEnvironment(e.detail.value))}>

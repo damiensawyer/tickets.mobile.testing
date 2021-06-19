@@ -13,7 +13,8 @@ import {isStatusCodeError, TicketsAPI} from "../../data/user/tickets-auth-api";
 import {isRight} from "fp-ts/Either";
 import {RootState} from "../../app/store";
 import {incrementAsync} from "../LearningReactPatterns/Counter/counterSlice";
-import {setEnvironment} from "../Settings/settingsSlice";
+import {initialEnvironment, setEnvironment, settingsSlice} from "../Settings/settingsSlice";
+import {SettingsPage} from "../Settings/SettingsPage";
 
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
 
@@ -31,7 +32,7 @@ const initialState: LoginState = {
         [Environment.local]: fromNullable(null),
         [Environment.localFiddler]: fromNullable(null)
     },
-    activeEnvironment: core.GetEnvironmentSettings[Environment.localFiddler]
+    activeEnvironment: core.GetEnvironmentSettings[initialEnvironment]
 };
 
 export const LoginSlice = createSlice({

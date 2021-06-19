@@ -9,8 +9,10 @@ export interface SettingsState {
     darkMode: darkModeValues
 }
 
+export const initialEnvironment = Environment.development
+
 export const initialState: SettingsState = {
-  activeSettings:core.GetEnvironmentSettings[Environment.production],
+  activeSettings:core.GetEnvironmentSettings[initialEnvironment],
   darkMode : "dark"
 };
 
