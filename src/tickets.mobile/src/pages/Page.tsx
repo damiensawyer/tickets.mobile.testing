@@ -1,18 +1,21 @@
 import {IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar} from '@ionic/react';
 import {useParams} from 'react-router';
+import ExploreContainer from '../components/ExploreContainer';
 import './Page.css';
 import * as ps from "../app/ticketsCore.pageSettings";
+import * as core from "./..//app/ticketsCore";
+import {SettingsPage} from "../features/Settings/SettingsPage";
 import {search} from "ionicons/icons";
-import {useMemo} from "react";
 
 
 type PageProps = {}
 
 const Page: React.FC<PageProps> = () => {
+
     const pageName = useParams<{ name: string; }>().name;
     const pageSettings = ps.PageSettings[pageName as ps.PageName]
 
-    let r = (
+    return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
@@ -45,8 +48,6 @@ const Page: React.FC<PageProps> = () => {
             </IonContent>
         </IonPage>
     );
-    return r
-    //return useMemo(() => r, [pageName])  // Tried this to no avail 
 };
 
-export default Page
+export default Page;

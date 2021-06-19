@@ -24,10 +24,8 @@ export type EnvironmentSettings = {
 export module EnvironmentFunctions {
     export const isLoggedIn
         = (e: EnvironmentSettings) => {
-        
-        var result =  isSome(e.bearerToken)
-        console.log(`rendering isLoggedIn - result = ${result}`)
-        return result
+        console.log('rendering isLoggedIn')
+        return isSome(e.bearerToken)
     }
 }
 

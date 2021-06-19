@@ -17,8 +17,8 @@ export const TestSettings = {
 export const itIfAPI = () => TestSettings.RunIntegratorTests ? it : it.skip;
 
 export const RunSetup = () => {
-    // axios.defaults.adapter = require('axios/lib/adapters/http');
-    // let dispatch = useDispatch()
+    axios.defaults.adapter = require('axios/lib/adapters/http');
+    let dispatch = useDispatch()
     // if (!useAppSelector(x => x.pingPong.isStarted))
     //     dispatch(setPing())
 }

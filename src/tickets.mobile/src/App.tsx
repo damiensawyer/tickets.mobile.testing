@@ -22,6 +22,8 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
+
 /*
 On Auth
 https://reactrouter.com/web/example/auth-workflow
@@ -31,14 +33,26 @@ https://usehooks.com/useAuth/
 import {useAppSelector} from './app/hooks'
 //import {setEnvironment} from './features/Settings/settingsSlice'
 import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
-import { ReactNode} from "react";
+import * as core from "./app/ticketsCore";
+import {createContext, ReactNode, useContext, useState} from "react";
 import {EnvironmentFunctions} from "./app/ticketsCore.Tooling";
 
+const fakeAuth = {
+    isAuthenticated: false,
+    signin(cb: () => void) {
+        fakeAuth.isAuthenticated = true;
+        setTimeout(cb, 100); // fake async
+    },
+    signout(cb: () => void) {
+        fakeAuth.isAuthenticated = false;
+        setTimeout(cb, 100);
+    }
+};
 
 // A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
 const PrivateRoute: React.FC<{ path:string, exact:boolean, children: ReactNode }> = ({children, ...rest}) => {
     let isLoggedIn = useAppSelector(x=>EnvironmentFunctions.isLoggedIn(x.loginSlice.activeEnvironment))
-    console.log(`rendering privateRoute isLoggedIn=${isLoggedIn}`)
+    console.log('rendering privateRoute')
     return (
         <Route
             {...rest}
@@ -59,14 +73,14 @@ const PrivateRoute: React.FC<{ path:string, exact:boolean, children: ReactNode }
 }
 
 const App: React.FC = () => {
-        //core.RunSetup()
+        core.RunSetup()
         const darkMode = useAppSelector(x => x.settings.darkMode)
         let routes =
             <IonRouterOutlet id="main">
                 <Route path="/" exact={true}>
                     <Redirect to="/page/Login"/>
                 </Route>
-
+                {/*Note if I put a private route before this one, we got into an infinite loop when we because logged out*/}
                 <Route path="/page/:name" exact={true}>
                     <Page/>
                 </Route>
@@ -75,9 +89,10 @@ const App: React.FC = () => {
                     <LearningPageWrapper page={TestPages.counter}/>
                 </PrivateRoute>
 
-                {/*<PrivateRoute path="/study/PingPong" exact={true}>*/}
-                {/*    <LearningPageWrapper page={TestPages.pingPong}/>*/}
-                {/*</PrivateRoute>*/}
+                <PrivateRoute path="/study/PingPong" exact={true}>
+                    <LearningPageWrapper page={TestPages.pingPong}/>
+                </PrivateRoute>
+
                 
             </IonRouterOutlet>
 
