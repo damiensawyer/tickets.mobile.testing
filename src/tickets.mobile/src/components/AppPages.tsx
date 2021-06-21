@@ -37,14 +37,14 @@ export const appPages: AppPage[] = [
     {
         ...securePage,
         title: 'Counter',
-        url: '/study/Counter',
+        url: '/page/Counter',
         iosIcon: calendarNumber,
         mdIcon: calendarNumber
     },
     {
         ...securePage,
         title: 'PingPong',
-        url: '/study/PingPong',
+        url: '/page/PingPong',
         iosIcon: calendarNumber,
         mdIcon: calendarNumber
     }

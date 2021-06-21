@@ -3,11 +3,15 @@ import {HomePage} from "../features/Home/HomePage";
 import {FC} from "react";
 import {EnumDictionary} from "./ticketsCore.Tooling";
 import {LoginPage} from "../features/Login/LoginPage";
+import Counter from "../features/LearningReactPatterns/Counter/Counter";
+import PingPong from "../features/LearningReactPatterns/PingPong/PingPong";
 
 export enum PageName {
     settings = "Settings",
     home = "Home",
-    login = "Login"
+    login = "Login",
+    counter = "Counter",
+    pingPong = "PingPong"
 }
 
 
@@ -23,8 +27,9 @@ const defaultSecurePage: PageSettingsBase = {isSecure: true}
 const defaultUnsecuredPage: PageSettingsBase = {isSecure: false}
 
 export const PageSettings: EnumDictionary<PageName, PageSettings> = {
-    
     [PageName.login]: {...{pageName: PageName.login, $Template: LoginPage}, ...defaultSecurePage},
     [PageName.settings]: {...{pageName: PageName.settings, $Template: SettingsPage}, ...defaultSecurePage},
     [PageName.home]: {...{pageName: PageName.home, $Template: HomePage}, ...defaultUnsecuredPage},
+    [PageName.counter]: {...{pageName: PageName.counter, $Template: Counter}, ...defaultUnsecuredPage},
+    [PageName.pingPong]: {...{pageName: PageName.pingPong, $Template: PingPong}, ...defaultUnsecuredPage},
 }

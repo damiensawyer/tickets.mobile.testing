@@ -1,12 +1,12 @@
-﻿
-import {IonRouterOutlet} from "@ionic/react";
+﻿import {IonRouterOutlet} from "@ionic/react";
 import {Redirect, Route} from "react-router-dom";
 import Page from "./pages/Page";
 import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
 import {useAppSelector} from "./app/hooks";
+import {appPages} from "./components/AppPages";
 
 
-type privateRouteProps = { path: string, exact: boolean, isLoggedIn:boolean }
+type privateRouteProps = { path: string, exact: boolean, isLoggedIn: boolean }
 // A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
 const PrivateRoute: React.FC<privateRouteProps> = ({isLoggedIn, children, ...rest}) => {
     return (<Route
@@ -46,28 +46,40 @@ const PrivateRoute: React.FC<privateRouteProps> = ({isLoggedIn, children, ...res
 //     )}
 
 
-export type routeProps = {isLoggedIn:boolean}
+export type routeProps = { isLoggedIn: boolean }
 
-export const Routes = ({isLoggedIn}:routeProps) =>
-{
+export const Routes = ({isLoggedIn}: routeProps) => {
     console.log(`rendering routes. Logged In ${isLoggedIn}`)
     return (<IonRouterOutlet id="main">
 
-        <PrivateRoute path="/study/Counter" exact={true} isLoggedIn={isLoggedIn}>
-            <LearningPageWrapper page={TestPages.counter}/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/study/PingPong" exact={true}  isLoggedIn={isLoggedIn}>
-            <LearningPageWrapper page={TestPages.pingPong}/>
-        </PrivateRoute>
-        
-        <Route path="/page/:name" exact={true}>
-            <Page/>
-        </Route>
-
         <Route path="/" exact={true}>
-            <Redirect to="/page/Login" from={"/"}/>
+            <Redirect to="/page/Login"/>
         </Route>
+        
+        {appPages.map((appPage, index) => {
+            return <Route path="/page/:name" exact={true}>
+                <Page/>
+                {/*<Redirect to={appPage.url} from={"/"}/>*/}
+            </Route>
+
+        })}
+
+        {/*<PrivateRoute path="/study/Counter" exact={true} isLoggedIn={isLoggedIn}>*/}
+        {/*    <LearningPageWrapper page={TestPages.counter}/>*/}
+        {/*</PrivateRoute>*/}
+
+        {/*<PrivateRoute path="/study/PingPong" exact={true}  isLoggedIn={isLoggedIn}>*/}
+        {/*    <LearningPageWrapper page={TestPages.pingPong}/>*/}
+        {/*</PrivateRoute>*/}
+
+        {/*<Route path="/page/:name" exact={true}>*/}
+        {/*    <Page/>*/}
+        {/*</Route>*/}
+
+        {/*<Route path="/" exact={true}>*/}
+        {/*    <Redirect to="/page/Login" from={"/"}/>*/}
+        {/*</Route>*/}
 
 
-    </IonRouterOutlet>)}
+    </IonRouterOutlet>)
+}
