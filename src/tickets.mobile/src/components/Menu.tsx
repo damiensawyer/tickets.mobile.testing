@@ -10,7 +10,6 @@ import React from "react";
 import {EnvironmentFunctions} from "../app/ticketsCore.Tooling";
 import {appPages} from "./AppPages";
 
-const labels = ['Family'];
 type MenuProps = {isLoggedIn:boolean}
 const Menu = ({isLoggedIn}:MenuProps) => {
   const location = useLocation();
@@ -18,7 +17,8 @@ const Menu = ({isLoggedIn}:MenuProps) => {
   const isDarkModeEnabled = () => darkMode === 'dark'
   const dispatch = useAppDispatch();
   const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
-  
+
+  console.log(`rendering menu. Logged In ${isLoggedIn}`)  
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
