@@ -8,8 +8,9 @@ import {useAppDispatch, useAppSelector} from '../app/hooks'
 import {setDarkMode} from '../features/Settings/settingsSlice'
 import React from "react";
 import {EnvironmentFunctions} from "../app/ticketsCore.Tooling";
-import {appPages} from "./AppPages";
-
+//import {appPages} from "./AppPages";
+import {PageName, PageSettings} from "../app/ticketsCore.pageSettings"
+import {$enum} from "ts-enum-util";
 type MenuProps = {isLoggedIn:boolean}
 const Menu = ({isLoggedIn}:MenuProps) => {
   const location = useLocation();
@@ -28,15 +29,16 @@ const Menu = ({isLoggedIn}:MenuProps) => {
         </IonItem>
         <IonList id="menu-list">
           <IonNote>{isLoggedIn ? 'logged in ....' : 'not logged in'} </IonNote>
-          {appPages.map((appPage, index) => {
+          {$enum(PageName).map((page, index) => {
+            let s = PageSettings[page]
             return (
                 <IonMenuToggle key={index} autoHide={false}>
-                  <IonItem className={location.pathname === appPage.url ? 'selected' : ''} 
-                           routerLink={appPage.url} 
+                  <IonItem className={location.pathname === s.url ? 'selected' : ''} 
+                           routerLink={s.url} 
                            routerDirection="none" 
                            lines="none" detail={false}>
-                    <IonIcon slot="start" ios={appPage.iosIcon} md={appPage.mdIcon}/>
-                    <IonLabel>{`${appPage.title}`}</IonLabel>
+                    <IonIcon slot="start" ios={s.iosIcon} md={s.mdIcon}/>
+                    <IonLabel>{`${s.title}`}</IonLabel>
                   </IonItem>
                 </IonMenuToggle>
             );
