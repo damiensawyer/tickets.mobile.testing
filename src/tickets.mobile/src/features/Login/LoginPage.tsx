@@ -38,7 +38,8 @@ type ErrorLabelProps = {
 const LoginLabel = forwardRef<ErrorLabelRef, ErrorLabelProps>((props, ref) => {
     const [visible, _setVisible] = useState(false);
     const [text, _setText] = useState('');
-
+    
+    
     useImperativeHandle(ref, () => {
         return {
             setVisible: _setVisible,
@@ -52,7 +53,7 @@ export const LoginPage: React.FC = (b) => {
 
     // const count = useAppSelector(selectCount);
     const dispatch = useAppDispatch();
-
+    const [shortCode, setShortCode] = useState('')
     const emailErrorLabel = useRef<ErrorLabelRef>(null);
     const shortTokenErrorLabel = useRef<ErrorLabelRef>(null);
 
@@ -60,7 +61,9 @@ export const LoginPage: React.FC = (b) => {
     emailCapturedText.pipe(filter(b => b !== '')).subscribe(x => emailErrorLabel.current!.setVisible(false))
     let shortCodeCapturedText = new BehaviorSubject<string>('')
 
+    
     shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => {
+        setShortCode(x) // without this, when you switch between logged and not logged in, the text you entered resets.  
         dispatch(processShortCode(x))
         shortTokenErrorLabel.current!.setVisible(false)}
     )
@@ -121,7 +124,7 @@ export const LoginPage: React.FC = (b) => {
             <IonList>
                 <IonItem>
                     <IonLabel position="floating" color="primary">Login Code</IonLabel>
-                    <IonInput name="email" type="email" value={''} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText.next(e.detail.value!)}/>
+                    <IonInput name="shortCode" type="text" value={shortCode} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText.next(e.detail.value!)}/>
                     <LoginLabel ref={shortTokenErrorLabel}/>
                 </IonItem>
 
