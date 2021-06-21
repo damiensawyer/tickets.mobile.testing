@@ -13,7 +13,7 @@ import {appPages} from "./AppPages";
 const labels = ['Family'];
 
 const Menu: React.FC = () => {
-  let isLoggedIn = useAppSelector(x=>EnvironmentFunctions.isLoggedIn(x.loginSlice.activeEnvironment))
+  let isLoggedIn = useAppSelector(x=>x.loginSlice.isLoggedIn)
   const location = useLocation();
   const darkMode = useAppSelector(x=>x.settings.darkMode)
   const isDarkModeEnabled = () => darkMode === 'dark'

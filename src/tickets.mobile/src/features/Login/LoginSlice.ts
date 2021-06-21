@@ -1,7 +1,7 @@
 import * as core from './../../app/ticketsCore'
 import {Environment, EnvironmentSettings} from './../../app/ticketsCore'
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {EnumDictionary} from "../../app/ticketsCore.Tooling";
+import {EnumDictionary, EnvironmentFunctions} from "../../app/ticketsCore.Tooling";
 import {fromNullable, match, none, Option} from "fp-ts/Option";
 import {pipe as fptsPipe} from "fp-ts/function";
 
@@ -20,7 +20,8 @@ export type darkModeValues = 'light' | 'dark' // could have been an enum... but 
 
 export interface LoginState {
     bearerTokens: EnumDictionary<Environment, Option<string>>, // I'm thinking to do this so that we can switch between environments without having to log back in and out.  
-    activeEnvironment: EnvironmentSettings
+    activeEnvironment: EnvironmentSettings,
+    isLoggedIn:boolean
 }
 
 const shortCodeLength = 6 // need to keep this is sync with the back end. Will use so that they don't have to press enter. Search for CreateShortToken() in c# 
@@ -32,7 +33,8 @@ const initialState: LoginState = {
         [Environment.local]: fromNullable(null),
         [Environment.localFiddler]: fromNullable(null)
     },
-    activeEnvironment: core.GetEnvironmentSettings[initialEnvironment]
+    activeEnvironment: core.GetEnvironmentSettings[initialEnvironment],
+    isLoggedIn:false
 };
 
 export const LoginSlice = createSlice({
@@ -44,12 +46,16 @@ export const LoginSlice = createSlice({
             state.bearerTokens[env] = none
             if (state.activeEnvironment.environment == env)
                 state.activeEnvironment.bearerToken = none
+            
+            state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
         },
         removeBearerToken:(state, action: PayloadAction<{ environment: Environment }>) => {
             let p = action.payload
             state.bearerTokens[p.environment] = none
             if (state.activeEnvironment.environment == action.payload.environment)
                 state.activeEnvironment.bearerToken = none
+            
+            state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
         },
         setBearerToken: (state, action: PayloadAction<{ token: string, environment: Environment }>) => {
             let p = action.payload
@@ -57,6 +63,8 @@ export const LoginSlice = createSlice({
             state.bearerTokens[p.environment] = token
             if (state.activeEnvironment.environment == action.payload.environment)
                 state.activeEnvironment.bearerToken = token
+
+            state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
         },
         requestShortCodeToEmail: (state, action: PayloadAction<string>) => {
         },
@@ -67,6 +75,8 @@ export const LoginSlice = createSlice({
         builder
             .addCase(setEnvironment, (state,action: PayloadAction<Environment>) => {
                 state.activeEnvironment = core.GetEnvironmentSettings[action.payload]
+
+                state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
             })
     }
 });

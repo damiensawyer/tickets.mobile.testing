@@ -12,3 +12,7 @@ Check out the show notes from the above.
     - Shows why React.FC is discouraged.
     - Shows how to put React reference in global.d.ts
     - [React Typescript Cheatsheet](https://github.com/typescript-cheatsheets/react) 
+
+
+## Links
+[Examples of how to remove React.FC](https://github.com/gndelia/codemod-replace-react-fc-typescript)
