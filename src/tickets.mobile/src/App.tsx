@@ -51,7 +51,8 @@ const fakeAuth = {
 
 // A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
 const PrivateRoute: React.FC<{ path:string, exact:boolean, children: ReactNode }> = ({children, ...rest}) => {
-    let isLoggedIn = useAppSelector(x=>EnvironmentFunctions.isLoggedIn(x.loginSlice.activeEnvironment))
+    //let isLoggedIn = useAppSelector(x=>EnvironmentFunctions.isLoggedIn(x.loginSlice.activeEnvironment))
+    let isLoggedIn =true;
     console.log('rendering privateRoute')
     return (
         <Route

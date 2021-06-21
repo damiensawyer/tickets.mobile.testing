@@ -8,6 +8,7 @@ import { useAppSelector, useAppDispatch } from '../app/hooks'
 import {setDarkMode} from '../features/Settings/settingsSlice'
 import React from "react";
 import * as core from './../app/ticketsCore'
+import {EnvironmentFunctions} from "../app/ticketsCore.Tooling";
 
 interface AppPage {
   url: string;
@@ -54,27 +55,25 @@ const appPages: AppPage[] = [
 const labels = ['Family'];
 
 const Menu: React.FC = () => {
+  let isLoggedIn = useAppSelector(x=>EnvironmentFunctions.isLoggedIn(x.loginSlice.activeEnvironment))
   const location = useLocation();
   const darkMode = useAppSelector(x=>x.settings.darkMode)
   const isDarkModeEnabled = () => darkMode === 'dark'
   const dispatch = useAppDispatch();
   const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
-    
-  
   
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonItem>
-          <IonImg className="" slot={'start'} src="assets/tickets-logo-colour-rgb.png" ></IonImg>
+          <IonImg className="" slot={'start'} src="assets/tickets-logo-colour-rgb.png" />
           
         </IonItem>
-        <IonList id="inbox-list">
-          <IonNote>hi@ionicframework.com</IonNote>
+        <IonList id="menu-list">
+          <IonNote>{isLoggedIn ? 'logged in ....' : 'not logged in'} </IonNote>
           {appPages.map((appPage, index) => {
             return (
                 <IonMenuToggle key={index} autoHide={false}>
-                  
                   <IonItem className={location.pathname === appPage.url ? 'selected' : ''} routerLink={appPage.url} routerDirection="none" lines="none" detail={false}>
                     <IonIcon slot="start" ios={appPage.iosIcon} md={appPage.mdIcon}/>
                     <IonLabel>{appPage.title}</IonLabel>
@@ -82,21 +81,13 @@ const Menu: React.FC = () => {
                 </IonMenuToggle>
             );
           })}
+          
           <IonItem>
-            <IonIcon slot="start" icon={moonOutline}></IonIcon>
+            <IonIcon slot="start" icon={moonOutline}/>
             <IonLabel onClick={() => toggleDarkMode()}>Dark Mode</IonLabel>
             <IonToggle content-id='mytoggle' checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
           </IonItem>
           
-        </IonList>
-        <IonList id="labels-list">
-          <IonListHeader>Labels</IonListHeader>
-          {labels.map((label, index) => (
-              <IonItem lines="none" key={index}>
-                <IonIcon slot="start" icon={bookmarkOutline}/>
-                <IonLabel>{label}</IonLabel>
-              </IonItem>
-          ))}
         </IonList>
       </IonContent>
     </IonMenu>
