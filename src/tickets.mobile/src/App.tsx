@@ -34,7 +34,7 @@ import {useAppSelector} from './app/hooks'
 //import {setEnvironment} from './features/Settings/settingsSlice'
 import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
 import * as core from "./app/ticketsCore";
-import {createContext, ReactNode, useContext, useState} from "react";
+import React, {createContext, ReactNode, useContext, useState} from "react";
 import {EnvironmentFunctions} from "./app/ticketsCore.Tooling";
 
 const fakeAuth = {
@@ -50,28 +50,28 @@ const fakeAuth = {
 };
 
 // A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
-const PrivateRoute: React.FC<{ path:string, exact:boolean, children: ReactNode }> = ({children, ...rest}) => {
-    //let isLoggedIn = useAppSelector(x=>EnvironmentFunctions.isLoggedIn(x.loginSlice.activeEnvironment))
-    let isLoggedIn =true;
-    console.log('rendering privateRoute')
-    return (
-        <Route
-            {...rest}
-            render={({location}) =>
-                isLoggedIn ? (
-                    children
-                ) : (
-                    <Redirect
-                        to={{
-                            pathname: "/page/Login",
-                            state: {from: location}
-                        }}
-                    />
-                )
-            }
-        />
-    );
-}
+const PrivateRoute: React.FC<{ path: string,exact:boolean, children: ReactNode }> = ({path, exact, children }) => {
+    let isLoggedIn = useAppSelector(x => EnvironmentFunctions.isLoggedIn(x.loginSlice.activeEnvironment))
+    //let isLoggedIn =true;
+    return (<Route
+        path={path}
+        exact={exact}
+        render={({location}) => {
+            console.log('YIP! location = ', location)
+            return isLoggedIn ? (
+                children
+            ) : (
+                <Redirect
+                    to={{
+                        pathname: "/page/Login",
+                        state:'hi!!'
+                    }}
+                />
+            )
+        }}
+ 
+    />)
+};
 
 const App: React.FC = () => {
         core.RunSetup()
@@ -85,7 +85,7 @@ const App: React.FC = () => {
                 <Route path="/page/:name" exact={true}>
                     <Page/>
                 </Route>
-                
+
                 <PrivateRoute path="/study/Counter" exact={true}>
                     <LearningPageWrapper page={TestPages.counter}/>
                 </PrivateRoute>
@@ -94,7 +94,7 @@ const App: React.FC = () => {
                     <LearningPageWrapper page={TestPages.pingPong}/>
                 </PrivateRoute>
 
-                
+
             </IonRouterOutlet>
 
         return (
