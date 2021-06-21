@@ -1,56 +1,14 @@
-import {IonContent, IonIcon, IonImg, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonToggle,} from '@ionic/react';
+import {IonContent, IonIcon, IonImg, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonNote, IonToggle,} from '@ionic/react';
 
 import {useLocation} from 'react-router-dom';
-import {bookmarkOutline, mailOutline, mailSharp, moonOutline, calendarNumber} from 'ionicons/icons';
+import {moonOutline} from 'ionicons/icons';
 import './Menu.css';
 
-import { useAppSelector, useAppDispatch } from '../app/hooks'
+import {useAppDispatch, useAppSelector} from '../app/hooks'
 import {setDarkMode} from '../features/Settings/settingsSlice'
 import React from "react";
-import * as core from './../app/ticketsCore'
 import {EnvironmentFunctions} from "../app/ticketsCore.Tooling";
-
-interface AppPage {
-  url: string;
-  iosIcon: string;
-  mdIcon: string;
-  title: string;
-}
-
-const appPages: AppPage[] = [
-  {
-    title: 'Settings',
-    url: '/page/Settings',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp
-  },
-  {
-    title: 'Home',
-    url: '/page/Home',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp
-  },
-  {
-    title: 'Login',
-    url: '/page/Login',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp
-  },
-    
-  {
-    title: 'Counter',
-    url: '/study/Counter',
-    iosIcon: calendarNumber,
-    mdIcon: calendarNumber
-  },
-  {
-    title: 'PingPong',
-    url: '/study/PingPong',
-    iosIcon: calendarNumber,
-    mdIcon: calendarNumber
-  }
-  
-];
+import {appPages} from "./AppPages";
 
 const labels = ['Family'];
 
