@@ -50,14 +50,14 @@ const fakeAuth = {
 };
 
 // A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
-const PrivateRoute: React.FC<{ path: string,exact:boolean, children: ReactNode }> = ({path, exact, children }) => {
+type privateRouteProps = {path: string,exact:boolean}
+const PrivateRoute: React.FC<privateRouteProps> = ({children ,...rest}) => {
     let isLoggedIn = useAppSelector(x => EnvironmentFunctions.isLoggedIn(x.loginSlice.activeEnvironment))
-    //let isLoggedIn =true;
     return (<Route
-        path={path}
-        exact={exact}
+        {...rest}
         render={({location}) => {
-            console.log('YIP! location = ', location)
+            console.log(`YIP! isLoggedIn=${isLoggedIn}, location = `, location)
+            // https://reactrouter.com/web/api/match/null-matches
             return isLoggedIn ? (
                 children
             ) : (
@@ -86,6 +86,11 @@ const App: React.FC = () => {
                     <Page/>
                 </Route>
 
+                
+                {/*<Route path="/study/Counter" exact={true}>*/}
+                {/*    <LearningPageWrapper page={TestPages.counter}/>*/}
+                {/*</Route>*/}
+                
                 <PrivateRoute path="/study/Counter" exact={true}>
                     <LearningPageWrapper page={TestPages.counter}/>
                 </PrivateRoute>
