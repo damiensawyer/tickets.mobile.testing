@@ -50,22 +50,3 @@ export const Routes = ({isLoggedIn}:routeProps) =>
             <LearningPageWrapper page={TestPages.pingPong}/>
         </PrivateRoute>
     </IonRouterOutlet>)
-
-// export const Routes = (props:routeProps) =>
-//     (<IonRouterOutlet id="main">
-//         <Route path="/page/:name" exact={true}>
-//             <Page/>
-//         </Route>
-//        
-//         <Route path="/" exact={true}>
-//             <Redirect to="/page/Login"/>
-//         </Route>
-//
-//         <PrivateRoute path="/study/Counter" exact={true} isLoggedIn={props.isLoggedIn}>
-//             <LearningPageWrapper page={TestPages.counter}/>
-//         </PrivateRoute>
-//
-//         <PrivateRoute path="/study/PingPong" exact={true}  isLoggedIn={props.isLoggedIn}>
-//             <LearningPageWrapper page={TestPages.pingPong}/>
-//         </PrivateRoute>
-//     </IonRouterOutlet>)

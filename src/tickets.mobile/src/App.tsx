@@ -27,15 +27,15 @@ import React from "react";
 import {Routes} from "./Routes";
 
 const App: React.FC = () => {
+        core.RunSetup()    
         const isLoggedIn = useAppSelector(x => x.loginSlice.isLoggedIn)
-        core.RunSetup()
         const darkMode = useAppSelector(x => x.settings.darkMode)
         return (
             <IonApp className={darkMode === 'dark' ? 'dark-theme' : ''}>
                 <IonReactRouter>
                     <IonSplitPane contentId="main">
                         <Routes isLoggedIn={isLoggedIn}/>
-                        <Menu/>
+                        <Menu  isLoggedIn={isLoggedIn}/>
                     </IonSplitPane>;
                 </IonReactRouter>
             </IonApp>
