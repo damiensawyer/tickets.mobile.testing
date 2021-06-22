@@ -55,34 +55,36 @@ export const Routes = ({isLoggedIn}: routeProps) => {
     console.log(`rendering routes. Logged In ${isLoggedIn}`)
     // https://ionicframework.com/docs/react/navigation 
     // https://forum.ionicframework.com/t/best-practice-for-react-routing/192100/14
-    return (
-        <IonRouterOutlet id="main">
+    return (<IonRouterOutlet id="main">
 
-            <Route path="/page/Home" component={HomePage}/>
-            <Route path="/page/Login" component={LoginPage}/>
-            <Redirect exact from='/page/Counter' to='/page/Login'/>
-            {/*<Redirect exact from='/' to='/page/Home' />*/}
-            {/*<Route path="page/Counter" exact={true}>*/}
-            {/*    */}
-            {/*</Route>*/}
+        {/*<Route path="/" exact>*/}
+        {/*    <Redirect to="/page/Login"/>*/}
+        {/*</Route>*/}
 
-            {/*<Route path="/page/:name">*/}
-            {/*    <Page  />*/}
-            {/*</Route>*/}
+        <Route path="/page/Home" component={HomePage} />
+        <Route path="/page/Login" component={LoginPage} />
+        <Redirect exact from='/page/Counter' to='/page/Login' />
+        {/*<Redirect exact from='/' to='/page/Home' />*/}
+        {/*<Route path="page/Counter" exact={true}>*/}
+        {/*    */}
+        {/*</Route>*/}
+        
+        {/*<Route path="/page/:name">*/}
+        {/*    <Page  />*/}
+        {/*</Route>*/}
 
-            {/*{$enum(PageName).map((appPage, index) => {*/}
-            {/*    let r = PageSettings[appPage]*/}
-            {/*    return (*/}
-            {/*             <Route path="/page/:name" exact={true}>*/}
-            {/*                 false */}
-            {/*                 ? <Page/>*/}
-            {/*                 : <Redirect to={{pathname: "/page/Login" }} from={r.url} />*/}
-            {/*            </Route>*/}
+        {/*{$enum(PageName).map((appPage, index) => {*/}
+        {/*    let r = PageSettings[appPage]*/}
+        {/*    return (*/}
+        {/*             <Route path="/page/:name" exact={true}>*/}
+        {/*                 false */}
+        {/*                 ? <Page/>*/}
+        {/*                 : <Redirect to={{pathname: "/page/Login" }} from={r.url} />*/}
+        {/*            </Route>*/}
+        
+        
+        {/*    )*/}
+        {/*})}*/}
 
-
-            {/*    )*/}
-            {/*})}*/}
-
-        </IonRouterOutlet>
-    )
+    </IonRouterOutlet>)
 }

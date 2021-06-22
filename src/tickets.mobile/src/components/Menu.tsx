@@ -1,6 +1,6 @@
 import {IonContent, IonIcon, IonImg, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonNote, IonToggle,} from '@ionic/react';
 
-import {Link, useLocation} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {moonOutline} from 'ionicons/icons';
 import './Menu.css';
 
@@ -32,19 +32,15 @@ const Menu = ({isLoggedIn}:MenuProps) => {
           {$enum(PageName).map((page, index) => {
             let s = PageSettings[page]
             return (
-                <div>
-                <Link to={s.url}>{s.title}</Link>
-                  
-                // <IonMenuToggle key={index} autoHide={false}>
-                //   <IonItem className={location.pathname === s.url ? 'selected' : ''} 
-                //            routerLink={s.url} 
-                //            routerDirection="forward" 
-                //            lines="none" detail={false}>
-                //     <IonIcon slot="start" ios={s.iosIcon} md={s.mdIcon}/>
-                //     <IonLabel>{`${s.title}`}</IonLabel>
-                //    
-                //   </IonItem>
-                // </IonMenuToggle>
+                <IonMenuToggle key={index} autoHide={false}>
+                  <IonItem className={location.pathname === s.url ? 'selected' : ''} 
+                           routerLink={s.url} 
+                           routerDirection="none" 
+                           lines="none" detail={false}>
+                    <IonIcon slot="start" ios={s.iosIcon} md={s.mdIcon}/>
+                    <IonLabel>{`${s.title}`}</IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
             );
           })}
           
