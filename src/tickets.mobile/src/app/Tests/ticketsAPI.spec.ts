@@ -1,12 +1,9 @@
 import {GetEnvironmentSettings, Environment, TestSettings, itIfAPI} from "../ticketsCore";
 import {isSome, none, some} from "fp-ts/Option";
-import {AxiosErrorWithNoStatusCode, AxiosErrorWithStatusCode, GetBearerToken2, GetEnvironmentDetails, isStatusCodeError, TicketsAPI} from "../../data/user/tickets-auth-api";
+import {AxiosErrorWithNoStatusCode, AxiosErrorWithStatusCode, isStatusCodeError, TicketsAPI} from "../../data/user/tickets-auth-api";
 import {isLeft, isRight, left, right} from "fp-ts/Either";
-import {interval, lastValueFrom, of, pipe, from, firstValueFrom} from 'rxjs';
-import { concatWith, combineLatestWith } from 'rxjs/operators';
-
 import '@relmify/jest-fp-ts';
-import {observe} from "web-vitals/dist/modules/lib/observe";
+import {GetBearerToken, GetEnvironmentDetails} from "../../data/user/tickets-http-requests";
 //import {right} from "fp-ts/These";
 
 describe('API Tests', () => {
@@ -18,12 +15,19 @@ describe('API Tests', () => {
         expect(none).toBeNone()
     })
 
-
     itIfAPI()('Get BearerToken with bad test name gets 403 - with jest-fp-ts', () => {
-        return GetBearerToken2(api,'damienbad')().then(y => {
+        return GetBearerToken(api,'damienbad')().then(y => {
             expect(y).toBeEither()
             expect(y).toSubsetEqualLeft(<AxiosErrorWithStatusCode>{status: 403})
             expect(y).toBeLeft()
+        })
+    })
+
+    itIfAPI()('Get BearerToken with good test gets 200', () => {
+        return GetBearerToken(api,'emma')().then(y => {
+            expect(y).toBeEither()
+            expect(y).toBeRight()
+            expect(y).toBeTruthy()
         })
     })
 

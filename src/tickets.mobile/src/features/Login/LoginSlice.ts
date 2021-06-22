@@ -9,23 +9,24 @@ import {ofType, StateObservable} from "redux-observable";
 import {catchError, filter, map, switchMap} from "rxjs/operators";
 import * as rxjs from "rxjs"
 import {Observable} from "rxjs"
-import {AxiosError, AxiosErrorWithStatusCode, GetBearerToken2, isStatusCodeError, TicketsAPI, ticketsQuery} from "../../data/user/tickets-auth-api";
+import {AxiosError, AxiosErrorWithStatusCode, AxiosRequest$, isStatusCodeError, TicketsAPI, ticketsQuery} from "../../data/user/tickets-auth-api";
 import {isRight} from "fp-ts/Either";
 import {RootState} from "../../app/store";
 import {incrementAsync} from "../LearningReactPatterns/Counter/counterSlice";
 import {initialEnvironment, setEnvironment, settingsSlice} from "../Settings/settingsSlice";
 import {SettingsPage} from "../Settings/SettingsPage";
 import {TaskEither} from "fp-ts/TaskEither";
+import {GetBearerToken} from "../../data/user/tickets-http-requests";
 
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
 
 export interface LoginState {
     bearerTokens: EnumDictionary<Environment, Option<string>>, // I'm thinking to do this so that we can switch between environments without having to log back in and out.  
     activeEnvironment: EnvironmentSettings,
-    isLoggedIn:boolean
+    isLoggedIn: boolean
 }
 
-const shortCodeLength = 6 // need to keep this is sync with the back end. Will use so that they don't have to press enter. Search for CreateShortToken() in c# 
+const minShortCodeLength = 4 // need to keep this is sync with the back end. Will use so that they don't have to press enter. Search for CreateShortToken() in c# 
 
 const initialState: LoginState = {
     bearerTokens: {
@@ -35,7 +36,7 @@ const initialState: LoginState = {
         [Environment.localFiddler]: fromNullable(null)
     },
     activeEnvironment: core.GetEnvironmentSettings[initialEnvironment],
-    isLoggedIn:false
+    isLoggedIn: false
 };
 
 export const LoginSlice = createSlice({
@@ -47,15 +48,15 @@ export const LoginSlice = createSlice({
             state.bearerTokens[env] = none
             if (state.activeEnvironment.environment == env)
                 state.activeEnvironment.bearerToken = none
-            
+
             state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
         },
-        removeBearerToken:(state, action: PayloadAction<{ environment: Environment }>) => {
+        removeBearerToken: (state, action: PayloadAction<{ environment: Environment }>) => {
             let p = action.payload
             state.bearerTokens[p.environment] = none
             if (state.activeEnvironment.environment == action.payload.environment)
                 state.activeEnvironment.bearerToken = none
-            
+
             state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
         },
         setBearerToken: (state, action: PayloadAction<{ token: string, environment: Environment }>) => {
@@ -74,7 +75,7 @@ export const LoginSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(setEnvironment, (state,action: PayloadAction<Environment>) => {
+            .addCase(setEnvironment, (state, action: PayloadAction<Environment>) => {
                 state.activeEnvironment = core.GetEnvironmentSettings[action.payload]
 
                 state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
@@ -89,61 +90,15 @@ export const LoginSlice = createSlice({
 // );
 
 
-// to do... make this generic so that we can use for multiple API calls. 
-// let getBearerFromShortCode$ = (environmentSettings: EnvironmentSettings, shortCode: string):Observable<string> =>
-//     new Observable((s) => {
-//         //let cancellationSource = axios.CancelToken.source();
-//         let api = new TicketsAPI(environmentSettings)
-//         api.GetBearerToken(shortCode)().then(r => {
-//             if (isRight(r)) {
-//                 s.next(r.right.value)
-//                 s.complete()
-//             } else {
-//                 if (isStatusCodeError(r.left))
-//                     s.error(`${r.left.status} ${r.left.statusText}`)
-//                 else
-//                     s.error(`error from http call ${r.left.code}`)
-//             }
-//         })
-//         //return a function which is called when they unsubscribe.
-//         return () => {
-//             api.axiosCancellationSource.cancel()
-//             //console.log(`tearing down ${searchTerm}`);
-//         };
-//     });
-
-// type dd<TProps, TResult> = <TProps, TResult>(p:TProps)=>TaskEither<AxiosError, TResult>
-
-let axiosRequest$ = <TProps, TResult>(environmentSettings: EnvironmentSettings, p:TProps, f:ticketsQuery<TProps, TResult>):Observable<TResult> =>
-    new Observable((s) => {
-        let api = new TicketsAPI(environmentSettings)
-        f(api,p)().then(r => {
-            
-            if (isRight(r)) {
-                s.next(r.right)
-                s.complete()
-            } else {
-                if (isStatusCodeError(r.left))
-                    s.error(`${r.left.status} ${r.left.statusText}`)
-                else
-                    s.error(`error from http call ${r.left.code}`)
-            }
-        })
-        return () => {
-            api.axiosCancellationSource.cancel()
-        };
-    });
-
-
 
 export const convertShortCodeToBearerEpic = (action$: any, state$: any) => // action$ is a stream of actions
     action$.pipe(
         ofType(processShortCode),
-        filter((x: PayloadAction<string>) => x.payload.length >= 1),
+        filter((x: PayloadAction<string>) => x.payload.length >= minShortCodeLength),
         switchMap((x: PayloadAction<string>) => {
-            return axiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, GetBearerToken2).pipe(
-                 map((i: string) => setBearerToken({token: i, environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})),
-                 catchError(error => rxjs.of(removeBearerToken({environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})))
+            return AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, GetBearerToken).pipe(
+                map((i: string) => setBearerToken({token: i, environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})),
+                catchError(error => rxjs.of(removeBearerToken({environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})))
             )
         })
     )

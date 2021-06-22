@@ -29,8 +29,11 @@ const Menu = ({isLoggedIn}:MenuProps) => {
         </IonItem>
         <IonList id="menu-list">
           <IonNote>{isLoggedIn ? 'logged in ....' : 'not logged in'} </IonNote>
-          {$enum(PageName).map((page, index) => {
-            let s = PageSettings[page]
+          {$enum(PageName)
+              .map(x=>PageSettings[x])
+              .filter(x=>!x.isSecure || isLoggedIn)
+              .map((s, index) => {
+            
             return (
                 <IonMenuToggle key={index} autoHide={false}>
                   <IonItem className={location.pathname === s.url ? 'selected' : ''} 

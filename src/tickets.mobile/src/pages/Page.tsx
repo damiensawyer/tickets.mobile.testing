@@ -6,13 +6,13 @@ import * as ps from "../app/ticketsCore.pageSettings";
 import * as core from "./..//app/ticketsCore";
 import {SettingsPage} from "../features/Settings/SettingsPage";
 import {search} from "ionicons/icons";
+import {routeProps} from "../Routes";
 
 
-type PageProps = {}
+type PageProps = {pageName:string}
 
-const Page: React.FC<PageProps> = () => {
-
-    const pageName = useParams<{ name: string; }>().name;
+//const Page: React.FC<PageProps> = () => {
+export const Page = ({pageName  }: PageProps) => {
     const pageSettings = ps.PageSettings[pageName as ps.PageName]
 
     return (
