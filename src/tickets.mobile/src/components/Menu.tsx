@@ -31,7 +31,7 @@ const Menu = ({isLoggedIn}:MenuProps) => {
           <IonNote>{isLoggedIn ? 'logged in ....' : 'not logged in'} </IonNote>
           {$enum(PageName)
               .map(x=>PageSettings[x])
-              //.filter(x=>!x.isSecure || isLoggedIn)
+              .filter(x=>!x.isSecure || isLoggedIn) // Shouldn't really have to hide inaccessible routes, but there is an issue in Ionic See my question here https://forum.ionicframework.com/t/routerlink-not-firing-redirects/211412 
               .map((s, index) => {
             
             return (

@@ -23,7 +23,8 @@ import {incrementAsync, selectCount} from "../LearningReactPatterns/Counter/coun
 import {validateEmail} from "../../app/ticketsCore.Tooling";
 import {TicketsAPI} from "../../data/user/tickets-auth-api";
 import {RequestShortCodeToEmail} from "../../data/user/tickets-http-requests";
-
+//import {routeState} from "../../Routes";
+import {useLocation} from "react-router-dom";
 
 // The type returned.  https://stackoverflow.com/a/65301990/494635 
 type ErrorLabelRef = {
@@ -60,7 +61,7 @@ export const LoginPage: React.FC = (b) => {
     const emailErrorLabel = useRef<ErrorLabelRef>(null);
     const shortTokenErrorLabel = useRef<ErrorLabelRef>(null);
     const activeEnvironment = useAppSelector(x =>x.loginSlice.activeEnvironment)
-    
+    const locationData:any = useLocation()
     const activeApi = new TicketsAPI(activeEnvironment) // need to pass param to show when to redo??
     useEffect(()=>()=>{activeApi.axiosCancellationSource.cancel()})
     
@@ -111,7 +112,6 @@ export const LoginPage: React.FC = (b) => {
                 <p>Please enter the email linked to your tickets.org.au account. If you logged in with Google or Facebook, use the email from that account. We will email you a login code which you can enter below.</p>
 
             </IonCardHeader>
-            
             <IonList lines={'none'}>
                 <IonItem>
                     <IonLabel position="floating" color="primary">Email Address</IonLabel>
