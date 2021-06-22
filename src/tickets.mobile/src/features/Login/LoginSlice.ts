@@ -101,18 +101,18 @@ export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: S
         })
     )
 
-export const requestShortCodeToEmailEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
-    action$.pipe(
-        ofType(requestShortCodeToEmail),
-        filter((x: PayloadAction<string>) => validateEmail(x.payload)),
-        switchMap((x: PayloadAction<string>) => {
-            return AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, RequestShortCodeToEmail).pipe(
-                map(() => EMPTY),
-                catchError(error => EMPTY) // handle somehow??
-                //catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment})))
-            )
-        })
-    )
+// export const requestShortCodeToEmailEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
+//     action$.pipe(
+//         ofType(requestShortCodeToEmail),
+//         filter((x: PayloadAction<string>) => validateEmail(x.payload)),
+//         switchMap((x: PayloadAction<string>) => {
+//             return AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, RequestShortCodeToEmail).pipe(
+//                 map(() => EMPTY),
+//                 catchError(error => EMPTY) // handle somehow??
+//                 //catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment})))
+//             )
+//         })
+//     )
 
 
 // Export the actionCreators

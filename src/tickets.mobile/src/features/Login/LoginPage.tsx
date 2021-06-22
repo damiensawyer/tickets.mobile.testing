@@ -1,4 +1,4 @@
-import {forwardRef, useImperativeHandle, useRef, useState} from "react";
+import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react";
 import {
     IonButton,
     IonCard, IonCardHeader, IonCardTitle,
@@ -21,6 +21,8 @@ import {BehaviorSubject} from "rxjs";
 import {filter} from "rxjs/operators";
 import {incrementAsync, selectCount} from "../LearningReactPatterns/Counter/counterSlice";
 import {validateEmail} from "../../app/ticketsCore.Tooling";
+import {TicketsAPI} from "../../data/user/tickets-auth-api";
+import {RequestShortCodeToEmail} from "../../data/user/tickets-http-requests";
 
 
 // The type returned.  https://stackoverflow.com/a/65301990/494635 
@@ -52,18 +54,19 @@ const LoginLabel = forwardRef<ErrorLabelRef, ErrorLabelProps>((props, ref) => {
 });
 
 export const LoginPage: React.FC = (b) => {
-
-    // const count = useAppSelector(selectCount);
     const [toastPresent, toastDismiss] = useIonToast(); // https://ionicframework.com/docs/api/toast
     const dispatch = useAppDispatch();
     const [shortCode, setShortCode] = useState('')
     const emailErrorLabel = useRef<ErrorLabelRef>(null);
     const shortTokenErrorLabel = useRef<ErrorLabelRef>(null);
-
+    const activeEnvironment = useAppSelector(x =>x.loginSlice.activeEnvironment)
+    
+    const activeApi = new TicketsAPI(activeEnvironment) // need to pass param to show when to redo??
+    useEffect(()=>()=>{activeApi.axiosCancellationSource.cancel()})
+    
     let emailCapturedText = new BehaviorSubject<string>('')
     emailCapturedText.pipe(filter(b => b !== '')).subscribe(x => emailErrorLabel.current!.setVisible(false))
     let shortCodeCapturedText = new BehaviorSubject<string>('')
-
     
     shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => {
         setShortCode(x) // without this, when you switch between logged and not logged in, the text you entered resets.  
@@ -77,28 +80,27 @@ export const LoginPage: React.FC = (b) => {
             emailErrorLabel.current!.setVisible(true)
             emailErrorLabel.current!.setText('please enter a valid email')
         } else {
+            let d = data.value // TypeScript didn't like referring to data.value below
             emailErrorLabel.current!.setVisible(false)
-            dispatch(requestShortCodeToEmail(data.value))
-            toastPresent({
-                buttons: [{ text: 'hide', handler: () => toastDismiss() }],
-                message: `Requested short code be emailed to ${data.value}`,
-                onDidDismiss: () => console.log('dismissed'),
-                onWillDismiss: () => console.log('will dismiss'),
-                duration:1000
-            })
+            RequestShortCodeToEmail(activeApi, data.value)()
+                .then(x=>{
+                    toastPresent({
+                        buttons: [{ text: 'hide', handler: () => toastDismiss() }],
+                        message: `Requested short code be emailed to ${d}`,
+                        onDidDismiss: () => console.log('dismissed'),
+                        onWillDismiss: () => console.log('will dismiss'),
+                        duration:3000
+                    })
+                    // emailCapturedText.next('') // don't think this will work. Need a ref to the textbox.
+                })
+                .catch(x=>{
+                    
+                    
+                })
+            // dispatch(requestShortCodeToEmail(data.value))
+            
         }
     }
-    // const submitShortCode = () => {
-    //     let data = fromNullable(shortCodeCapturedText.value)
-    //     if (isNone(data) || data.value === '') {
-    //
-    //         shortTokenErrorLabel.current!.setVisible(true)
-    //         shortTokenErrorLabel.current!.setText('please enter code')
-    //     } else {
-    //         (shortTokenErrorLabel.current! as any).setVisible(false)
-    //
-    //     }
-    // }
     return <>
         <div className="login-logo">
             <IonImg class="small" src="assets/tickets-logo-colour-rgb.png"/>
