@@ -6,13 +6,15 @@ import {LoginPage} from "../features/Login/LoginPage";
 import Counter from "../features/LearningReactPatterns/Counter/Counter";
 import PingPong from "../features/LearningReactPatterns/PingPong/PingPong";
 import {calendarNumber, mailOutline, mailSharp} from "ionicons/icons";
+import {LogoutPage} from "../features/Login/LogoutPage";
 
 export enum PageName {
     home = "Home",
     settings = "Settings",
     login = "Login",
     counter = "Counter",
-    pingPong = "PingPong"
+    pingPong = "PingPong",
+    logOut = "Logout"
 }
 
 interface PageSettingsBase {
@@ -21,6 +23,8 @@ interface PageSettingsBase {
     iosIcon: string,
     mdIcon: string,
     title: string,
+    showIfLoggedOn: boolean
+    showIfNotLoggedOn: boolean
 }
 
 interface PageSettings extends PageSettingsBase {
@@ -29,11 +33,12 @@ interface PageSettings extends PageSettingsBase {
 }
 
 //const defaultPage: Pick<PageSettings, 'requireLogin' | 'title'>  = {requireLogin:true, title:'blah'}  // demo for using multiple keys  
-const defaultSecurePage: Pick<PageSettings, 'isSecure'> = {isSecure: true}
-const defaultUnsecuredPage: Pick<PageSettings, 'isSecure'> = {isSecure: false}
+const defaultSecurePage: Pick<PageSettings, 'isSecure' | 'showIfLoggedOn' | 'showIfNotLoggedOn'> = {isSecure: true, showIfLoggedOn:true, showIfNotLoggedOn:false}
+const defaultUnsecuredPage: Pick<PageSettings, 'isSecure'| 'showIfLoggedOn' | 'showIfNotLoggedOn'> = {isSecure: false, showIfLoggedOn:true, showIfNotLoggedOn:true}
 
 export const PageSettings: EnumDictionary<PageName, PageSettings> = {
-    [PageName.login]: {pageName: PageName.login, $Template: LoginPage, url:'/page/Login', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Login', ...defaultUnsecuredPage},
+    [PageName.login]: {pageName: PageName.login, $Template: LoginPage, url:'/page/Login', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Login', ...defaultUnsecuredPage, showIfLoggedOn:false},
+    [PageName.logOut]: {pageName: PageName.logOut, $Template: LogoutPage, url:'/page/Logout', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Logout', ...defaultUnsecuredPage, showIfLoggedOn:true, showIfNotLoggedOn:false},
     [PageName.settings]: {...{pageName: PageName.settings, $Template: SettingsPage, url:'/page/Settings', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Settings'}, ...defaultUnsecuredPage},
     [PageName.home]: {...{pageName: PageName.home, $Template: HomePage, url:'/page/Home', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Home'}, ...defaultUnsecuredPage},
     [PageName.counter]: {...{pageName: PageName.counter, $Template: Counter, url:'/page/Counter', iosIcon:calendarNumber, mdIcon:calendarNumber ,title:'Counter'}, ...defaultSecurePage},

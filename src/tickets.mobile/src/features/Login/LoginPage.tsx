@@ -6,7 +6,7 @@ import {
     IonInput,
     IonItem,
     IonLabel,
-    IonList,
+    IonList, IonProgressBar,
     IonRow,
     IonText, IonTitle, LocationHistory,
     useIonToast
@@ -148,6 +148,7 @@ export const LoginPage: React.FC = (b) => {
                         <IonInput name="shortCode" type="text" value={shortCode} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText.next(e.detail.value!)}/>
                         <LoginLabel ref={shortTokenErrorLabel}/>
                     </IonItem>
+                    <IonProgressBar type="indeterminate"/><br />
 
                 </IonList>
 

@@ -43,8 +43,8 @@ export const LoginSlice = createSlice({
     name: 'Login',
     initialState,
     reducers: {
-        setLoggedOut: (state, action: PayloadAction<{ environment: Option<Environment> }>) => {
-            let env = fptsPipe(action.payload.environment, match(() => state.activeEnvironment.environment, b => b)) // if they don't pass an environment, log out the default
+        setLoggedOut: (state, action: PayloadAction<Option<Environment>>) => {
+            let env = fptsPipe(action.payload, match(() => state.activeEnvironment.environment, b => b)) // if they don't pass an environment, log out the default
             state.bearerTokens[env] = none
             if (state.activeEnvironment.environment == env)
                 state.activeEnvironment.bearerToken = none
@@ -125,7 +125,7 @@ export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: S
 
 
 // Export the actionCreators
-export const {requestShortCodeToEmail, setBearerToken, processedShortCodeSuccessfully, processShortCode, removeBearerToken} = LoginSlice.actions;
+export const {setLoggedOut, requestShortCodeToEmail, setBearerToken, processedShortCodeSuccessfully, processShortCode, removeBearerToken} = LoginSlice.actions;
 export const epics = [convertShortCodeToBearerEpic]
 
 // export the reducer
