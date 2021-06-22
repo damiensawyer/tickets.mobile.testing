@@ -38,8 +38,8 @@ function logEpic(actions: any) {
 
 export const rootEpic = combineEpics(
     //logEpic, 
-    ...pingPongEpics,
-    ...loginEpics
+    ...(pingPongEpics as any),
+    ...(loginEpics as any)
 );
 rxjsEpicMiddleware.run(rootEpic)
 

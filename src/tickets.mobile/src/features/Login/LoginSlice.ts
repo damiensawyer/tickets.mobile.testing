@@ -1,6 +1,6 @@
 import * as core from './../../app/ticketsCore'
 import {Environment, EnvironmentSettings} from './../../app/ticketsCore'
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {EnumDictionary, EnvironmentFunctions} from "../../app/ticketsCore.Tooling";
 import {fromNullable, match, none, Option} from "fp-ts/Option";
 import {pipe as fptsPipe} from "fp-ts/function";
@@ -52,8 +52,7 @@ export const LoginSlice = createSlice({
             state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
         },
         removeBearerToken: (state, action: PayloadAction<{ environment: Environment }>) => {
-            let p = action.payload
-            state.bearerTokens[p.environment] = none
+            state.bearerTokens[action.payload.environment] = none
             if (state.activeEnvironment.environment == action.payload.environment)
                 state.activeEnvironment.bearerToken = none
 
@@ -76,8 +75,9 @@ export const LoginSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(setEnvironment, (state, action: PayloadAction<Environment>) => {
-                state.activeEnvironment = core.GetEnvironmentSettings[action.payload]
-
+                state.activeEnvironment = {...core.GetEnvironmentSettings[action.payload], bearerToken:state.bearerTokens[action.payload]}
+                // The line below failed: https://stackoverflow.com/a/54413951/494635
+                //state.activeEnvironment.bearerToken = state.bearerTokens[action.payload]
                 state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
             })
     }
@@ -89,16 +89,14 @@ export const LoginSlice = createSlice({
 //     mapTo(setBearerToken({token:'123',environment:Environment.local})) // here we're executing the action creator to create an action Type 'plain old javascript object' 
 // );
 
-
-
-export const convertShortCodeToBearerEpic = (action$: any, state$: any) => // action$ is a stream of actions
+export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
     action$.pipe(
         ofType(processShortCode),
         filter((x: PayloadAction<string>) => x.payload.length >= minShortCodeLength),
         switchMap((x: PayloadAction<string>) => {
             return AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, GetBearerToken).pipe(
-                map((i: string) => setBearerToken({token: i, environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})),
-                catchError(error => rxjs.of(removeBearerToken({environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})))
+                map((i: string) => setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment})),
+                catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment})))
             )
         })
     )
