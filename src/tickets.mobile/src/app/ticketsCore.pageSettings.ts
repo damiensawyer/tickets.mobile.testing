@@ -27,13 +27,13 @@ interface PageSettings extends PageSettingsBase {
     pageName: PageName,
     $Template: FC<{}> // a non alpha first character lets you render it in JSX https://gist.github.com/mikeyamadeo/6bdbbfde7ff0e1c3cf3c 
 }
-// const defaultSecurePage: PageSettingsBase = {isSecure: true}
-// const defaultUnsecuredPage: PageSettingsBase = {isSecure: false}
+
+//const defaultPage: Pick<PageSettings, 'requireLogin' | 'title'>  = {requireLogin:true, title:'blah'}  // demo for using multiple keys  
 const defaultSecurePage: Pick<PageSettings, 'isSecure'> = {isSecure: true}
 const defaultUnsecuredPage: Pick<PageSettings, 'isSecure'> = {isSecure: false}
 
 export const PageSettings: EnumDictionary<PageName, PageSettings> = {
-    [PageName.login]: {...{pageName: PageName.login, $Template: LoginPage, url:'/page/Login', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Login'}, ...defaultSecurePage},
+    [PageName.login]: {pageName: PageName.login, $Template: LoginPage, url:'/page/Login', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Login', ...defaultSecurePage},
     [PageName.settings]: {...{pageName: PageName.settings, $Template: SettingsPage, url:'/page/Settings', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Settings'}, ...defaultSecurePage},
     [PageName.home]: {...{pageName: PageName.home, $Template: HomePage, url:'/page/Home', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Home'}, ...defaultUnsecuredPage},
     [PageName.counter]: {...{pageName: PageName.counter, $Template: Counter, url:'/page/Counter', iosIcon:calendarNumber, mdIcon:calendarNumber ,title:'Counter'}, ...defaultUnsecuredPage},

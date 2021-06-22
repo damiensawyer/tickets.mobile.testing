@@ -3,8 +3,8 @@ import {Redirect, Route} from "react-router-dom";
 import Page from "./pages/Page";
 import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/LearningPageWrapper";
 import {useAppSelector} from "./app/hooks";
-import {appPages} from "./components/AppPages";
-
+import {PageName, PageSettings} from "./app/ticketsCore.pageSettings"
+import {$enum} from "ts-enum-util";
 
 type privateRouteProps = { path: string, exact: boolean, isLoggedIn: boolean }
 // A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
@@ -56,7 +56,7 @@ export const Routes = ({isLoggedIn}: routeProps) => {
             <Redirect to="/page/Login"/>
         </Route>
         
-        {appPages.map((appPage, index) => {
+        {$enum(PageName).map((appPage, index) => {
             return <Route path="/page/:name" exact={true}>
                 <Page/>
                 {/*<Redirect to={appPage.url} from={"/"}/>*/}
