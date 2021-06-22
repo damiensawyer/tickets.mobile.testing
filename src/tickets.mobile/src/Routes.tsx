@@ -5,6 +5,9 @@ import LearningPageWrapper, {TestPages} from "./features/LearningReactPatterns/L
 import {useAppSelector} from "./app/hooks";
 import {PageName, PageSettings} from "./app/ticketsCore.pageSettings"
 import {$enum} from "ts-enum-util";
+import {home} from "ionicons/icons";
+import {HomePage} from "./features/Home/HomePage";
+import {LoginPage} from "./features/Login/LoginPage";
 
 type privateRouteProps = { path: string, exact: boolean, isLoggedIn: boolean }
 // A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
@@ -50,36 +53,38 @@ export type routeProps = { isLoggedIn: boolean }
 
 export const Routes = ({isLoggedIn}: routeProps) => {
     console.log(`rendering routes. Logged In ${isLoggedIn}`)
+    // https://ionicframework.com/docs/react/navigation 
+    // https://forum.ionicframework.com/t/best-practice-for-react-routing/192100/14
     return (<IonRouterOutlet id="main">
 
-        <Route path="/" exact={true}>
-            <Redirect to="/page/Login"/>
-        </Route>
+        {/*<Route path="/" exact>*/}
+        {/*    <Redirect to="/page/Login"/>*/}
+        {/*</Route>*/}
+
+        <Route path="/page/Home" component={HomePage} />
+        <Route path="/page/Login" component={LoginPage} />
+        <Redirect exact from='/page/Counter' to='/page/Login' />
+        {/*<Redirect exact from='/' to='/page/Home' />*/}
+        {/*<Route path="page/Counter" exact={true}>*/}
+        {/*    */}
+        {/*</Route>*/}
         
-        {$enum(PageName).map((appPage, index) => {
-            return <Route path="/page/:name" exact={true}>
-                <Page/>
-                {/*<Redirect to={appPage.url} from={"/"}/>*/}
-            </Route>
-
-        })}
-
-        {/*<PrivateRoute path="/study/Counter" exact={true} isLoggedIn={isLoggedIn}>*/}
-        {/*    <LearningPageWrapper page={TestPages.counter}/>*/}
-        {/*</PrivateRoute>*/}
-
-        {/*<PrivateRoute path="/study/PingPong" exact={true}  isLoggedIn={isLoggedIn}>*/}
-        {/*    <LearningPageWrapper page={TestPages.pingPong}/>*/}
-        {/*</PrivateRoute>*/}
-
-        {/*<Route path="/page/:name" exact={true}>*/}
-        {/*    <Page/>*/}
+        {/*<Route path="/page/:name">*/}
+        {/*    <Page  />*/}
         {/*</Route>*/}
 
-        {/*<Route path="/" exact={true}>*/}
-        {/*    <Redirect to="/page/Login" from={"/"}/>*/}
-        {/*</Route>*/}
-
+        {/*{$enum(PageName).map((appPage, index) => {*/}
+        {/*    let r = PageSettings[appPage]*/}
+        {/*    return (*/}
+        {/*             <Route path="/page/:name" exact={true}>*/}
+        {/*                 false */}
+        {/*                 ? <Page/>*/}
+        {/*                 : <Redirect to={{pathname: "/page/Login" }} from={r.url} />*/}
+        {/*            </Route>*/}
+        
+        
+        {/*    )*/}
+        {/*})}*/}
 
     </IonRouterOutlet>)
 }
