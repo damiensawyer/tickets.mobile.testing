@@ -8,6 +8,7 @@ import {Lazy, pipe} from "fp-ts/function";
 import {isSome} from "fp-ts/Option";
 import {Either} from "fp-ts/Either";
 import {Agent} from "https";
+import {TaskEither} from "fp-ts/TaskEither";
 
 const onRejected: (reason: unknown) => AxiosError = (r: any) => !!r.response
     ? {status: r.response.status, statusText: r.response.statusText}
@@ -32,12 +33,19 @@ export function isStatusCodeError(axiosError: AxiosError): axiosError is AxiosEr
 
 export type AxiosError = AxiosErrorWithStatusCode | AxiosErrorWithNoStatusCode
 
+export type ticketsQuery<TProps, TResult> = (e:TicketsAPI, p:TProps)=>TaskEither<AxiosError, TResult>
+
+
+export const  GetBearerToken2:ticketsQuery<string, string> = (e:TicketsAPI,shortCode: string) =>
+    TE.tryCatch<AxiosError, string >(() => axios.get(`${e.environmentSettings.baseUrl}/phoneapi/apisecuritytokens/GetBearerFromToken?shorttoken=${shortCode}`, e.axiosConfig).then(r => r.data.value), onRejected)
+
+
 export class TicketsAPI {
     public axiosConfig: AxiosRequestConfig;
     public axiosCancellationSource: CancelTokenSource;
-    
+
     constructor(/**This comes from redux*/ public environmentSettings: EnvironmentSettings) {
-        
+
         this.axiosCancellationSource = axios.CancelToken.source();
         this.axiosConfig = {
             proxy: (isSome(environmentSettings.proxy) && pipe(environmentSettings.proxy, O.match(() => undefined, x => x))), // possibly don't need to pipe if && is short-circuiting
@@ -52,8 +60,10 @@ export class TicketsAPI {
         axios.defaults.adapter = require('axios/lib/adapters/http'); // search for "configure axios adapter" from wallaby support in gmail. https://github.com/axios/axios/issues/1754#issuecomment-572778305 
     }
 
-    public GetBearerToken = (shortCode: string) =>
-        TE.tryCatch<AxiosError, { value: string }>(() => axios.get(`${this.environmentSettings.baseUrl}/phoneapi/apisecuritytokens/GetBearerFromToken?shorttoken=${shortCode}`, this.axiosConfig).then(r => r.data), onRejected)
+    
+    
+    // public GetBearerToken:ticketsQuery<string, { value:string}> = (shortCode: string) =>
+    //     TE.tryCatch<AxiosError, { value: string }>(() => axios.get(`${this.environmentSettings.baseUrl}/phoneapi/apisecuritytokens/GetBearerFromToken?shorttoken=${shortCode}`, this.axiosConfig).then(r => r.data), onRejected)
 
     public GetEnvironmentDetailsTemp = TE.tryCatch<AxiosError, string>(() => axios.get(`${this.environmentSettings.baseUrl}/phoneapi/PhoneAPISamples/GetEnvironmentDetails`, this.axiosConfig).then(r => r.data), onRejected)
 

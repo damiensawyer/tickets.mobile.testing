@@ -9,12 +9,13 @@ import {ofType, StateObservable} from "redux-observable";
 import {catchError, filter, map, switchMap} from "rxjs/operators";
 import * as rxjs from "rxjs"
 import {Observable} from "rxjs"
-import {isStatusCodeError, TicketsAPI} from "../../data/user/tickets-auth-api";
+import {AxiosError, AxiosErrorWithStatusCode, GetBearerToken2, isStatusCodeError, TicketsAPI, ticketsQuery} from "../../data/user/tickets-auth-api";
 import {isRight} from "fp-ts/Either";
 import {RootState} from "../../app/store";
 import {incrementAsync} from "../LearningReactPatterns/Counter/counterSlice";
 import {initialEnvironment, setEnvironment, settingsSlice} from "../Settings/settingsSlice";
 import {SettingsPage} from "../Settings/SettingsPage";
+import {TaskEither} from "fp-ts/TaskEither";
 
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
 
@@ -89,13 +90,37 @@ export const LoginSlice = createSlice({
 
 
 // to do... make this generic so that we can use for multiple API calls. 
-let getBearerFromShortCode$ = (environmentSettings: EnvironmentSettings, shortCord: string):Observable<string> =>
+// let getBearerFromShortCode$ = (environmentSettings: EnvironmentSettings, shortCode: string):Observable<string> =>
+//     new Observable((s) => {
+//         //let cancellationSource = axios.CancelToken.source();
+//         let api = new TicketsAPI(environmentSettings)
+//         api.GetBearerToken(shortCode)().then(r => {
+//             if (isRight(r)) {
+//                 s.next(r.right.value)
+//                 s.complete()
+//             } else {
+//                 if (isStatusCodeError(r.left))
+//                     s.error(`${r.left.status} ${r.left.statusText}`)
+//                 else
+//                     s.error(`error from http call ${r.left.code}`)
+//             }
+//         })
+//         //return a function which is called when they unsubscribe.
+//         return () => {
+//             api.axiosCancellationSource.cancel()
+//             //console.log(`tearing down ${searchTerm}`);
+//         };
+//     });
+
+// type dd<TProps, TResult> = <TProps, TResult>(p:TProps)=>TaskEither<AxiosError, TResult>
+
+let axiosRequest$ = <TProps, TResult>(environmentSettings: EnvironmentSettings, p:TProps, f:ticketsQuery<TProps, TResult>):Observable<TResult> =>
     new Observable((s) => {
-        //let cancellationSource = axios.CancelToken.source();
         let api = new TicketsAPI(environmentSettings)
-        api.GetBearerToken(shortCord)().then(r => {
+        f(api,p)().then(r => {
+            
             if (isRight(r)) {
-                s.next(r.right.value)
+                s.next(r.right)
                 s.complete()
             } else {
                 if (isStatusCodeError(r.left))
@@ -104,12 +129,11 @@ let getBearerFromShortCode$ = (environmentSettings: EnvironmentSettings, shortCo
                     s.error(`error from http call ${r.left.code}`)
             }
         })
-        //return a function which is called when they unsubscribe.
         return () => {
             api.axiosCancellationSource.cancel()
-            //console.log(`tearing down ${searchTerm}`);
         };
     });
+
 
 
 export const convertShortCodeToBearerEpic = (action$: any, state$: any) => // action$ is a stream of actions
@@ -117,7 +141,7 @@ export const convertShortCodeToBearerEpic = (action$: any, state$: any) => // ac
         ofType(processShortCode),
         filter((x: PayloadAction<string>) => x.payload.length >= 1),
         switchMap((x: PayloadAction<string>) => {
-            return getBearerFromShortCode$(state$.value.loginSlice.activeEnvironment, x.payload).pipe(
+            return axiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, GetBearerToken2).pipe(
                  map((i: string) => setBearerToken({token: i, environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})),
                  catchError(error => rxjs.of(removeBearerToken({environment: (state$ as StateObservable<RootState>).value.loginSlice.activeEnvironment.environment})))
             )
