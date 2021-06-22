@@ -55,7 +55,7 @@ const LoginLabel = forwardRef<ErrorLabelRef, ErrorLabelProps>((props, ref) => {
     return visible ? <IonText color="danger">{text}</IonText> : <IonText>&nbsp;</IonText>
 });
 
-export const LoginPage: React.FC = (b) => {
+export const LoginPage = () => {
     const isLoggedIn = useAppSelector(x => x.loginSlice.isLoggedIn)
     const [toastPresent, toastDismiss] = useIonToast(); // https://ionicframework.com/docs/api/toast
     const dispatch = useAppDispatch();
@@ -66,7 +66,7 @@ export const LoginPage: React.FC = (b) => {
     const activeEnvironment = useAppSelector(x => x.loginSlice.activeEnvironment)
     const history = useHistory() // typing from https://stackoverflow.com/questions/49342390/typescript-how-to-add-type-check-for-history-object-in-react
     const activeApi = new TicketsAPI(activeEnvironment) // need to pass param to show when to redo??
-
+    
     useEffect(() => () => {
         activeApi.axiosCancellationSource.cancel()
     })
@@ -76,7 +76,7 @@ export const LoginPage: React.FC = (b) => {
     let shortCodeCapturedText = new BehaviorSubject<string>('')
 
     shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => {
-            setShortCode(x) // without this, when you switch between logged and not logged in, the text you entered resets.  
+            //setShortCode(x) // without this, when you switch between logged and not logged in, the text you entered resets.  
             dispatch(processShortCode({code: x, history}))
             //let hh:History = history
             shortTokenErrorLabel.current!.setVisible(false)
@@ -145,7 +145,7 @@ export const LoginPage: React.FC = (b) => {
                 <IonList>
                     <IonItem>
                         <IonLabel position="floating" color="primary">Login Code</IonLabel>
-                        <IonInput name="shortCode" type="text" value={shortCode} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText.next(e.detail.value!)}/>
+                        <IonInput name="shortCode" type="text" value={isLoggedIn ? shortCode : ''} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText.next(e.detail.value!)}/>
                         <LoginLabel ref={shortTokenErrorLabel}/>
                     </IonItem>
                     <IonProgressBar type="indeterminate"/><br />
