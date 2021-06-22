@@ -35,9 +35,13 @@ export type AxiosError = AxiosErrorWithStatusCode | AxiosErrorWithNoStatusCode
 
 export type ticketsQuery<TProps, TResult> = (e:TicketsAPI, p:TProps)=>TaskEither<AxiosError, TResult>
 
-
 export const  GetBearerToken2:ticketsQuery<string, string> = (e:TicketsAPI,shortCode: string) =>
     TE.tryCatch<AxiosError, string >(() => axios.get(`${e.environmentSettings.baseUrl}/phoneapi/apisecuritytokens/GetBearerFromToken?shorttoken=${shortCode}`, e.axiosConfig).then(r => r.data.value), onRejected)
+
+export const GetEnvironmentDetails:ticketsQuery<void, string> = (e:TicketsAPI) => TE.tryCatch<AxiosError, string>(() => axios.get(`${e.environmentSettings.baseUrl}/phoneapi/PhoneAPISamples/GetEnvironmentDetails`, e.axiosConfig).then(r => r.data), onRejected)
+
+// public GetEnvironmentDetailsTemp = TE.tryCatch<AxiosError, string>(() => axios.get(`${this.environmentSettings.baseUrl}/phoneapi/PhoneAPISamples/GetEnvironmentDetails`, this.axiosConfig).then(r => r.data), onRejected)
+
 
 
 export class TicketsAPI {
@@ -65,7 +69,7 @@ export class TicketsAPI {
     // public GetBearerToken:ticketsQuery<string, { value:string}> = (shortCode: string) =>
     //     TE.tryCatch<AxiosError, { value: string }>(() => axios.get(`${this.environmentSettings.baseUrl}/phoneapi/apisecuritytokens/GetBearerFromToken?shorttoken=${shortCode}`, this.axiosConfig).then(r => r.data), onRejected)
 
-    public GetEnvironmentDetailsTemp = TE.tryCatch<AxiosError, string>(() => axios.get(`${this.environmentSettings.baseUrl}/phoneapi/PhoneAPISamples/GetEnvironmentDetails`, this.axiosConfig).then(r => r.data), onRejected)
+    // public GetEnvironmentDetailsTemp = TE.tryCatch<AxiosError, string>(() => axios.get(`${this.environmentSettings.baseUrl}/phoneapi/PhoneAPISamples/GetEnvironmentDetails`, this.axiosConfig).then(r => r.data), onRejected)
 
 
     public TCExample = (httpCode: number) => TE.tryCatch(() => axios.get(`https://httpstat.us/${httpCode}`), onRejected)

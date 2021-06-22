@@ -1,12 +1,13 @@
 import {GetEnvironmentSettings, Environment, TestSettings, itIfAPI} from "../ticketsCore";
 import {isSome, none, some} from "fp-ts/Option";
-import {AxiosErrorWithNoStatusCode, AxiosErrorWithStatusCode, GetBearerToken2, isStatusCodeError, TicketsAPI} from "../../data/user/tickets-auth-api";
-import {isLeft, isRight} from "fp-ts/Either";
+import {AxiosErrorWithNoStatusCode, AxiosErrorWithStatusCode, GetBearerToken2, GetEnvironmentDetails, isStatusCodeError, TicketsAPI} from "../../data/user/tickets-auth-api";
+import {isLeft, isRight, left, right} from "fp-ts/Either";
 import {interval, lastValueFrom, of, pipe, from, firstValueFrom} from 'rxjs';
 import { concatWith, combineLatestWith } from 'rxjs/operators';
 
 import '@relmify/jest-fp-ts';
 import {observe} from "web-vitals/dist/modules/lib/observe";
+//import {right} from "fp-ts/These";
 
 describe('API Tests', () => {
     let api = new TicketsAPI(GetEnvironmentSettings[Environment.local])
@@ -23,6 +24,15 @@ describe('API Tests', () => {
             expect(y).toBeEither()
             expect(y).toSubsetEqualLeft(<AxiosErrorWithStatusCode>{status: 403})
             expect(y).toBeLeft()
+        })
+    })
+
+    itIfAPI()('Get Environment Details', () => {
+        return GetEnvironmentDetails(api)().then(y => {
+            expect(y).toBeEither()
+            expect(y).toBeRight()
+            if (isRight(y))
+                expect(y.right).toMatch(/local development/i)
         })
     })
     
