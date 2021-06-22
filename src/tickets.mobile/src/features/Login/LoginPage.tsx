@@ -8,17 +8,19 @@ import {
     IonLabel,
     IonList,
     IonRow,
-    IonText, IonTitle
+    IonText, IonTitle,
+    useIonToast
 } from "@ionic/react";
 
 import {
-    processShortCode
+    processShortCode, requestShortCodeToEmail
 } from './LoginSlice';
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {fromNullable, isNone, isSome} from "fp-ts/Option";
 import {BehaviorSubject} from "rxjs";
 import {filter} from "rxjs/operators";
 import {incrementAsync, selectCount} from "../LearningReactPatterns/Counter/counterSlice";
+import {validateEmail} from "../../app/ticketsCore.Tooling";
 
 
 // The type returned.  https://stackoverflow.com/a/65301990/494635 
@@ -52,6 +54,7 @@ const LoginLabel = forwardRef<ErrorLabelRef, ErrorLabelProps>((props, ref) => {
 export const LoginPage: React.FC = (b) => {
 
     // const count = useAppSelector(selectCount);
+    const [toastPresent, toastDismiss] = useIonToast(); // https://ionicframework.com/docs/api/toast
     const dispatch = useAppDispatch();
     const [shortCode, setShortCode] = useState('')
     const emailErrorLabel = useRef<ErrorLabelRef>(null);
@@ -70,25 +73,32 @@ export const LoginPage: React.FC = (b) => {
 
     const requestEmail = () => {
         let data = fromNullable(emailCapturedText.value)
-        if (isNone(data) || data.value === '') {
-            emailErrorLabel.current!
+        if (isNone(data) || data.value === '' || !validateEmail(data.value)) {
             emailErrorLabel.current!.setVisible(true)
-            emailErrorLabel.current!.setText('please enter an email')
+            emailErrorLabel.current!.setText('please enter a valid email')
         } else {
-            (emailErrorLabel.current! as any).setVisible(false)
+            emailErrorLabel.current!.setVisible(false)
+            dispatch(requestShortCodeToEmail(data.value))
+            toastPresent({
+                buttons: [{ text: 'hide', handler: () => toastDismiss() }],
+                message: `Requested short code be emailed to ${data.value}`,
+                onDidDismiss: () => console.log('dismissed'),
+                onWillDismiss: () => console.log('will dismiss'),
+                duration:1000
+            })
         }
     }
-    const submitShortCode = () => {
-        let data = fromNullable(shortCodeCapturedText.value)
-        if (isNone(data) || data.value === '') {
-
-            shortTokenErrorLabel.current!.setVisible(true)
-            shortTokenErrorLabel.current!.setText('please enter code')
-        } else {
-            (shortTokenErrorLabel.current! as any).setVisible(false)
-
-        }
-    }
+    // const submitShortCode = () => {
+    //     let data = fromNullable(shortCodeCapturedText.value)
+    //     if (isNone(data) || data.value === '') {
+    //
+    //         shortTokenErrorLabel.current!.setVisible(true)
+    //         shortTokenErrorLabel.current!.setText('please enter code')
+    //     } else {
+    //         (shortTokenErrorLabel.current! as any).setVisible(false)
+    //
+    //     }
+    // }
     return <>
         <div className="login-logo">
             <IonImg class="small" src="assets/tickets-logo-colour-rgb.png"/>
@@ -99,7 +109,7 @@ export const LoginPage: React.FC = (b) => {
                 <p>Please enter the email linked to your tickets.org.au account. If you logged in with Google or Facebook, use the email from that account. We will email you a login code which you can enter below.</p>
 
             </IonCardHeader>
-
+            
             <IonList lines={'none'}>
                 <IonItem>
                     <IonLabel position="floating" color="primary">Email Address</IonLabel>
@@ -128,11 +138,6 @@ export const LoginPage: React.FC = (b) => {
                     <LoginLabel ref={shortTokenErrorLabel}/>
                 </IonItem>
 
-                <IonRow className='ion-padding'>
-                    <IonCol>
-                        <IonButton expand="block" onClick={submitShortCode}>Login with Code</IonButton>
-                    </IonCol>
-                </IonRow>
             </IonList>
 
         </IonCard>

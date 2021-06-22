@@ -1,14 +1,14 @@
 import * as core from './../../app/ticketsCore'
 import {Environment, EnvironmentSettings} from './../../app/ticketsCore'
 import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {EnumDictionary, EnvironmentFunctions} from "../../app/ticketsCore.Tooling";
+import {EnumDictionary, EnvironmentFunctions, validateEmail} from "../../app/ticketsCore.Tooling";
 import {fromNullable, match, none, Option} from "fp-ts/Option";
 import {pipe as fptsPipe} from "fp-ts/function";
 
 import {ofType, StateObservable} from "redux-observable";
 import {catchError, filter, map, switchMap} from "rxjs/operators";
 import * as rxjs from "rxjs"
-import {Observable} from "rxjs"
+import {EMPTY, Observable} from "rxjs"
 import {AxiosError, AxiosErrorWithStatusCode, AxiosRequest$, isStatusCodeError, TicketsAPI, ticketsQuery} from "../../data/user/tickets-auth-api";
 import {isRight} from "fp-ts/Either";
 import {RootState} from "../../app/store";
@@ -16,7 +16,7 @@ import {incrementAsync} from "../LearningReactPatterns/Counter/counterSlice";
 import {initialEnvironment, setEnvironment, settingsSlice} from "../Settings/settingsSlice";
 import {SettingsPage} from "../Settings/SettingsPage";
 import {TaskEither} from "fp-ts/TaskEither";
-import {GetBearerToken} from "../../data/user/tickets-http-requests";
+import {GetBearerToken, RequestShortCodeToEmail} from "../../data/user/tickets-http-requests";
 
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
 
@@ -97,6 +97,19 @@ export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: S
             return AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, GetBearerToken).pipe(
                 map((i: string) => setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment})),
                 catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment})))
+            )
+        })
+    )
+
+export const requestShortCodeToEmailEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
+    action$.pipe(
+        ofType(requestShortCodeToEmail),
+        filter((x: PayloadAction<string>) => validateEmail(x.payload)),
+        switchMap((x: PayloadAction<string>) => {
+            return AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, RequestShortCodeToEmail).pipe(
+                map(() => EMPTY),
+                catchError(error => EMPTY) // handle somehow??
+                //catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment})))
             )
         })
     )

@@ -5,5 +5,8 @@ import {AxiosError, TicketsAPI, ticketsQuery,onRejected} from "./tickets-auth-ap
 export const GetBearerToken: ticketsQuery<string, string> = (e: TicketsAPI, shortCode: string) =>
     TE.tryCatch(() => axios.get(`${e.environmentSettings.baseUrl}/phoneapi/apisecuritytokens/GetBearerFromToken?shorttoken=${shortCode}`, e.axiosConfig).then(r => r.data.value), onRejected)
 
+export const RequestShortCodeToEmail: ticketsQuery<string, void> = (e: TicketsAPI, emailAddress: string) =>
+    TE.tryCatch(() => axios.get(`${e.environmentSettings.baseUrl}/phoneapi/apisecuritytokens/GetBearerFromToken?shorttoken=${emailAddress}`, e.axiosConfig).then(r => r.data), onRejected)
+
 export const GetEnvironmentDetails: ticketsQuery<void, string> = (e: TicketsAPI) =>
     TE.tryCatch(() => axios.get(`${e.environmentSettings.baseUrl}/phoneapi/PhoneAPISamples/GetEnvironmentDetails`, e.axiosConfig).then(r => r.data), onRejected)
