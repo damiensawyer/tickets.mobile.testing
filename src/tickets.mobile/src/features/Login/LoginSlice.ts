@@ -6,7 +6,7 @@ import {fromNullable, match, none, Option} from "fp-ts/Option";
 import {pipe as fptsPipe} from "fp-ts/function";
 
 import {ofType, StateObservable} from "redux-observable";
-import {catchError, filter, map, switchMap} from "rxjs/operators";
+import {catchError, filter, map, mergeMap, switchMap} from "rxjs/operators";
 import * as rxjs from "rxjs"
 import {EMPTY, Observable} from "rxjs"
 import {AxiosError, AxiosErrorWithStatusCode, AxiosRequest$, isStatusCodeError, TicketsAPI, ticketsQuery} from "../../data/user/tickets-auth-api";
@@ -17,7 +17,7 @@ import {initialEnvironment, setEnvironment, settingsSlice} from "../Settings/set
 import {SettingsPage} from "../Settings/SettingsPage";
 import {TaskEither} from "fp-ts/TaskEither";
 import {GetBearerToken, RequestShortCodeToEmail} from "../../data/user/tickets-http-requests";
-
+import {History} from 'history'; // https://stackoverflow.com/questions/49342390/typescript-how-to-add-type-check-for-history-object-in-react
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
 
 export interface LoginState {
@@ -38,7 +38,7 @@ const initialState: LoginState = {
     activeEnvironment: core.GetEnvironmentSettings[initialEnvironment],
     isLoggedIn: false
 };
-
+type codeWithHistory = { code: string, history: History }
 export const LoginSlice = createSlice({
     name: 'Login',
     initialState,
@@ -69,13 +69,17 @@ export const LoginSlice = createSlice({
         },
         requestShortCodeToEmail: (state, action: PayloadAction<string>) => {
         },
-        processShortCode: (state, action: PayloadAction<string>) => {
+        processShortCode: (state, action: PayloadAction<codeWithHistory>) => {
+        },
+        processedShortCodeSuccessfully: (state, action: PayloadAction<History>) => {
+            // cant' navigate from here...... https://blog.logrocket.com/react-router-with-redux-navigation-state/
+            // action.payload.push('/page/Home')
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(setEnvironment, (state, action: PayloadAction<Environment>) => {
-                state.activeEnvironment = {...core.GetEnvironmentSettings[action.payload], bearerToken:state.bearerTokens[action.payload]}
+                state.activeEnvironment = {...core.GetEnvironmentSettings[action.payload], bearerToken: state.bearerTokens[action.payload]}
                 // The line below failed: https://stackoverflow.com/a/54413951/494635
                 //state.activeEnvironment.bearerToken = state.bearerTokens[action.payload]
                 state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
@@ -92,10 +96,15 @@ export const LoginSlice = createSlice({
 export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
     action$.pipe(
         ofType(processShortCode),
-        filter((x: PayloadAction<string>) => x.payload.length >= minShortCodeLength),
-        switchMap((x: PayloadAction<string>) => {
-            return AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, GetBearerToken).pipe(
-                map((i: string) => setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment})),
+        filter((x: PayloadAction<codeWithHistory>) => x.payload.code.length >= minShortCodeLength),
+        switchMap((x: PayloadAction<codeWithHistory>) => {
+            return AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload.code, GetBearerToken).pipe(
+                // https://stackoverflow.com/questions/47965184/how-to-dispatch-multiple-actions-from-redux-observable
+                //map((i: string) => setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment})),
+                mergeMap((i) => [
+                    setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment}),
+                    processedShortCodeSuccessfully(x.payload.history)]
+                ),
                 catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment})))
             )
         })
@@ -116,7 +125,7 @@ export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: S
 
 
 // Export the actionCreators
-export const {requestShortCodeToEmail, setBearerToken, processShortCode, removeBearerToken} = LoginSlice.actions;
+export const {requestShortCodeToEmail, setBearerToken, processedShortCodeSuccessfully, processShortCode, removeBearerToken} = LoginSlice.actions;
 export const epics = [convertShortCodeToBearerEpic]
 
 // export the reducer
