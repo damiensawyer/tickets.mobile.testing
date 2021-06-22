@@ -31,7 +31,7 @@ const Menu = ({isLoggedIn}:MenuProps) => {
           <IonNote>{isLoggedIn ? 'logged in ....' : 'not logged in'} </IonNote>
           {$enum(PageName)
               .map(x=>PageSettings[x])
-              .filter(x=>!x.isSecure || isLoggedIn)
+              //.filter(x=>!x.isSecure || isLoggedIn)
               .map((s, index) => {
             
             return (

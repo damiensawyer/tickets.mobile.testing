@@ -26,7 +26,7 @@ export interface LoginState {
     isLoggedIn: boolean
 }
 
-const minShortCodeLength = 4 // need to keep this is sync with the back end. Will use so that they don't have to press enter. Search for CreateShortToken() in c# 
+const minShortCodeLength = 1 // need to keep this is sync with the back end. Will use so that they don't have to press enter. Search for CreateShortToken() in c# 
 
 const initialState: LoginState = {
     bearerTokens: {

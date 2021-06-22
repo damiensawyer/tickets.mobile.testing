@@ -19,23 +19,14 @@ const PrivateRoute: React.FC<privateRouteProps> = ({isLoggedIn, children, ...res
         {...rest}
         // Check this.....https://reactrouter.com/web/api/Route/render-func  do we have to use Render???
         render={({location}) => {
-            console.log(`routes:`, location)
             // This totally did my head in. I was passing location to Redirect and it was causing an enedless loop. https://stackoverflow.com/questions/68030679/error-maximum-update-depth-exceeded-again
             // Note also that this PrivateRoute is still being called for non private routes. I think because of this https://reactrouter.com/web/api/match/null-matches.
-            return isLoggedIn ? (
-                children
-            ) : (
-                <>
-                    <Redirect
-                        to={{
-                            pathname: "/page/Login"
-                            //state:'hi!!'
-                        }}
-                        from={location.pathname}
-                    />
-                    <div>redirect damien {location.pathname}</div>
-                </>
-            )
+            return isLoggedIn
+                ? children
+                : <Redirect to="/page/Login"
+                            from={location.pathname}
+                />
+
         }}
 
     />)
@@ -53,17 +44,35 @@ export const Routes = ({isLoggedIn}: routeProps) => {
             <Redirect to="/page/Login"/>
         </Route>
 
+        {/*<Route path='/page/Secure'>*/}
+        {/*    <Redirect to={'/page/Login'}/>*/}
+        {/*</Route>*/}
+
+        {$enum(PageName)
+            .map(x => PageSettings[x])
+            //.filter(x => x.isSecure)
+            .map((appPage, index) =>
+                (
+                    appPage.isSecure
+                        ? <PrivateRoute path={appPage.url} exact isLoggedIn={isLoggedIn}>
+                            <Page pageName={appPage.pageName}/>
+                        </PrivateRoute>
+                        : <Route path={appPage.url}><Page pageName={appPage.pageName}/></Route>)
+            )
+        }
+
+
         {/*
             This is kind of crap in that it's basically removing a route if you don't have access to it. I fought with all this for a day. It should be ok for a phone, but not 
             for a web app, where, if they go to a route they don't have access to, they get redirected to login. See PrivateRoute above which is more like what I 'should' be using. Also See my question 
             here  https://forum.ionicframework.com/t/routerlink-not-firing-redirects/211412 which is more for Ionic.
-        */}        
-        
+        */}
+
         {$enum(PageName)
-            .map(x=>PageSettings[x])
-            .filter(x=>!x.isSecure || isLoggedIn)
-            .map((appPage, index) => 
-                (<Route path={appPage.url}><Page pageName={appPage.pageName} /></Route>))
+            .map(x => PageSettings[x])
+            .filter(x => !x.isSecure)
+            .map((appPage, index) =>
+                (<Route path={appPage.url}><Page pageName={appPage.pageName}/></Route>))
         }
 
     </IonRouterOutlet>)
