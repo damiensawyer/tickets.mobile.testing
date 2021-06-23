@@ -8,5 +8,5 @@ export const LogoutPage: React.FC = (b) => {
     const history = useHistory() // typing from https://stackoverflow.com/questions/49342390/typescript-how-to-add-type-check-for-history-object-in-react
     const dispatch = useAppDispatch();
     dispatch(setLoggedOut(none))
-    return  <Redirect to={'/page/Login'}/>
+    return null
 };
