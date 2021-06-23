@@ -11,53 +11,50 @@ import {EnvironmentFunctions} from "../app/ticketsCore.Tooling";
 //import {appPages} from "./AppPages";
 import {PageName, PageSettings} from "../app/ticketsCore.pageSettings"
 import {$enum} from "ts-enum-util";
-type MenuProps = {isLoggedIn:boolean}
-const Menu = ({isLoggedIn}:MenuProps) => {
-  const location = useLocation();
-  const darkMode = useAppSelector(x=>x.settings.darkMode)
-  const isDarkModeEnabled = () => darkMode === 'dark'
-  const dispatch = useAppDispatch();
-  const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
 
-  console.log(`rendering menu. Logged In ${isLoggedIn}`)  
-  return (
-    <IonMenu contentId="main" type="overlay">
-      <IonContent>
-        <IonItem>
-          <IonImg className="" slot={'start'} src="assets/tickets-logo-colour-rgb.png" />
-          
-        </IonItem>
-        <IonList id="menu-list">
-          <IonNote>{isLoggedIn ? 'logged in ....' : 'not logged in'} </IonNote>
-          {$enum(PageName)
-              .map(x=>PageSettings[x])
-              //.filter(x=>!x.isSecure || isLoggedIn) // Shouldn't really have to hide inaccessible routes, but there is an issue in Ionic See my question here https://forum.ionicframework.com/t/routerlink-not-firing-redirects/211412 
-              .filter(x=> (isLoggedIn && x.showIfLoggedOn) || (!isLoggedIn && x.showIfNotLoggedOn))  
-              .map((s, index) => {
-            
-            return (
-                <IonMenuToggle key={index} autoHide={false}>
-                  <IonItem className={location.pathname === s.url ? 'selected' : ''} 
-                           routerLink={s.url} 
-                           routerDirection="none" 
-                           lines="none" detail={false}>
-                    <IonIcon slot="start" ios={s.iosIcon} md={s.mdIcon}/>
-                    <IonLabel>{`${s.title}`}</IonLabel>
-                  </IonItem>
+type MenuProps = { isLoggedIn: boolean }
+const Menu = ({isLoggedIn}: MenuProps) => {
+    const location = useLocation();
+    const darkMode = useAppSelector(x => x.settings.darkMode)
+    const isDarkModeEnabled = () => darkMode === 'dark'
+    const dispatch = useAppDispatch();
+    const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
+
+    console.log(`rendering menu. Logged In ${isLoggedIn}`)
+    return (
+        <IonMenu contentId="main" type="overlay">
+            <IonContent>
+                <IonItem>
+                    <IonImg className="" slot={'start'} src="assets/tickets-logo-colour-rgb.png"/>
+                </IonItem>
+                <IonMenuToggle autoHide={false}>
+                    <IonList id="menu-list">
+                        <IonNote>{isLoggedIn ? 'logged in ....' : 'not logged in'} </IonNote>
+
+                        {$enum(PageName)
+                            .map(x => PageSettings[x])
+                            .filter(x => (isLoggedIn && x.showIfLoggedOn) || (!isLoggedIn && x.showIfNotLoggedOn))
+                            .map((s, index) => 
+                                    <IonItem key={s.url} className={location.pathname === s.url ? 'selected' : ''}
+                                             routerLink={s.url}
+                                             routerDirection="none"
+                                             lines="none" detail={false}>
+                                        <IonIcon slot="start" ios={s.iosIcon} md={s.mdIcon}/>
+                                        <IonLabel>{`${s.title}`}</IonLabel>
+                                    </IonItem>
+                            )}
+
+                        <IonItem>
+                            <IonIcon slot="start" icon={moonOutline}/>
+                            <IonLabel onClick={() => toggleDarkMode()}>Dark Mode</IonLabel>
+                            <IonToggle content-id='mytoggle' checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
+                        </IonItem>
+
+                    </IonList>
                 </IonMenuToggle>
-            );
-          })}
-          
-          <IonItem>
-            <IonIcon slot="start" icon={moonOutline}/>
-            <IonLabel onClick={() => toggleDarkMode()}>Dark Mode</IonLabel>
-            <IonToggle content-id='mytoggle' checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
-          </IonItem>
-          
-        </IonList>
-      </IonContent>
-    </IonMenu>
-  );
+            </IonContent>
+        </IonMenu>
+    );
 };
 
 export default Menu;

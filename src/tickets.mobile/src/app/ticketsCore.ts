@@ -5,6 +5,7 @@ import {fromNullable} from "fp-ts/Option";
 import {useAppSelector} from "./hooks";
 import {setPing} from "../features/LearningReactPatterns/PingPong/PingPongSlice";
 import axios from "axios";
+import { SplashScreen } from '@capacitor/splash-screen';
 
 export type {EnvironmentSettings} from "./ticketsCore.Tooling";
 //export * from './ticketsCore.pageSettings';
@@ -17,6 +18,7 @@ export const TestSettings = {
 export const itIfAPI = () => TestSettings.RunIntegratorTests ? it : it.skip;
 
 export const RunSetup = () => {
+    SplashScreen.hide().finally();
     // axios.defaults.adapter = require('axios/lib/adapters/http');
     // let dispatch = useDispatch()
     // if (!useAppSelector(x => x.pingPong.isStarted))

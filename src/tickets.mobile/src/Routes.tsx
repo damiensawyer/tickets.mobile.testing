@@ -35,42 +35,24 @@ const PrivateRoute: React.FC<privateRouteProps> = ({isLoggedIn, children, ...res
 
 
 export type routeProps = { isLoggedIn: boolean }
-
 export const Routes = ({isLoggedIn}: routeProps) => {
-    console.log(`rendering routes. Logged In ${isLoggedIn}`)
     // https://ionicframework.com/docs/react/navigation 
     // https://forum.ionicframework.com/t/best-practice-for-react-routing/192100/14
     return (<IonRouterOutlet id="main">
         <Route path="/" exact>
             <Redirect to="/page/Login"/>
         </Route>
-
-
         {$enum(PageName)
             .map(x => PageSettings[x])
             .map((appPage, index) =>
                 (
                     appPage.isSecure
                         // See my comments on PrivateRoute. I'm going to leave this in, but also hide the links to private routes 
-                        ? <PrivateRoute path={appPage.url} exact isLoggedIn={isLoggedIn}>
+                        ? <PrivateRoute key={appPage.url} path={appPage.url} exact isLoggedIn={isLoggedIn}>
                             <Page pageName={appPage.pageName}/>
                         </PrivateRoute>
-                        : <Route path={appPage.url}><Page pageName={appPage.pageName}/></Route>)
+                        : <Route key={appPage.url} path={appPage.url}><Page pageName={appPage.pageName}/></Route>)
             )
-        }
-
-
-        {/*
-            This is kind of crap in that it's basically removing a route if you don't have access to it. I fought with all this for a day. It should be ok for a phone, but not 
-            for a web app, where, if they go to a route they don't have access to, they get redirected to login. See PrivateRoute above which is more like what I 'should' be using. Also See my question 
-            here  https://forum.ionicframework.com/t/routerlink-not-firing-redirects/211412 which is more for Ionic.
-        */}
-
-        {$enum(PageName)
-            .map(x => PageSettings[x])
-            .filter(x => !x.isSecure)
-            .map((appPage, index) =>
-                (<Route path={appPage.url}><Page pageName={appPage.pageName}/></Route>))
         }
 
     </IonRouterOutlet>)

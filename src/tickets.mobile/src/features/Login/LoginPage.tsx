@@ -83,7 +83,7 @@ export const LoginPage = () => {
 
     shortCodeCapturedText.pipe(filter(b => b !== '')).subscribe(x => {
             //setShortCode(x) // without this, when you switch between logged and not logged in, the text you entered resets.  
-            dispatch(processShortCode({code: x, history}))
+            dispatch(processShortCode(x))
             //let hh:History = history
             shortTokenErrorLabel.current!.setVisible(false)
         }
