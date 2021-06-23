@@ -19,3 +19,10 @@ Then run this.
 cordova-res ios --skip-config --copy
 cordova-res android --skip-config --copy
 
+
+
+
+
+
+## Notes
+[Is it actually Cordova and not capacitor?](https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-splashscreen/)

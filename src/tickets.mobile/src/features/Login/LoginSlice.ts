@@ -42,7 +42,6 @@ const initialState: LoginState = {
     isLoggedIn: false,
     shortCodeLoadingState: 0//shortCodeLoadingStates.notLoading
 };
-type codeWithHistory = { code: string, history: History }
 export const LoginSlice = createSlice({
     name: 'Login',
     initialState,
@@ -74,13 +73,13 @@ export const LoginSlice = createSlice({
         },
         requestShortCodeToEmail: (state, action: PayloadAction<string>) => {
         },
-        processShortCode: (state, action: PayloadAction<codeWithHistory>) => {
+        processShortCode: (state, action:PayloadAction<string>) => {
             state.shortCodeLoadingState = 1 // shortCodeLoadingStates.loading
         },
         finishedProcessShortCode: (state) => {
             state.shortCodeLoadingState = 0// shortCodeLoadingStates.notLoading
         },
-        processedShortCodeSuccessfully: (state, action: PayloadAction<History>) => {
+        processedShortCodeSuccessfully: (state) => {
             // cant' navigate from here...... https://blog.logrocket.com/react-router-with-redux-navigation-state/
             // action.payload.push('/page/Home')
         },
@@ -108,14 +107,14 @@ export const LoginSlice = createSlice({
 export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
     action$.pipe(
         ofType(processShortCode),
-        filter((x: PayloadAction<codeWithHistory>) => x.payload.code.length >= minShortCodeLength),
-        switchMap((x: PayloadAction<codeWithHistory>) =>
-            AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload.code, GetBearerToken).pipe(
+        filter((x: PayloadAction<string>) => x.payload.length >= minShortCodeLength),
+        switchMap((x: PayloadAction<string>) =>
+            AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload, GetBearerToken).pipe(
                 // https://stackoverflow.com/questions/47965184/how-to-dispatch-multiple-actions-from-redux-observable
                 //map((i: string) => setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment})),
                 mergeMap((i) => [
                     setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment}),
-                    processedShortCodeSuccessfully(x.payload.history)]
+                    processedShortCodeSuccessfully()]
                 ),
                 // Note this blows... I am double doing the finishedProcessShortCode work in the removeBearerToken reducer.
                 catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment}))),
