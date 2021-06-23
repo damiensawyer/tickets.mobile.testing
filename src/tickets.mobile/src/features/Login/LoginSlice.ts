@@ -61,6 +61,7 @@ export const LoginSlice = createSlice({
                 state.activeEnvironment.bearerToken = none
 
             state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
+            state.shortCodeLoadingState = 0 // temp
         },
         setBearerToken: (state, action: PayloadAction<{ token: string, environment: Environment }>) => {
             let p = action.payload
@@ -74,10 +75,10 @@ export const LoginSlice = createSlice({
         requestShortCodeToEmail: (state, action: PayloadAction<string>) => {
         },
         processShortCode: (state, action: PayloadAction<codeWithHistory>) => {
-            state.shortCodeLoadingState = 0 // shortCodeLoadingStates.loading
+            state.shortCodeLoadingState = 1 // shortCodeLoadingStates.loading
         },
         finishedProcessShortCode: (state) => {
-            state.shortCodeLoadingState = 1// shortCodeLoadingStates.notLoading
+            state.shortCodeLoadingState = 0// shortCodeLoadingStates.notLoading
         },
         processedShortCodeSuccessfully: (state, action: PayloadAction<History>) => {
             // cant' navigate from here...... https://blog.logrocket.com/react-router-with-redux-navigation-state/
@@ -113,12 +114,13 @@ export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: S
                 //map((i: string) => setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment})),
                 mergeMap((i) => [
                     setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment}),
-                    processedShortCodeSuccessfully(x.payload.history)]
+                    processedShortCodeSuccessfully(x.payload.history),
+                    finishedProcessShortCode()] 
                 ),
                 catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment}))),
                 // because rxjs finalise is more like 'tap / do' than merge. https://itnext.io/redux-observable-can-solve-your-state-problems-15b23a9649d7
                 // This is run even if there's an error.
-                mergeWith(rxjs.of(finishedProcessShortCode())) 
+                //mergeWith(rxjs.of(finishedProcessShortCode())) 
         )
     ))
 
