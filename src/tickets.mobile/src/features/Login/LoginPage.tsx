@@ -13,7 +13,7 @@ import {
 } from "@ionic/react";
 
 import {
-    processShortCode, requestShortCodeToEmail
+    processShortCode, requestShortCodeToEmail, shortCodeLoadingStates
 } from './LoginSlice';
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {fromNullable, isNone, isSome} from "fp-ts/Option";
@@ -55,8 +55,14 @@ const LoginLabel = forwardRef<ErrorLabelRef, ErrorLabelProps>((props, ref) => {
     return visible ? <IonText color="danger">{text}</IonText> : <IonText>&nbsp;</IonText>
 });
 
+export const LoadingShortStateIndicator = () => {
+    const isProcessingShortCode = useAppSelector(x=>x.loginSlice.shortCodeLoadingState)
+    return isProcessingShortCode == 1 ? <IonProgressBar type="indeterminate"/> : null
+}
+
 export const LoginPage = () => {
     const isLoggedIn = useAppSelector(x => x.loginSlice.isLoggedIn)
+ 
     const [toastPresent, toastDismiss] = useIonToast(); // https://ionicframework.com/docs/api/toast
     const dispatch = useAppDispatch();
     const [requestingEmail, setRequestingEmail] = useState(false)
@@ -148,7 +154,8 @@ export const LoginPage = () => {
                         <IonInput name="shortCode" type="text" value={isLoggedIn ? shortCode : ''} spellCheck={false} autocapitalize="off" onIonChange={e => shortCodeCapturedText.next(e.detail.value!)}/>
                         <LoginLabel ref={shortTokenErrorLabel}/>
                     </IonItem>
-                    <IonProgressBar type="indeterminate"/><br />
+
+                    <LoadingShortStateIndicator />
 
                 </IonList>
 

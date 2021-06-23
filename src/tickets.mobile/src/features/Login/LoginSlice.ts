@@ -6,7 +6,7 @@ import {fromNullable, match, none, Option} from "fp-ts/Option";
 import {pipe as fptsPipe} from "fp-ts/function";
 
 import {ofType, StateObservable} from "redux-observable";
-import {catchError, filter, map, mergeMap, switchMap} from "rxjs/operators";
+import {catchError, filter, finalize, map, mergeMap, switchMap, mergeWith} from "rxjs/operators";
 import * as rxjs from "rxjs"
 import {EMPTY, Observable} from "rxjs"
 import {AxiosError, AxiosErrorWithStatusCode, AxiosRequest$, isStatusCodeError, TicketsAPI, ticketsQuery} from "../../data/user/tickets-auth-api";
@@ -20,10 +20,13 @@ import {GetBearerToken, RequestShortCodeToEmail} from "../../data/user/tickets-h
 import {History} from 'history'; // https://stackoverflow.com/questions/49342390/typescript-how-to-add-type-check-for-history-object-in-react
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
 
+export enum shortCodeLoadingStates{loading, notLoading}
+
 export interface LoginState {
     bearerTokens: EnumDictionary<Environment, Option<string>>, // I'm thinking to do this so that we can switch between environments without having to log back in and out.  
     activeEnvironment: EnvironmentSettings,
-    isLoggedIn: boolean
+    isLoggedIn: boolean,
+    shortCodeLoadingState:number//shortCodeLoadingStates
 }
 
 const minShortCodeLength = 1 // need to keep this is sync with the back end. Will use so that they don't have to press enter. Search for CreateShortToken() in c# 
@@ -36,7 +39,8 @@ const initialState: LoginState = {
         [Environment.localFiddler]: fromNullable(null)
     },
     activeEnvironment: core.GetEnvironmentSettings[initialEnvironment],
-    isLoggedIn: false
+    isLoggedIn: false,
+    shortCodeLoadingState:0//shortCodeLoadingStates.notLoading
 };
 type codeWithHistory = { code: string, history: History }
 export const LoginSlice = createSlice({
@@ -70,6 +74,10 @@ export const LoginSlice = createSlice({
         requestShortCodeToEmail: (state, action: PayloadAction<string>) => {
         },
         processShortCode: (state, action: PayloadAction<codeWithHistory>) => {
+            state.shortCodeLoadingState = 0 // shortCodeLoadingStates.loading
+        },
+        finishedProcessShortCode: (state) => {
+            state.shortCodeLoadingState = 1// shortCodeLoadingStates.notLoading
         },
         processedShortCodeSuccessfully: (state, action: PayloadAction<History>) => {
             // cant' navigate from here...... https://blog.logrocket.com/react-router-with-redux-navigation-state/
@@ -93,22 +101,26 @@ export const LoginSlice = createSlice({
 //     mapTo(setBearerToken({token:'123',environment:Environment.local})) // here we're executing the action creator to create an action Type 'plain old javascript object' 
 // );
 
+// Good example, including working around finalise https://itnext.io/redux-observable-can-solve-your-state-problems-15b23a9649d7 
+
 export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
     action$.pipe(
         ofType(processShortCode),
         filter((x: PayloadAction<codeWithHistory>) => x.payload.code.length >= minShortCodeLength),
-        switchMap((x: PayloadAction<codeWithHistory>) => {
-            return AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload.code, GetBearerToken).pipe(
+        switchMap((x: PayloadAction<codeWithHistory>) =>
+            AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload.code, GetBearerToken).pipe(
                 // https://stackoverflow.com/questions/47965184/how-to-dispatch-multiple-actions-from-redux-observable
                 //map((i: string) => setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment})),
                 mergeMap((i) => [
                     setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment}),
                     processedShortCodeSuccessfully(x.payload.history)]
                 ),
-                catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment})))
-            )
-        })
-    )
+                catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment}))),
+                // because rxjs finalise is more like 'tap / do' than merge. https://itnext.io/redux-observable-can-solve-your-state-problems-15b23a9649d7
+                // This is run even if there's an error.
+                mergeWith(rxjs.of(finishedProcessShortCode())) 
+        )
+    ))
 
 // export const requestShortCodeToEmailEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
 //     action$.pipe(
@@ -125,7 +137,7 @@ export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: S
 
 
 // Export the actionCreators
-export const {setLoggedOut, requestShortCodeToEmail, setBearerToken, processedShortCodeSuccessfully, processShortCode, removeBearerToken} = LoginSlice.actions;
+export const {finishedProcessShortCode, setLoggedOut, requestShortCodeToEmail, setBearerToken, processedShortCodeSuccessfully, processShortCode, removeBearerToken} = LoginSlice.actions;
 export const epics = [convertShortCodeToBearerEpic]
 
 // export the reducer
