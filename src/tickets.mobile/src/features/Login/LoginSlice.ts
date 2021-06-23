@@ -117,7 +117,9 @@ export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: S
                     processedShortCodeSuccessfully(x.payload.history),
                     finishedProcessShortCode()] 
                 ),
+                // Note this blows... I am double doing the finishedProcessShortCode work in the removeBearerToken reducer.
                 catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment}))),
+                
                 // because rxjs finalise is more like 'tap / do' than merge. https://itnext.io/redux-observable-can-solve-your-state-problems-15b23a9649d7
                 // This is run even if there's an error.
                 //mergeWith(rxjs.of(finishedProcessShortCode())) 
