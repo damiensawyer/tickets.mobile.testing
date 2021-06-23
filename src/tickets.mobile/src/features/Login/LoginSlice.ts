@@ -104,6 +104,7 @@ export const LoginSlice = createSlice({
 
 // Good example, including working around finalise https://itnext.io/redux-observable-can-solve-your-state-problems-15b23a9649d7 
 
+// noinspection JSDeprecatedSymbols
 export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
     action$.pipe(
         ofType(processShortCode),
@@ -121,6 +122,8 @@ export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: S
 
                 // because rxjs finalise is more like 'tap / do' than merge. https://itnext.io/redux-observable-can-solve-your-state-problems-15b23a9649d7
                 // This is run even if there's an error.
+                
+                //https://www.gitmemory.com/issue/ReactiveX/rxjs/4772/491553380
                 endWith(finishedProcessShortCode()) 
             )
         ))
