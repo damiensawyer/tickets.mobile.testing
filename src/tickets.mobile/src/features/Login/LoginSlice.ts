@@ -6,7 +6,7 @@ import {fromNullable, match, none, Option} from "fp-ts/Option";
 import {pipe as fptsPipe} from "fp-ts/function";
 
 import {ofType, StateObservable} from "redux-observable";
-import {catchError, filter, finalize, map, mergeMap, switchMap, mergeWith} from "rxjs/operators";
+import {catchError, filter, finalize, map, mergeMap, switchMap, mergeWith, endWith} from "rxjs/operators";
 import * as rxjs from "rxjs"
 import {EMPTY, Observable} from "rxjs"
 import {AxiosError, AxiosErrorWithStatusCode, AxiosRequest$, isStatusCodeError, TicketsAPI, ticketsQuery} from "../../data/user/tickets-auth-api";
@@ -20,13 +20,13 @@ import {GetBearerToken, RequestShortCodeToEmail} from "../../data/user/tickets-h
 import {History} from 'history'; // https://stackoverflow.com/questions/49342390/typescript-how-to-add-type-check-for-history-object-in-react
 export type darkModeValues = 'light' | 'dark' // could have been an enum... but I was learning. Leave in to show another way. 
 
-export enum shortCodeLoadingStates{loading, notLoading}
+export enum shortCodeLoadingStates {loading, notLoading}
 
 export interface LoginState {
     bearerTokens: EnumDictionary<Environment, Option<string>>, // I'm thinking to do this so that we can switch between environments without having to log back in and out.  
     activeEnvironment: EnvironmentSettings,
     isLoggedIn: boolean,
-    shortCodeLoadingState:number//shortCodeLoadingStates
+    shortCodeLoadingState: number//shortCodeLoadingStates
 }
 
 const minShortCodeLength = 1 // need to keep this is sync with the back end. Will use so that they don't have to press enter. Search for CreateShortToken() in c# 
@@ -40,7 +40,7 @@ const initialState: LoginState = {
     },
     activeEnvironment: core.GetEnvironmentSettings[initialEnvironment],
     isLoggedIn: false,
-    shortCodeLoadingState:0//shortCodeLoadingStates.notLoading
+    shortCodeLoadingState: 0//shortCodeLoadingStates.notLoading
 };
 type codeWithHistory = { code: string, history: History }
 export const LoginSlice = createSlice({
@@ -61,7 +61,7 @@ export const LoginSlice = createSlice({
                 state.activeEnvironment.bearerToken = none
 
             state.isLoggedIn = EnvironmentFunctions.isLoggedIn(state.activeEnvironment)
-            state.shortCodeLoadingState = 0 // temp
+//            state.shortCodeLoadingState = 0 // temp
         },
         setBearerToken: (state, action: PayloadAction<{ token: string, environment: Environment }>) => {
             let p = action.payload
@@ -114,17 +114,31 @@ export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: S
                 //map((i: string) => setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment})),
                 mergeMap((i) => [
                     setBearerToken({token: i, environment: (state$).value.loginSlice.activeEnvironment.environment}),
-                    processedShortCodeSuccessfully(x.payload.history),
-                    finishedProcessShortCode()] 
+                    processedShortCodeSuccessfully(x.payload.history)]
                 ),
                 // Note this blows... I am double doing the finishedProcessShortCode work in the removeBearerToken reducer.
                 catchError(error => rxjs.of(removeBearerToken({environment: (state$).value.loginSlice.activeEnvironment.environment}))),
-                
+
                 // because rxjs finalise is more like 'tap / do' than merge. https://itnext.io/redux-observable-can-solve-your-state-problems-15b23a9649d7
                 // This is run even if there's an error.
-                //mergeWith(rxjs.of(finishedProcessShortCode())) 
-        )
-    ))
+                endWith(finishedProcessShortCode()) 
+            )
+        ))
+
+
+// export const convertShortCodeToBearerEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
+//     action$.pipe(
+//         ofType(processShortCode),
+//         filter((x: PayloadAction<codeWithHistory>) => x.payload.code.length >= minShortCodeLength),
+//         switchMap((x: PayloadAction<codeWithHistory>) =>
+//             AxiosRequest$(state$.value.loginSlice.activeEnvironment, x.payload.code, GetBearerToken).pipe(
+//
+//                 map((i: string) => setBearerToken({token: i, environment: state$.value.loginSlice.activeEnvironment.environment})),
+//                 catchError(error => rxjs.of(removeBearerToken({environment: state$.value.loginSlice.activeEnvironment.environment}))),
+//                 endWith(rxjs.of(finishedProcessShortCode())) 
+//             )
+//         ))
+
 
 // export const requestShortCodeToEmailEpic = (action$: Observable<any>, state$: StateObservable<RootState>) => // action$ is a stream of actions
 //     action$.pipe(
