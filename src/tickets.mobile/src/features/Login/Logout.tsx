@@ -47,7 +47,7 @@ export const Logout = ({menuController}:logoutProps) => {
         </>
         : <>
             <IonItem lines="none">
-                {/*<IonIcon slot="start" icon={exit}/>*/}
+                <IonIcon slot="start" icon={exit}/>
                 <IonButton
                     color="tertiary"
                     size="small"
