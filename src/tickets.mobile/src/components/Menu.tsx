@@ -45,20 +45,16 @@ const Menu = ({isLoggedIn}: MenuProps) => {
                                 </IonItem>
                             )}
 
-                        <IonItem/>
+                        <IonItem lines="none"/>
 
-                        <IonItem>
+                        <IonItem lines="none">
                             <IonIcon slot="start" icon={moonOutline}/>
                             <IonLabel onClick={() => toggleDarkMode()}>Dark Mode</IonLabel>
                             <IonToggle content-id='mytoggle' checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
                         </IonItem>
 
-                        {isLoggedIn &&
-                        <IonItem>
-                            <IonIcon slot="start" icon={exit}/>
-                            <Logout/>
-                        </IonItem>
-                        }
+                        {isLoggedIn && <Logout/>}
+                        
 
 
                     </IonList>

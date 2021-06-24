@@ -38,7 +38,7 @@ const defaultUnsecuredPage: Pick<PageSettings, 'isSecure'| 'showIfLoggedOn' | 's
 
 export const PageSettings: EnumDictionary<PageName, PageSettings> = {
     [PageName.login]: {pageName: PageName.login, $Template: LoginPage, url:'/page/Login', iosIcon:key, mdIcon:key ,title:'Login', ...defaultUnsecuredPage, showIfLoggedOn:false},
-    // [PageName.logOut]: {pageName: PageName.logOut, $Template: Logout, url:'/page/Logout', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Logout', ...defaultUnsecuredPage, showIfLoggedOn:true, showIfNotLoggedOn:false},
+    //[PageName.logOut]: {pageName: PageName.logOut, $Template: Logout, url:'/page/Logout', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Logout', ...defaultUnsecuredPage, showIfLoggedOn:true, showIfNotLoggedOn:true},
     [PageName.settings]: {...{pageName: PageName.settings, $Template: SettingsPage, url:'/page/Settings', iosIcon:cog, mdIcon:cog ,title:'Settings'}, ...defaultUnsecuredPage},
     [PageName.home]: {...{pageName: PageName.home, $Template: HomePage, url:'/page/Home', iosIcon:home, mdIcon:home ,title:'Home'}, ...defaultUnsecuredPage},
     [PageName.counter]: {...{pageName: PageName.counter, $Template: Counter, url:'/page/Counter', iosIcon:calendarNumber, mdIcon:calendarNumber ,title:'Counter'}, ...defaultSecurePage},
