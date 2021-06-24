@@ -20,27 +20,19 @@ const Menu = ({isLoggedIn}: MenuProps) => {
     const darkMode = useAppSelector(x => x.settings.darkMode)
     const isDarkModeEnabled = () => darkMode === 'dark'
     const dispatch = useAppDispatch();
-    const toggleDarkMode = () => isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
-
-    const [menuOpen, setMenuOpen] = useState(false)
-    // setTimeout(() => {
-    //         if (menuOpen) {
-    //             menuController.close()
-    //         } else {
-    //             menuController.open()
-    //         }
-    //         setMenuOpen(m => !m)
-    //     }
-    //     , 1000)
-
-
+    const toggleDarkMode = () => {
+        menuController.close().then()
+        isDarkModeEnabled() ? dispatch(setDarkMode('light')) : dispatch(setDarkMode('dark'))
+    }
+    
     return (
         <IonMenu contentId="main" type="overlay">
             <IonContent>
                 <IonItem>
                     <IonImg className="" slot={'start'} src="assets/tickets-logo-colour-rgb.png"/>
                 </IonItem>
-                {/*<IonMenuToggle autoHide={false}>*/}
+
+                {/* I took this out so that the menu didn't auto close when I clicked the logout button <IonMenuToggle autoHide={false}>*/}
 
                 <IonList id="menu-list">
                     <IonNote>{isLoggedIn ? 'logged in ....' : 'not logged in'} </IonNote>
@@ -68,7 +60,7 @@ const Menu = ({isLoggedIn}: MenuProps) => {
                         <IonToggle content-id='mytoggle' checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
                     </IonItem>
 
-                    {isLoggedIn && <Logout/>}
+                    {isLoggedIn && <Logout menuController={menuController}/>}
 
 
                 </IonList>
