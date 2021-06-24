@@ -48,7 +48,7 @@ export const Routes = ({isLoggedIn}: routeProps) => {
             {
                 //let k = `${appPage.url}-${isLoggedIn}`
                 let k = `${appPage.url}`
-                return appPage.isSecure && false
+                return appPage.isSecure
                         // See my comments on PrivateRoute. I'm going to leave this in, but also hide the links to private routes 
                         ? <PrivateRoute key={k} path={appPage.url} exact isLoggedIn={isLoggedIn}>
                             <Page pageName={appPage.pageName}/>

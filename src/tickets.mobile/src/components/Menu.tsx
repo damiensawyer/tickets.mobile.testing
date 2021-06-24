@@ -11,6 +11,7 @@ import {EnvironmentFunctions} from "../app/ticketsCore.Tooling";
 //import {appPages} from "./AppPages";
 import {PageName, PageSettings} from "../app/ticketsCore.pageSettings"
 import {$enum} from "ts-enum-util";
+import {Logout} from "../features/Login/Logout";
 
 type MenuProps = { isLoggedIn: boolean }
 const Menu = ({isLoggedIn}: MenuProps) => {
@@ -50,6 +51,13 @@ const Menu = ({isLoggedIn}: MenuProps) => {
                             <IonToggle content-id='mytoggle' checked={isDarkModeEnabled()} onClick={() => toggleDarkMode()}/>
                         </IonItem>
 
+                        {isLoggedIn &&
+                        <IonItem>
+                            <Logout/>
+                        </IonItem>
+                        }
+                        
+                        
                     </IonList>
                 </IonMenuToggle>
             </IonContent>

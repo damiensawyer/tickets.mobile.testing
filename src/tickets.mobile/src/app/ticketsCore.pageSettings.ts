@@ -6,7 +6,7 @@ import {LoginPage} from "../features/Login/LoginPage";
 import Counter from "../features/LearningReactPatterns/Counter/Counter";
 import PingPong from "../features/LearningReactPatterns/PingPong/PingPong";
 import {calendarNumber, mailOutline, mailSharp} from "ionicons/icons";
-import {LogoutPage} from "../features/Login/LogoutPage";
+import {Logout} from "../features/Login/Logout";
 
 export enum PageName {
     home = "Home",
@@ -14,7 +14,7 @@ export enum PageName {
     login = "Login",
     counter = "Counter",
     pingPong = "PingPong",
-    logOut = "Logout"
+    //logOut = "Logout"
 }
 
 interface PageSettingsBase {
@@ -38,7 +38,7 @@ const defaultUnsecuredPage: Pick<PageSettings, 'isSecure'| 'showIfLoggedOn' | 's
 
 export const PageSettings: EnumDictionary<PageName, PageSettings> = {
     [PageName.login]: {pageName: PageName.login, $Template: LoginPage, url:'/page/Login', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Login', ...defaultUnsecuredPage, showIfLoggedOn:false},
-    [PageName.logOut]: {pageName: PageName.logOut, $Template: LogoutPage, url:'/page/Logout', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Logout', ...defaultUnsecuredPage, showIfLoggedOn:true, showIfNotLoggedOn:false},
+    // [PageName.logOut]: {pageName: PageName.logOut, $Template: Logout, url:'/page/Logout', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Logout', ...defaultUnsecuredPage, showIfLoggedOn:true, showIfNotLoggedOn:false},
     [PageName.settings]: {...{pageName: PageName.settings, $Template: SettingsPage, url:'/page/Settings', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Settings'}, ...defaultUnsecuredPage},
     [PageName.home]: {...{pageName: PageName.home, $Template: HomePage, url:'/page/Home', iosIcon:mailOutline, mdIcon:mailSharp ,title:'Home'}, ...defaultUnsecuredPage},
     [PageName.counter]: {...{pageName: PageName.counter, $Template: Counter, url:'/page/Counter', iosIcon:calendarNumber, mdIcon:calendarNumber ,title:'Counter'}, ...defaultSecurePage},
