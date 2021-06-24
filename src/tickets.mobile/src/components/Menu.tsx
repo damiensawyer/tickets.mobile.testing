@@ -1,7 +1,7 @@
 import {IonContent, IonIcon, IonImg, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonNote, IonToggle,} from '@ionic/react';
 
 import {useLocation} from 'react-router-dom';
-import {moonOutline} from 'ionicons/icons';
+import {exit, menu, moonOutline} from 'ionicons/icons';
 import './Menu.css';
 
 import {useAppDispatch, useAppSelector} from '../app/hooks'
@@ -35,15 +35,17 @@ const Menu = ({isLoggedIn}: MenuProps) => {
                         {$enum(PageName)
                             .map(x => PageSettings[x])
                             .filter(x => (isLoggedIn && x.showIfLoggedOn) || (!isLoggedIn && x.showIfNotLoggedOn))
-                            .map((s, index) => 
-                                    <IonItem key={s.url} className={location.pathname === s.url ? 'selected' : ''}
-                                             routerLink={s.url}
-                                             routerDirection="none"
-                                             lines="none" detail={false}>
-                                        <IonIcon slot="start" ios={s.iosIcon} md={s.mdIcon}/>
-                                        <IonLabel>{`${s.title}`}</IonLabel>
-                                    </IonItem>
+                            .map((s, index) =>
+                                <IonItem key={s.url} className={location.pathname === s.url ? 'selected' : ''}
+                                         routerLink={s.url}
+                                         routerDirection="none"
+                                         lines="none" detail={false}>
+                                    <IonIcon slot="start" ios={s.iosIcon} md={s.mdIcon}/>
+                                    <IonLabel>{`${s.title}`}</IonLabel>
+                                </IonItem>
                             )}
+
+                        <IonItem/>
 
                         <IonItem>
                             <IonIcon slot="start" icon={moonOutline}/>
@@ -53,11 +55,12 @@ const Menu = ({isLoggedIn}: MenuProps) => {
 
                         {isLoggedIn &&
                         <IonItem>
+                            <IonIcon slot="start" icon={exit}/>
                             <Logout/>
                         </IonItem>
                         }
-                        
-                        
+
+
                     </IonList>
                 </IonMenuToggle>
             </IonContent>

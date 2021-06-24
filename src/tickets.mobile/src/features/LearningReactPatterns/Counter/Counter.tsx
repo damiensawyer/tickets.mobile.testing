@@ -38,6 +38,7 @@ export const Counter: React.FC = (b) => {
 
                     <IonButton
                         className="ion-padding-horizontal"
+                        size="large"
                         aria-label="Increment value"
                         onClick={() => dispatch(increment())}
                     >+</IonButton>
@@ -53,6 +54,7 @@ export const Counter: React.FC = (b) => {
                         onIonChange={e => setIncrementAmount(e.detail.value!)}
                     />
                     <IonButton
+                        expand="full"
                         fill="outline"
                         onClick={() => dispatch(incrementByAmount(incrementValue))}
                     >

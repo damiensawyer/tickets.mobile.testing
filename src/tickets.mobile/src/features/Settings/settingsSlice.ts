@@ -9,7 +9,7 @@ export interface SettingsState {
     darkMode: darkModeValues
 }
 
-export const initialEnvironment = Environment.development
+export const initialEnvironment = Environment.local
 
 export const initialState: SettingsState = {
   activeSettings:core.GetEnvironmentSettings[initialEnvironment],
