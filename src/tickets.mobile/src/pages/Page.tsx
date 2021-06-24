@@ -8,7 +8,7 @@ import {SettingsPage} from "../features/Settings/SettingsPage";
 import {search} from "ionicons/icons";
 import {routeProps} from "../Routes";
 import {useAppSelector} from "../app/hooks";
-import {Redirect} from "react-router-dom";
+import {Redirect, useHistory} from "react-router-dom";
 
 
 type PageProps = {pageName:string}
@@ -17,7 +17,10 @@ type PageProps = {pageName:string}
 export const Page = ({pageName  }: PageProps) => {
     const pageSettings = ps.PageSettings[pageName as ps.PageName]
     const isLoggedIn = useAppSelector(x => x.loginSlice.isLoggedIn)
-    if (!isLoggedIn && pageSettings.isSecure) return <Redirect to='page/Login'/>
+    const history = useHistory() // typing from https://stackoverflow.com/questions/49342390/typescript-how-to-add-type-check-for-history-object-in-react
+    if (!isLoggedIn && pageSettings.isSecure)
+        history.push('/page/Login')
+        // Note that this doesn't seem to work! It's buggy!! return <Redirect to='/page/Login'/>
     return (
         <IonPage>
             <IonHeader>
