@@ -39,7 +39,7 @@ const initialState: LoginState = {
         [Environment.localFiddler]: fromNullable(null)
     },
     activeEnvironment: core.GetEnvironmentSettings[initialEnvironment],
-    isLoggedIn: false,
+    isLoggedIn: true,
     shortCodeLoadingState: 0//shortCodeLoadingStates.notLoading
 };
 export const LoginSlice = createSlice({

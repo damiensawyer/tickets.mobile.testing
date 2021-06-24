@@ -9,9 +9,14 @@ import {exit, happy} from "ionicons/icons";
 //type logoutProps = {confirmMode:boolean}
 export const Logout = () => {
     const isLoggedIn = useAppSelector(x => x.loginSlice.isLoggedIn)
-    const [confirmMode, setConformMode] = useState(false)
+    const [confirmMode, setConfirmMode] = useState(false)
     const history = useHistory() // typing from https://stackoverflow.com/questions/49342390/typescript-how-to-add-type-check-for-history-object-in-react
     const dispatch = useAppDispatch();
+
+    function StopEventPropagation(event: any) {
+        event.stopPropagation();
+        event.preventDefault()
+    }
     return confirmMode
         ? <>
             <IonItem lines="none">
@@ -22,7 +27,7 @@ export const Logout = () => {
                     fill="solid"
                     onClick={() => {
                         dispatch(setLoggedOut(none))
-                        setConformMode(false)
+                        setConfirmMode(false)
                         history.push('/page/Login')
                     }}>Confirm Log Out?</IonButton>
             </IonItem>
@@ -33,20 +38,23 @@ export const Logout = () => {
                     size="small"
                     fill="solid"
                     onClick={() => {
-                        setConformMode(false)
+                        setConfirmMode(false)
                     }}>Stay Logged In</IonButton>
             </IonItem>
 
         </>
         : <>
-            <IonItem lines="none">
-                <IonIcon slot="start" icon={exit}/>
+            <IonItem lines="none" onClick={(e) => {
+                StopEventPropagation(e)
+            }}>
+                {/*<IonIcon slot="start" icon={exit}/>*/}
                 <IonButton
                     color="tertiary"
                     size="small"
                     fill="solid"
-                    onClick={() => {
-                        setConformMode(true)
+                    onClick={(e) => {
+                        StopEventPropagation(e)
+                        setConfirmMode(true)
                     }}>Log out</IonButton>
             </IonItem>
         </>
