@@ -52,6 +52,8 @@ export const Routes = ({isLoggedIn}: routeProps) => {
                 // After days of trying I couldn't get the secure routes to work. they worked first pass through, then after I logged out and in they failed. 
                 // Seing as we're deploying to a phone, it doesn't really matter because there is no url bar. So, just enable all routes for now, and hide the menus when they're not logged in 
                 // :-(
+                // PATCH: Have a look at the top of Page.tsx. I put in a simple check that re-routes to login if required. This works, without us having to adjust the routes. That is, 
+                // this is using 'dynamic' routes instead of 'static'
                 return appPage.isSecure && false
                         // See my comments on PrivateRoute. I'm going to leave this in, but also hide the links to private routes 
                         ? <PrivateRoute key={k} path={appPage.url} exact isLoggedIn={isLoggedIn}>
