@@ -45,14 +45,18 @@ export const Routes = ({isLoggedIn}: routeProps) => {
         {$enum(PageName)
             .map(x => PageSettings[x])
             .map((appPage, index) =>
-                (
-                    appPage.isSecure
+            {
+                //let k = `${appPage.url}-${isLoggedIn}`
+                let k = `${appPage.url}`
+                return appPage.isSecure && false
                         // See my comments on PrivateRoute. I'm going to leave this in, but also hide the links to private routes 
-                        ? <PrivateRoute key={appPage.url} path={appPage.url} exact isLoggedIn={isLoggedIn}>
+                        ? <PrivateRoute key={k} path={appPage.url} exact isLoggedIn={isLoggedIn}>
                             <Page pageName={appPage.pageName}/>
                         </PrivateRoute>
-                        : <Route key={appPage.url} path={appPage.url}><Page pageName={appPage.pageName}/></Route>)
-            )
+                        : <Route exact key={k} path={appPage.url}><Page pageName={appPage.pageName}/></Route>
+                // return <Route exact key={k} path={appPage.url}><Page pageName={appPage.pageName}/></Route>
+                
+            })
         }
 
     </IonRouterOutlet>)

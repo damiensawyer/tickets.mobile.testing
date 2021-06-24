@@ -27,8 +27,10 @@ import React from "react";
 import {Routes} from "./Routes";
 
 const App: React.FC = () => {
-        core.RunSetup()    
+        core.RunSetup()
+        
         const isLoggedIn = useAppSelector(x => x.loginSlice.isLoggedIn)
+        console.log(`running APP loggedOn: ${isLoggedIn}`)
         const darkMode = useAppSelector(x => x.settings.darkMode)
         return (
             <IonApp className={darkMode === 'dark' ? 'dark-theme' : ''}>
